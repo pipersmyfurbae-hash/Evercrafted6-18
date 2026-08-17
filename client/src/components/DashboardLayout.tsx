@@ -1,4 +1,5 @@
 import { useAuth } from "@/_core/hooks/useAuth";
+import { trpc } from "@/lib/trpc";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -21,15 +22,19 @@ import {
 } from "@/components/ui/sidebar";
 import { startLogin } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users } from "lucide-react";
+import { Bell, BriefcaseBusiness, ChevronDown, FolderKanban, LayoutDashboard, LogOut, PanelLeft, Search, Settings, Shield, Sparkles, UserRound } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
 
 const menuItems = [
-  { icon: LayoutDashboard, label: "Page 1", path: "/" },
-  { icon: Users, label: "Page 2", path: "/some-path" },
+  { icon: LayoutDashboard, label: "Overview", path: "/app" },
+  { icon: Search, label: "Search", path: "/search" },
+  { icon: FolderKanban, label: "Projects", path: "/projects" },
+  { icon: Sparkles, label: "Moodoor Studio", path: "/studio" },
+  { icon: Bell, label: "Notifications", path: "/notifications" },
+  { icon: Settings, label: "Settings", path: "/settings" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";
@@ -112,6 +117,7 @@ function DashboardLayoutContent({
   const sidebarRef = useRef<HTMLDivElement>(null);
   const activeMenuItem = menuItems.find(item => item.path === location);
   const isMobile = useIsMobile();
+  const workspaces = trpc.workspace.listMine.useQuery(undefined, { enabled: Boolean(user) });
 
   useEffect(() => {
     if (isCollapsed) {
@@ -177,8 +183,21 @@ function DashboardLayoutContent({
           </SidebarHeader>
 
           <SidebarContent className="gap-0">
+            {!isCollapsed ? <div className="px-3 pb-3 pt-1">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="flex w-full items-center justify-between gap-2 rounded-xl border border-border bg-background px-3 py-2.5 text-left text-sm transition hover:bg-accent/50">
+                    <span className="flex min-w-0 items-center gap-2"><BriefcaseBusiness className="h-4 w-4 shrink-0 text-[#516f5e]" /><span className="truncate">{workspaces.data?.[0]?.name ?? "Select workspace"}</span></span><ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-[var(--radix-dropdown-menu-trigger-width)]">
+                  {workspaces.data?.map(workspace => <DropdownMenuItem key={workspace.id} onClick={() => setLocation(`/projects?workspace=${workspace.id}`)} className="cursor-pointer"><span className="min-w-0"><span className="block truncate">{workspace.name}</span><span className="text-xs capitalize text-muted-foreground">{workspace.kind} · {workspace.role}</span></span></DropdownMenuItem>)}
+                  {workspaces.isLoading ? <DropdownMenuItem disabled>Loading spaces…</DropdownMenuItem> : null}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div> : null}
             <SidebarMenu className="px-2 py-1">
-              {menuItems.map(item => {
+              {[...menuItems, { icon: UserRound, label: "Personal", path: "/me" }, ...(user?.role === "admin" ? [{ icon: Shield, label: "Administration", path: "/admin" }] : [])].map(item => {
                 const isActive = location === item.path;
                 return (
                   <SidebarMenuItem key={item.path}>
@@ -220,6 +239,13 @@ function DashboardLayoutContent({
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem
+                  onClick={() => setLocation("/profile")}
+                  className="cursor-pointer"
+                >
+                  <UserRound className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem
                   onClick={logout}
                   className="cursor-pointer text-destructive focus:text-destructive"
                 >
@@ -248,7 +274,7 @@ function DashboardLayoutContent({
               <div className="flex items-center gap-3">
                 <div className="flex flex-col gap-1">
                   <span className="tracking-tight text-foreground">
-                    {activeMenuItem?.label ?? "Menu"}
+                    {activeMenuItem?.label ?? "Evercrafted"}
                   </span>
                 </div>
               </div>

@@ -1,0 +1,53 @@
+# Project TODO
+
+- [ ] EC-P01-GOV-001 Create and maintain repository-resident roadmap, run log, change register, capability matrix, data dictionary, migration ledger, risk register, test matrix, and release checklist. (Initial artifacts exist; first end-of-run verification and GitHub synchronization remain pending.)
+- [ ] EC-P00-INV-001 Audit the initialized project and the two source programs, recording runtime, routes, APIs, schema, storage, dependencies, tests, and feature disposition in governance documents. (Scaffold audit complete; legacy source working copy blocked.)
+- [ ] EC-P02-DB-001 Establish database-as-code conventions with Drizzle schema modules, migrations, seeds, fixtures, migration tests, repository helpers, data dictionary, and migration ledger. (Schema, migrations, seed convention, fixtures, helpers, and documentation exist; generated-migration workflow and automated migration-test evidence remain.)
+- [ ] EC-P03-DATA-001 Define canonical multi-tenant entities for workspaces, organizations, memberships, roles, projects, assets, workflows, audit records, notifications, jobs, feature flags, plans, entitlements, and integrations. (Foundation schema and applied migrations complete; fixture/migration-test coverage remains.)
+- [ ] EC-P03-IAM-001 Implement personal-workspace auto-provisioning, organizations, invitations, memberships, and owner/admin/member/viewer/client role policies. (Core typed lifecycle and settings interface complete; acceptance and full lifecycle testing remain.)
+- [ ] EC-P03-AUTHZ-001 Implement server-side tenant-scoped authorization, role checks, owner-only Personal Command Center policy, and audited support-access boundaries. (Server policy, owner guard, asset/workspace checks, and support audit record are complete; expanded negative tests remain.)
+- [x] EC-P03-API-001 Publish typed tRPC routers for workspace, project, studio, asset, notification, administration, and platform-health functions.
+- [x] EC-P03-AUD-001 Implement auditable activity and sensitive support-action records.
+- [x] EC-P05-PUB-001 Build the responsive Evercrafted public landing, product, pricing, and lead-capture pages with an authenticated onboarding path.
+- [x] EC-P05-ONB-001 Build authenticated onboarding that creates or opens a personal workspace and supports organization workspace creation.
+- [ ] EC-P05-APP-001 Build the authenticated SaaS workspace shell with context-safe navigation, workspace switcher, project list/detail, global search, notifications, profile, and settings states. (Navigation, switcher, projects, search, notifications, and settings are complete; a profile management page remains.)
+- [ ] EC-P06-UX-001 Build the Moodoor Studio shell with studio project navigation, creation, review, approval, delivery, and publishing flows. (Navigation, review, approval, and delivery preparation are complete; provider-neutral publishing handoff remains.)
+- [ ] EC-P04-STO-001 Implement tenant-scoped S3-backed asset metadata, governed upload intent, asset versioning, and signed-access policy. (Upload, S3 metadata, initial v1 records, and signed access are complete; subsequent versions and history UI remain.)
+- [ ] EC-P04-WF-001 Implement shared project/studio workflow statuses, review, approval, assignment, delivery, and audit events. (Statuses, reviews, approvals, delivery, and audits are complete; reviewer/member assignment interface remains.)
+- [ ] EC-P04-JOB-001 Implement observable asynchronous job records and service contracts for processing, notifications, webhook retries, and long-running Studio operations. (Durable record, typed queue, health, and recovery foundations complete; provider worker adapters remain.)
+- [x] EC-P04-JOB-002 Implement the approved hybrid job policy: request-driven short actions, durable idempotent job records, bounded retry/recovery processing, and provider-neutral heavy-media handoff contracts.
+- [ ] EC-P04-JOB-003 Add a scheduled recovery handler for queued/retryable jobs with idempotent claim semantics, documented deployment requirement, and no in-process timers.
+- [ ] EC-P04-JOB-004 Add job health, queue latency, retry, dead-letter, and heavy-media escalation telemetry so an always-on worker can be introduced from measured demand without redesign.
+- [ ] EC-P04-NOT-001 Implement notification records, preference-ready delivery, and in-app workspace notification UI.
+- [ ] EC-P07-ENT-001 Implement plan, subscription, entitlement, and usage model scaffolding with server-enforced feature checks.
+- [ ] EC-P08-ME-001 Build the owner-only Personal Command Center with private projects, cross-workspace activity overview, integration controls, and operational dashboards.
+- [ ] EC-P08-ADM-002 Build a restricted administration and support console for tenant overview, feature flags, entitlement assistance, job/integration health, and audited access.
+- [ ] EC-P10-TEST-001 Add Vitest coverage for tenant isolation, role policy, personal-workspace provisioning, activity/audit records, and critical typed API behavior.
+- [ ] EC-P10-A11Y-001 Verify keyboard, semantic, contrast, loading, empty, error, and authorization states for all implemented user journeys.
+- [ ] EC-P11-GOV-001 Update all documentation, test evidence, affected-file inventory, and this TODO checklist after each execution run; commit and push the synchronized increment to GitHub.
+- [ ] EC-P11-GOV-002 Commit and push the initial governance-document set and first validated implementation increment to the designated GitHub branch, recording the commit ID and push result in RUN_LOG.md.
+- [ ] EC-P02-DB-002 Generate, review, and test Drizzle migration artifacts using the documented database workflow; record executable migration evidence.
+- [ ] EC-P05-PROFILE-001 Build authenticated profile view and editing with loading, error, and success states.
+- [ ] EC-P06-PUB-001 Build a provider-neutral Studio publishing handoff flow and audit event without enabling an external provider until separately approved.
+- [ ] EC-P04-STO-002 Add tenant-scoped asset re-upload/new-version creation, version history query, and Studio version history UI.
+- [ ] EC-P04-WF-002 Add assigned reviewer/member selection and assignment state UI for Studio review workflow.
+- [ ] EC-WIX-001 Audit the connected Wix account, target site, enabled products, permissions, Velo availability, CMS collections, member areas, stores, automations, and current integrations; record the source-of-truth mapping.
+- [ ] EC-WIX-002 Write and maintain a Wix migration decision record that maps each Evercrafted engine capability to Wix-native data, members, Velo, CMS, automations, Stores, external services, or an explicit deferred state.
+- [ ] EC-WIX-003 Define a Restoration Hardware–inspired editorial design system for Wix: warm stone/ivory/charcoal palette, high-contrast serif/sans typography, restrained grid, architectural photography treatment, and accessible interaction standards.
+- [ ] EC-WIX-004 Build all Wix public pages in the approved editorial system: home, platform, Moodoor Studio, pricing, contact/lead capture, about, legal, sign-in, and 404 states.
+- [ ] EC-WIX-005 Build Wix-native commerce: catalog, collection/product pages, cart, checkout, account flows, post-purchase views, and operational store settings, subject to the audited Wix product configuration.
+- [ ] EC-WIX-006 Build Wix member identity, workspace/membership, invitation, role, and tenant-boundary capability using the audited Wix member and data model.
+- [ ] EC-WIX-007 Build Wix member dashboards, personal command center, Moodoor Studio, asset/review/delivery flows, notifications, settings, and restricted administration experiences.
+- [ ] EC-WIX-008 Design Wix-native automations and external execution boundaries for notifications, webhooks, asynchronous work, media processing, recovery, and audit logging without relying on unsupported in-process workers.
+- [ ] EC-WIX-009 Document every Wix page, collection, Velo module, automation, integration, migration, test result, and release action in the repository governance records and synchronize approved code/document changes to GitHub.
+- [x] EC-WIX-010 Select and document a Wix template that supports a luxury editorial, commerce, and member-experience information architecture; show the selected layout before site creation.
+- [x] EC-WIX-011 Produce a page-by-page Restoration Hardware–inspired editorial transformation plan for the selected Wix template, including typography, palette, spacing, imagery, content hierarchy, accessibility, and responsive behavior.
+- [x] EC-WIX-012 Produce a step-by-step Wix-native implementation plan covering template customization, CMS, Stores, Members, Velo, automations, roles, data permissions, testing, and release controls.
+- [ ] EC-WIX-013 Design and configure the Wix CMS collection model for organizations, workspaces, memberships, projects, assets, reviews, deliveries, notifications, audit events, plans, entitlements, feature flags, leads, and jobs, subject to the approved target site. (Secure baseline collection resources created; production refinements remain.)
+- [ ] EC-WIX-014 Design and configure the custom Wix member dashboard information architecture, role gates, workspace context, dashboard widgets, Studio, personal command, and restricted administration views.
+- [x] EC-WIX-015 Create the new isolated Wix site from Home Goods Store (Cosy) template `0840bbce-80b1-48d6-8dec-3f6084f213e7` and retain the Interior Design Company (Elegant) template `dff23900-3567-4130-93ad-d933e91318d1` as the approved dynamic composition reference.
+- [ ] EC-WIX-016 Apply the approved hybrid layout: commerce-first header, collection and product foundations, portfolio-led editorial hero, asymmetric project narratives, architectural image bands, restrained product curation, and member portal entry points.
+- [ ] EC-WIX-017 Remove all template-supplied reviews, ratings, and testimonial content before the Evercrafted site is edited or released; retain no user-generated-content section until authentic, permissioned source material is provided.
+- [ ] EC-WIX-018 Refine Wix CMS field types, references, lookup behavior, and indexing for workspace-, project-, asset-, review-, and delivery-linked records.
+- [ ] EC-WIX-020 Define Wix slug metadata for Organizations, Workspaces, and Projects, then promote their temporary text slug fields to native `SLUG` type without losing the URL strategy.
+- [ ] EC-WIX-019 Implement and verify Velo-backed data-access modules and collection policies for member, role, workspace, owner, and administrator boundaries; document their security evidence.

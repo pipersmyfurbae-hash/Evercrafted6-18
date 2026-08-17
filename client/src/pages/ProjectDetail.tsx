@@ -1,0 +1,15 @@
+import DashboardLayout from "@/components/DashboardLayout";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { trpc } from "@/lib/trpc";
+import { ArrowLeft, ArrowRight, FolderKanban, Sparkles } from "lucide-react";
+import { useLocation, useRoute } from "wouter";
+
+export default function ProjectDetail() {
+  const [, params] = useRoute("/projects/:projectId");
+  const [, setLocation] = useLocation();
+  const projectId = Number(params?.projectId ?? 0);
+  const workspaceId = Number(new URLSearchParams(window.location.search).get("workspace") ?? 0);
+  const project = trpc.project.get.useQuery({ workspaceId, projectId }, { enabled: workspaceId > 0 && projectId > 0 });
+  return <DashboardLayout><div className="mx-auto max-w-5xl"><Button variant="ghost" onClick={() => setLocation(`/projects?workspace=${workspaceId}`)} className="-ml-3 mb-5"><ArrowLeft className="mr-1 h-4 w-4" />Back to projects</Button>{project.isLoading ? <p className="text-sm text-muted-foreground">Loading permitted project details…</p> : null}{project.data ? <><section className="rounded-3xl bg-[#17202b] p-8 text-[#f7f5ef]"><p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#f3d5aa]">Project record</p><h1 className="mt-3 text-3xl font-semibold tracking-[-0.05em] sm:text-4xl">{project.data.name}</h1><p className="mt-4 max-w-2xl text-sm leading-6 text-[#d1d7d1]">{project.data.description || "No project description has been added."}</p><span className="mt-6 inline-flex rounded-full bg-[#e4eee6] px-3 py-1 text-sm font-medium capitalize text-[#405c4c]">{project.data.status.replace("_", " ")}</span></section><section className="mt-6 grid gap-5 md:grid-cols-2"><Card><CardHeader><FolderKanban className="h-6 w-6 text-[#c65e32]" /><CardTitle className="mt-5">Shared project context</CardTitle><CardDescription>Every workflow transition is recorded against the project and its workspace boundary.</CardDescription></CardHeader><CardContent><p className="text-sm text-muted-foreground">Created {new Date(project.data.createdAt).toLocaleString()} · Updated {new Date(project.data.updatedAt).toLocaleString()}</p></CardContent></Card><Card><CardHeader><Sparkles className="h-6 w-6 text-[#516f5e]" /><CardTitle className="mt-5">Open in Moodoor Studio</CardTitle><CardDescription>Manage governed assets and move the Studio workflow forward in the selected workspace.</CardDescription></CardHeader><CardContent><Button onClick={() => setLocation(`/studio?workspace=${workspaceId}&project=${projectId}`)} className="bg-[#516f5e] hover:bg-[#405c4c]">Open Studio <ArrowRight className="ml-1 h-4 w-4" /></Button></CardContent></Card></section></> : null}{project.error ? <Card className="border-destructive/30 bg-destructive/5"><CardContent className="p-6 text-sm text-destructive">This project is unavailable or you do not have access through the selected workspace.</CardContent></Card> : null}</div></DashboardLayout>;
+}
