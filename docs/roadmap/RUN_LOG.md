@@ -76,6 +76,14 @@
 | Wix CMS foundation | Direct Wix CMS API collection creation | All 17 Evercrafted collection definitions returned HTTP 200 with their expected collection identifiers and administrator-only baseline permissions |
 | Wix CMS refinement | Verified Wix field-update API | 23 of 26 production field-type refinements succeeded; the three slug fields remain text pending required Wix slug metadata; no collection records exist |
 | Wix collection audit | Verified Wix collection listing API | Exactly 17 expected Evercrafted collections are present; each has administrator-only insert/read/update/remove permissions and no unexpected custom collections were returned |
+| Velo dashboard contract | Repository Velo source using verified Wix SDK patterns | Tenant-scoped dashboard service contract added; deployment and end-to-end role verification remain pending because editor code controls are not exposed |
+| Wix relationship refinement | API-spec request | Deferred without mutation after a temporary Wix connector timeout prevented verification of reference-field metadata |
+| Three-experience correction | User-approved architecture revision | Replaced the prior merged public/member model with separate Evercrafted, Client SaaS, and Personal route/layout/dashboard plans sharing one governed engine; no template visual edit has been applied |
+| Client SaaS public layer | User-approved scope clarification | Added a standalone public SaaS conversion group—landing, How It Works, capabilities, outcomes, pricing/access, and sign-in—separate from both Evercrafted commerce and protected workspace routes |
+| Three-experience visual system | Architecture and design artifact | Defined independent Evercrafted editorial/commerce, Client SaaS public/workspace, and Personal command visual systems; source-template colors, typography, and merged layout are excluded |
+| Harmony editor access | User-reported session error plus sandbox loading-canvas evidence | Live visual editing is blocked; source template is frozen and no visual page mutation is claimed |
+| Personal owner policy | Repository Velo source plus syntax-only check | Separate server-side Personal resolver created; requires a Wix backend secret and deployment before it becomes live |
+| Three-experience page-ready content | Repository copy and dashboard specifications | Prepared separated Evercrafted editorial/commerce copy, Client SaaS public conversion copy, and Personal command specification; no template content or testimonials were altered in Wix |
 
 ### Next actions
 

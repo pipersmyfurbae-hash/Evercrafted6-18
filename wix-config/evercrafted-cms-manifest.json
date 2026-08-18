@@ -1,0 +1,97 @@
+{
+  "schemaVersion": "1.0.0",
+  "targetSiteId": "4a20e429-d686-4f4d-8282-13454219024a",
+  "strategy": "backend-admin-only-until-velo-policy-is-deployed",
+  "collections": [
+    {
+      "id": "evercrafted-organizations",
+      "experienceVisibility": ["client-saas", "personal"],
+      "fields": {"name": "TEXT", "slug": "TEXT_PENDING_SLUG_METADATA", "status": "TEXT", "ownerMemberId": "TEXT", "createdAt": "DATETIME"}
+    },
+    {
+      "id": "evercrafted-workspaces",
+      "experienceVisibility": ["client-saas", "personal"],
+      "fields": {"name": "TEXT", "slug": "TEXT_PENDING_SLUG_METADATA", "kind": "TEXT", "organizationId": "TEXT_PENDING_REFERENCE", "ownerMemberId": "TEXT", "isArchived": "BOOLEAN", "createdAt": "DATETIME"}
+    },
+    {
+      "id": "evercrafted-workspace-memberships",
+      "experienceVisibility": ["client-saas", "personal"],
+      "fields": {"workspaceId": "TEXT_PENDING_REFERENCE", "memberId": "TEXT", "role": "TEXT", "status": "TEXT", "invitedEmail": "EMAIL", "joinedAt": "DATETIME"}
+    },
+    {
+      "id": "evercrafted-workspace-invitations",
+      "experienceVisibility": ["client-saas", "personal"],
+      "fields": {"workspaceId": "TEXT_PENDING_REFERENCE", "email": "EMAIL", "role": "TEXT", "tokenHash": "TEXT", "expiresAt": "DATETIME", "status": "TEXT"}
+    },
+    {
+      "id": "evercrafted-projects",
+      "experienceVisibility": ["client-saas", "personal"],
+      "fields": {"workspaceId": "TEXT_PENDING_REFERENCE", "name": "TEXT", "slug": "TEXT_PENDING_SLUG_METADATA", "status": "TEXT", "description": "TEXT", "leadMemberId": "TEXT", "createdAt": "DATETIME"}
+    },
+    {
+      "id": "evercrafted-assets",
+      "experienceVisibility": ["client-saas", "personal"],
+      "fields": {"workspaceId": "TEXT_PENDING_REFERENCE", "projectId": "TEXT_PENDING_REFERENCE", "mediaRef": "TEXT", "name": "TEXT", "mimeType": "TEXT", "sizeBytes": "NUMBER", "currentVersionId": "TEXT_PENDING_REFERENCE", "status": "TEXT"}
+    },
+    {
+      "id": "evercrafted-asset-versions",
+      "experienceVisibility": ["client-saas", "personal"],
+      "fields": {"assetId": "TEXT_PENDING_REFERENCE", "workspaceId": "TEXT_PENDING_REFERENCE", "versionNumber": "NUMBER", "mediaRef": "TEXT", "note": "TEXT", "createdByMemberId": "TEXT", "createdAt": "DATETIME"}
+    },
+    {
+      "id": "evercrafted-review-requests",
+      "experienceVisibility": ["client-saas", "personal"],
+      "fields": {"workspaceId": "TEXT_PENDING_REFERENCE", "projectId": "TEXT_PENDING_REFERENCE", "assetId": "TEXT_PENDING_REFERENCE", "assignedMemberId": "TEXT", "status": "TEXT", "requestNote": "TEXT", "responseNote": "TEXT", "resolvedAt": "DATETIME"}
+    },
+    {
+      "id": "evercrafted-deliveries",
+      "experienceVisibility": ["client-saas", "personal"],
+      "fields": {"workspaceId": "TEXT_PENDING_REFERENCE", "projectId": "TEXT_PENDING_REFERENCE", "status": "TEXT", "destinationType": "TEXT", "destinationRef": "TEXT", "handoffJobId": "TEXT_PENDING_REFERENCE", "createdAt": "DATETIME"}
+    },
+    {
+      "id": "evercrafted-notifications",
+      "experienceVisibility": ["client-saas", "personal"],
+      "fields": {"memberId": "TEXT", "workspaceId": "TEXT_PENDING_REFERENCE", "type": "TEXT", "title": "TEXT", "body": "TEXT", "readAt": "DATETIME", "createdAt": "DATETIME"}
+    },
+    {
+      "id": "evercrafted-audit-events",
+      "experienceVisibility": ["personal", "client-saas-owner-read"],
+      "fields": {"workspaceId": "TEXT_PENDING_REFERENCE", "actorMemberId": "TEXT", "action": "TEXT", "targetType": "TEXT", "targetId": "TEXT", "metadata": "TEXT", "createdAt": "DATETIME"}
+    },
+    {
+      "id": "evercrafted-background-jobs",
+      "experienceVisibility": ["personal", "client-saas-policy-filtered"],
+      "fields": {"workspaceId": "TEXT_PENDING_REFERENCE", "jobType": "TEXT", "status": "TEXT", "idempotencyKey": "TEXT", "attempts": "NUMBER", "maxAttempts": "NUMBER", "payloadRef": "TEXT", "runAfter": "DATETIME", "progress": "NUMBER"}
+    },
+    {
+      "id": "evercrafted-plans",
+      "experienceVisibility": ["client-saas-public-marketing", "personal-admin"],
+      "fields": {"slug": "TEXT", "name": "TEXT", "description": "TEXT", "isActive": "BOOLEAN", "createdAt": "DATETIME"}
+    },
+    {
+      "id": "evercrafted-workspace-entitlements",
+      "experienceVisibility": ["client-saas-evaluated", "personal-admin"],
+      "fields": {"workspaceId": "TEXT_PENDING_REFERENCE", "planId": "TEXT_PENDING_REFERENCE", "capability": "TEXT", "isEnabled": "BOOLEAN", "usageLimit": "NUMBER", "createdAt": "DATETIME"}
+    },
+    {
+      "id": "evercrafted-feature-flags",
+      "experienceVisibility": ["personal-admin"],
+      "fields": {"key": "TEXT", "workspaceId": "TEXT_PENDING_REFERENCE", "isEnabled": "BOOLEAN", "description": "TEXT", "expiresAt": "DATETIME"}
+    },
+    {
+      "id": "evercrafted-leads",
+      "experienceVisibility": ["evercrafted-public-form", "client-saas-public-access-form", "personal-admin"],
+      "fields": {"name": "TEXT", "email": "EMAIL", "interest": "TEXT", "source": "TEXT", "status": "TEXT", "createdAt": "DATETIME"}
+    },
+    {
+      "id": "evercrafted-integration-connections",
+      "experienceVisibility": ["personal-admin"],
+      "fields": {"workspaceId": "TEXT_PENDING_REFERENCE", "provider": "TEXT", "status": "TEXT", "externalRef": "TEXT", "lastCheckedAt": "DATETIME"}
+    }
+  ],
+  "securityNotes": [
+    "No credentials are stored in CMS records.",
+    "All existing collection permissions remain administrator-only until Velo policy deployment and verification.",
+    "REFERENCE and SLUG transitions are intentionally pending Wix metadata verification."
+  ]
+}
