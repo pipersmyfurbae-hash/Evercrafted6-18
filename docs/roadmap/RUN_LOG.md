@@ -703,4 +703,26 @@ The completed managed three-experience verification increment was pushed success
 ### GitHub synchronization
 
 The completed provider-neutral async job service increment was pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `a8af997` (`feat: complete durable job service contracts`).
+
+## Run EC-RUN-0023 — Managed and preserved source inventory completion
+
+**Date:** 2026-08-19 EDT
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`
+**Work item:** `EC-P00-INV-001`
+**Objective:** Audit both source programs in the repository and record their runtime, routes, APIs, storage, dependencies, tests, and feature disposition without executing legacy code.
+
+| Source | Audit evidence | Disposition |
+|---|---|---|
+| Managed Evercrafted application | React 19/Tailwind 4 client, Express/tRPC server, Drizzle/MySQL schema/migrations, Manus OAuth, S3 metadata policy, typed router/test suite, and public/Client/Studio/Admin/Personal route registry | Active, governed implementation source of truth. |
+| Preserved Moodoor Studio source | Standalone source tree includes brief generator, prompt library/composer, inventory, settings, hash routing, local storage, static inventory JSON, and a direct browser-enabled model client | Reference-only source. Workflow ideas are usable as governed product concepts; code and data are not imported or executed by the managed runtime. |
+| Legacy safety boundary | `SOURCE_INVENTORY.md`, `source.inventory.contract.test.ts` | Explicitly rejects direct browser operator keys, hash-routing/local-storage source of truth, and automatic import of unvetted inventory/price/availability data. |
+| Validation | `pnpm test`, `pnpm check`, `pnpm build` | Passed: 42 Vitest files / 103 tests, TypeScript check, and production build. The existing non-blocking client chunk-size advisory remains. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Added | `docs/architecture/SOURCE_INVENTORY.md` | Records runtime, routes, APIs, storage, dependencies, tests, and disposition for both source programs. |
+| Added | `server/source.inventory.contract.test.ts` | Locks managed source-of-truth status and legacy direct-key/local-storage/hash-routing exclusions. |
+| Updated | `docs/quality/TEST_MATRIX.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Records completed source-audit evidence. |
 | Updated | `docs/quality/TEST_MATRIX.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Records the completed data-governance evidence. |
