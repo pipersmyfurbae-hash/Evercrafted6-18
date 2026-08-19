@@ -761,7 +761,7 @@ The validated Wix live-audit increment was committed and pushed successfully to 
 ## Run EC-RUN-0025 — Wix migration decision completion
 
 **Date:** 2026-08-19 EDT
-**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`
+**Status:** `VALIDATED — GITHUB SYNCHRONIZED`
 **Work item:** `EC-WIX-002`
 **Objective:** Define the verified Wix-native migration path for every governed Evercrafted engine capability without representing a planning decision as a live Wix cutover.
 
@@ -783,4 +783,4 @@ The validated Wix live-audit increment was committed and pushed successfully to 
 
 ### GitHub synchronization
 
-The validated Wix migration-decision increment is pending commit and push to `pipersmyfurbae-hash/Evercrafted6-18` on `main`.
+The validated Wix migration-decision increment was committed and pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `a8ef24e` (`docs: add wix migration decision`).
