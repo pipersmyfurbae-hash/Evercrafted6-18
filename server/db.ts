@@ -12,6 +12,7 @@ import {
   notifications,
   notificationPreferences,
   organizations,
+  platformIntegrationControls,
   plans,
   projects,
   deliveries,
@@ -48,6 +49,16 @@ export function canAdministerWorkspace(role: WorkspaceRole) {
   return workspaceRoleRank[role] >= workspaceRoleRank.admin;
 }
 
+export const platformIntegrationKeys = ["publishing_provider", "external_email", "job_recovery"] as const;
+export type PlatformIntegrationKey = (typeof platformIntegrationKeys)[number];
+export type PlatformIntegrationStatus = "unconfigured" | "reviewed" | "ready" | "disabled";
+
+const platformIntegrationDefinitions: Record<PlatformIntegrationKey, { label: string; detail: string }> = {
+  publishing_provider: { label: "Publishing provider", detail: "Provider selection and scoped credentials have not been approved." },
+  external_email: { label: "External email", detail: "In-app notices are active; external delivery remains intentionally unconfigured." },
+  job_recovery: { label: "Job recovery", detail: "Cron-authenticated recovery is deployed; task cadence remains explicitly deferred." },
+};
+
 function normalizeSlug(value: string, fallback: string) {
   const normalized = value
     .toLowerCase()
@@ -74,6 +85,35 @@ export async function getDb() {
     }
   }
   return _db;
+}
+
+export async function listPlatformIntegrationControls() {
+  const db = requireDb(await getDb());
+  const records = await db.select().from(platformIntegrationControls).orderBy(asc(platformIntegrationControls.integrationKey));
+  const recordByKey = new Map(records.map(record => [record.integrationKey, record]));
+  return platformIntegrationKeys.map(key => {
+    const record = recordByKey.get(key);
+    const definition = platformIntegrationDefinitions[key];
+    return {
+      key,
+      label: definition.label,
+      detail: definition.detail,
+      status: (record?.status ?? "unconfigured") as PlatformIntegrationStatus,
+      isEnabled: record?.isEnabled ?? false,
+      reviewNote: record?.reviewNote ?? null,
+      reviewedAt: record?.reviewedAt ?? null,
+    };
+  });
+}
+
+export async function updatePlatformIntegrationControl(input: { integrationKey: PlatformIntegrationKey; status: PlatformIntegrationStatus; isEnabled: boolean; reviewNote: string; reviewedByUserId: number }) {
+  const db = requireDb(await getDb());
+  const reviewedAt = new Date();
+  await db.insert(platformIntegrationControls).values({ ...input, reviewedAt }).onDuplicateKeyUpdate({
+    set: { status: input.status, isEnabled: input.isEnabled, reviewNote: input.reviewNote, reviewedByUserId: input.reviewedByUserId, reviewedAt, updatedAt: reviewedAt },
+  });
+  const record = await db.select().from(platformIntegrationControls).where(eq(platformIntegrationControls.integrationKey, input.integrationKey)).limit(1);
+  return record[0];
 }
 
 export async function upsertUser(user: InsertUser): Promise<void> {

@@ -381,6 +381,27 @@ export const featureFlags = mysqlTable(
   table => [uniqueIndex("feature_flags_workspace_key_unique").on(table.workspaceId, table.key)],
 );
 
+/**
+ * Platform-level integration control state for the private Personal command.
+ * It captures readiness and enablement intent without retaining credentials,
+ * provider tokens, provider operations, or payment data.
+ */
+export const platformIntegrationControls = mysqlTable(
+  "platformIntegrationControls",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    integrationKey: varchar("integrationKey", { length: 80 }).notNull(),
+    status: mysqlEnum("status", ["unconfigured", "reviewed", "ready", "disabled"]).default("unconfigured").notNull(),
+    isEnabled: boolean("isEnabled").default(false).notNull(),
+    reviewNote: text("reviewNote"),
+    reviewedByUserId: int("reviewedByUserId").references(() => users.id),
+    reviewedAt: timestamp("reviewedAt"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  },
+  table => [uniqueIndex("platform_integration_control_key_unique").on(table.integrationKey)],
+);
+
 export const auditLogs = mysqlTable(
   "auditLogs",
   {

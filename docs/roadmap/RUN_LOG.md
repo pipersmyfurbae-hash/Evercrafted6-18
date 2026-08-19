@@ -536,3 +536,30 @@ The completed subscription, usage, and entitlement increment was pushed successf
 ### GitHub synchronization
 
 The workspace identity lifecycle assurance increment was pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `c0191fa` (`test: complete workspace identity assurance`).
+
+## Run EC-RUN-0017 — Owner-only Personal command completion
+
+**Date:** 2026-08-19 EDT
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`
+**Work item:** `EC-P08-ME-001`
+**Objective:** Complete the private Personal command experience with exact-owner operational controls while preserving separate Client workspace boundaries.
+
+| Area | Evidence | Result |
+|---|---|---|
+| Private project control | Typed `personal.createPrivateProject` procedure and `Personal.tsx` | Only the exact platform owner can create a project. The procedure resolves the owner’s personal workspace, checks `project.create` capability and lifecycle/usage policy, records usage after success, and writes `personal.project.created`. |
+| Personal operations dashboard | Existing Personal overview and authenticated visual review | The separate Personal layout shows verified owner state, cross-workspace count and activity, queue/retry/dead-letter/heavy-media signals, private projects, and integration readiness. Client workspace navigation remains excluded. |
+| Integration controls | `platformIntegrationControls`, `personal.updateIntegrationControl`, and UI | The exact owner can persist non-secret status (`unconfigured`, `reviewed`, `ready`, or `disabled`), enablement intent, and an operational note for publishing, email, or recovery. Each update appends `personal.integration.control_updated`; it cannot store credentials, invoke providers, or modify client workspace access. |
+| Dashboard resilience | `Personal.tsx` | The owner dashboard now provides main-overview loading, error/retry, and empty states for recent workspaces, activity, private projects, and integration controls. |
+| Migration evidence | `0003_messy_gambit` and information-schema query | The additive migration applied successfully. Verification returned the expected 9 persisted fields in `platformIntegrationControls`; no test data was inserted. |
+| Regression evidence | `personal.command.contract.test.ts`, `personal.command.ui.contract.test.ts` | Covers personal-workspace project scope, capability/usage/audit side effects, persisted integration control update/audit, loading/error/retry/empty UI states, and existing exact-owner denial coverage. |
+| Validation | `pnpm test`, `pnpm check`, `pnpm build`, authenticated `/personal` review | Passed: 32 Vitest files / 81 tests, TypeScript check, production build, applied migration verification, and visual review. The existing non-blocking client chunk-size advisory remains. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Updated | `drizzle/schema.ts`, `drizzle/meta/*`, `drizzle/0003_messy_gambit.sql` | Defines, generates, and applies the persisted non-secret integration-control state. |
+| Updated | `server/db.ts`, `server/routers.ts` | Adds persisted integration-control helpers, Personal overview state, and exact-owner integration-control update/audit contract. |
+| Updated | `client/src/pages/Personal.tsx` | Adds private projects plus persisted control editing and main dashboard loading/error/retry/empty states. |
+| Updated/created | `server/personal.command.contract.test.ts`, `server/personal.command.ui.contract.test.ts` | Protects owner-only project, usage, audit, integration-control, and UI recovery contracts. |
+| Updated | `docs/quality/TEST_MATRIX.md`, `docs/roadmap/MIGRATION_LEDGER.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Records completion, migration, and validation evidence. |

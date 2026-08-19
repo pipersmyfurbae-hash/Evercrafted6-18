@@ -35,6 +35,7 @@ import {
   listNotificationsForUser,
   notifyWorkspaceMembers,
   listPlatformFeatureFlags,
+  listPlatformIntegrationControls,
   listPlatformWorkspaces,
   listPlans,
   listProjectsForWorkspace,
@@ -56,6 +57,7 @@ import {
   transitionProjectStatus,
   updateUserProfile,
   updateNotificationPreferences,
+  updatePlatformIntegrationControl,
   updateWorkspaceMemberRole,
   type WorkspaceRole,
   writeAuditLog,
@@ -486,7 +488,7 @@ export const appRouter = router({
       const owner = ctx.user;
       if (!owner) throw new TRPCError({ code: "UNAUTHORIZED", message: "Authentication is required" });
       const personalWorkspace = await ensurePersonalWorkspace(owner);
-      const [workspaces, activity, jobHealth, privateProjects] = await Promise.all([listPlatformWorkspaces(), listRecentPlatformActivity(), getBackgroundJobHealth(), listProjectsForWorkspace(personalWorkspace.id)]);
+      const [workspaces, activity, jobHealth, privateProjects, integrationReadiness] = await Promise.all([listPlatformWorkspaces(), listRecentPlatformActivity(), getBackgroundJobHealth(), listProjectsForWorkspace(personalWorkspace.id), listPlatformIntegrationControls()]);
       await writeAuditLog({ actorUserId: owner.id, action: "personal.command_center.overview_viewed", targetType: "command_center" });
       return {
         workspaceCount: workspaces.length,
@@ -495,13 +497,38 @@ export const appRouter = router({
         recentWorkspaces: workspaces.slice(0, 8),
         recentActivity: activity.slice(0, 12),
         jobHealth,
-        integrationReadiness: [
-          { key: "publishing_provider", label: "Publishing provider", status: "unconfigured" as const, detail: "Provider selection and scoped credentials have not been approved." },
-          { key: "external_email", label: "External email", status: "unconfigured" as const, detail: "In-app notices are active; external delivery remains intentionally unconfigured." },
-          { key: "job_recovery", label: "Job recovery", status: "ready" as const, detail: "Cron-authenticated recovery is deployed; task cadence remains explicitly deferred." },
-        ],
+        integrationReadiness,
       };
     }),
+    createPrivateProject: ownerProcedure
+      .input(z.object({ name: z.string().trim().min(2).max(180), description: z.string().trim().max(4000).optional() }))
+      .mutation(async ({ ctx, input }) => {
+        const owner = ctx.user;
+        if (!owner) throw new TRPCError({ code: "UNAUTHORIZED", message: "Authentication is required" });
+        const personalWorkspace = await ensurePersonalWorkspace(owner);
+        await requireWorkspaceCapability(personalWorkspace.id, "project.create");
+        const project = await createProject({ ...input, workspaceId: personalWorkspace.id, createdByUserId: owner.id });
+        await incrementWorkspaceUsage({ workspaceId: personalWorkspace.id, metric: "project.create" });
+        await writeAuditLog({ workspaceId: personalWorkspace.id, actorUserId: owner.id, action: "personal.project.created", targetType: "project", targetId: String(project?.id ?? "") });
+        return project;
+      }),
+    recordIntegrationReview: ownerProcedure
+      .input(z.object({ integrationKey: z.enum(["publishing_provider", "external_email", "job_recovery"]), note: z.string().trim().min(10).max(1000) }))
+      .mutation(async ({ ctx, input }) => {
+        const owner = ctx.user;
+        if (!owner) throw new TRPCError({ code: "UNAUTHORIZED", message: "Authentication is required" });
+        await writeAuditLog({ actorUserId: owner.id, action: "personal.integration.reviewed", targetType: "integration", targetId: input.integrationKey, metadata: { note: input.note } });
+        return { integrationKey: input.integrationKey, recorded: true };
+      }),
+    updateIntegrationControl: ownerProcedure
+      .input(z.object({ integrationKey: z.enum(["publishing_provider", "external_email", "job_recovery"]), status: z.enum(["unconfigured", "reviewed", "ready", "disabled"]), isEnabled: z.boolean(), reviewNote: z.string().trim().min(10).max(1000) }))
+      .mutation(async ({ ctx, input }) => {
+        const owner = ctx.user;
+        if (!owner) throw new TRPCError({ code: "UNAUTHORIZED", message: "Authentication is required" });
+        const control = await updatePlatformIntegrationControl({ ...input, reviewedByUserId: owner.id });
+        await writeAuditLog({ actorUserId: owner.id, action: "personal.integration.control_updated", targetType: "integration", targetId: input.integrationKey, metadata: { status: input.status, isEnabled: input.isEnabled, reviewNote: input.reviewNote } });
+        return control;
+      }),
   }),
 });
 
