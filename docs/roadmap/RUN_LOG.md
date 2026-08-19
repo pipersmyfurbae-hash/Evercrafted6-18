@@ -412,6 +412,10 @@ The durable-job telemetry increment was pushed successfully to `pipersmyfurbae-h
 | Created | `server/entitlement.policy.test.ts` | Typed-router enforcement regression coverage. |
 | Updated | `todo.md` | Tracks the completed enforcement milestone separately from remaining plan/subscription/usage work. |
 
+### GitHub synchronization
+
+The entitlement-enforcement increment was pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `de981de` (`feat: enforce workspace entitlements`).
+
 ### Next actions
 
 The next actions are to refine the Wix CMS foundation with production field types, references, indexes, and Velo data-access policy; transform the hybrid template while removing all template testimonial content; build the custom member dashboard; then complete the remaining test, payment/provider, scheduler, and legacy-source audit work.
