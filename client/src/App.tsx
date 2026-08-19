@@ -20,13 +20,20 @@ import ProjectDetail from "./pages/ProjectDetail";
 import Search from "./pages/Search";
 import Settings from "./pages/Settings";
 import Studio from "./pages/Studio";
+import WreathCreation from "./pages/WreathCreation";
+import WreathPublic from "./pages/WreathPublic";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/product"><Redirect to="/client/capabilities" /></Route>
-      <Route path="/pricing"><Redirect to="/client/access" /></Route>
+      <Route path="/create/:projectId" component={WreathCreation} />
+      <Route path="/create" component={WreathCreation} />
+      <Route path="/how-it-works" component={WreathPublic} />
+      <Route path="/pricing" component={WreathPublic} />
+      <Route path="/signature-wreaths" component={WreathPublic} />
+      <Route path="/moodoor" component={WreathPublic} />
       <Route path="/collections" component={EvercraftedPages} />
       <Route path="/collections/material-studies" component={EvercraftedPages} />
       <Route path="/journal" component={EvercraftedPages} />

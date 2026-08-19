@@ -64,6 +64,8 @@ import {
 } from "./db";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
+import { createSourceGroundedDraft } from "./guidedWreath";
+import { canOpenGuidedWreath, decideGuidedArtifact, getGuidedProjectForWorkspace, getGuidedWreathJourney, saveGroundedDraft, saveGuidedMemory, startGuidedWreathProject } from "./guidedWreathDb";
 import { storageGetSignedUrl, storagePut } from "./storage";
 import { adminProcedure, ownerProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
 
@@ -222,6 +224,51 @@ export const appRouter = router({
         const project = await createProject({ ...input, createdByUserId: ctx.user.id });
         await incrementWorkspaceUsage({ workspaceId: input.workspaceId, metric: "project.create" });
         return project;
+      }),
+  }),
+  guidedWreath: router({
+    start: protectedProcedure
+      .input(z.object({ workspaceId: z.number().int().positive(), name: z.string().trim().min(2).max(180) }))
+      .mutation(async ({ ctx, input }) => {
+        await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: canOpenGuidedWreath });
+        return startGuidedWreathProject({ ...input, createdByUserId: ctx.user.id });
+      }),
+    journey: protectedProcedure
+      .input(z.object({ workspaceId: z.number().int().positive(), projectId: z.number().int().positive() }))
+      .query(async ({ ctx, input }) => {
+        await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: () => true });
+        const project = await getGuidedProjectForWorkspace(input.projectId, input.workspaceId);
+        if (!project) throw new TRPCError({ code: "NOT_FOUND", message: "Guided Wreath project not found in this workspace" });
+        return { project, ...(await getGuidedWreathJourney(project.id)) };
+      }),
+    saveMemory: protectedProcedure
+      .input(z.object({ workspaceId: z.number().int().positive(), projectId: z.number().int().positive(), body: z.string().trim().min(20).max(8000), visibility: z.enum(["private", "private_story_shareable_wreath", "private_link_lookbook", "anonymous_gallery", "public_first_name", "fully_public"]).default("private") }))
+      .mutation(async ({ ctx, input }) => {
+        await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: canOpenGuidedWreath });
+        const project = await getGuidedProjectForWorkspace(input.projectId, input.workspaceId);
+        if (!project) throw new TRPCError({ code: "NOT_FOUND", message: "Guided Wreath project not found in this workspace" });
+        return saveGuidedMemory({ ...input, createdByUserId: ctx.user.id });
+      }),
+    generateDraft: protectedProcedure
+      .input(z.object({ workspaceId: z.number().int().positive(), projectId: z.number().int().positive() }))
+      .mutation(async ({ ctx, input }) => {
+        await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: canOpenGuidedWreath });
+        const project = await getGuidedProjectForWorkspace(input.projectId, input.workspaceId);
+        if (!project) throw new TRPCError({ code: "NOT_FOUND", message: "Guided Wreath project not found in this workspace" });
+        const journey = await getGuidedWreathJourney(project.id);
+        if (!journey.memory) throw new TRPCError({ code: "BAD_REQUEST", message: "Save a memory before creating Your Essence." });
+        const generated = await createSourceGroundedDraft(journey.memory.body);
+        return saveGroundedDraft({ workspaceId: input.workspaceId, projectId: project.id, memoryEntryId: journey.memory.id, createdByUserId: ctx.user.id, ...generated });
+      }),
+    decide: protectedProcedure
+      .input(z.object({ workspaceId: z.number().int().positive(), projectId: z.number().int().positive(), stage: z.enum(["essence", "story"]), entityId: z.number().int().positive(), decision: z.enum(["approved", "revision_requested"]), note: z.string().trim().max(2000).optional() }))
+      .mutation(async ({ ctx, input }) => {
+        await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: canOpenGuidedWreath });
+        const project = await getGuidedProjectForWorkspace(input.projectId, input.workspaceId);
+        if (!project) throw new TRPCError({ code: "NOT_FOUND", message: "Guided Wreath project not found in this workspace" });
+        const result = await decideGuidedArtifact({ ...input, decidedByUserId: ctx.user.id });
+        if (!result) throw new TRPCError({ code: "NOT_FOUND", message: "Guided Wreath artifact not found in this project" });
+        return result;
       }),
   }),
   asset: router({

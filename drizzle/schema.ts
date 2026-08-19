@@ -402,6 +402,156 @@ export const platformIntegrationControls = mysqlTable(
   table => [uniqueIndex("platform_integration_control_key_unique").on(table.integrationKey)],
 );
 
+/**
+ * Guided Wreath Creation is a versioned customer journey layered over the
+ * existing tenant-scoped project model. It deliberately separates the client
+ * memory, interpretation, story, approval, consent, and provenance records so
+ * no generated output may silently rewrite the supplied source material.
+ */
+export const guidedWreathStageValues = ["memory", "essence", "story", "florals", "recipe", "blueprint", "wreath", "outcome"] as const;
+export const guidedStageStatusValues = ["draft", "blocked", "complete"] as const;
+export const guidedApprovalDecisionValues = ["approved", "revision_requested"] as const;
+export const generationSourceValues = ["manual", "model", "fallback"] as const;
+export const consentTypeValues = ["memory", "story", "wreath_image", "lookbook", "marketing", "anonymous_improvement"] as const;
+export const visibilityValues = ["private", "private_story_shareable_wreath", "private_link_lookbook", "anonymous_gallery", "public_first_name", "fully_public"] as const;
+
+export const memoryEntries = mysqlTable(
+  "memoryEntries",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    projectId: int("projectId").notNull().references(() => projects.id),
+    version: int("version").default(1).notNull(),
+    body: text("body").notNull(),
+    visibility: mysqlEnum("visibility", visibilityValues).default("private").notNull(),
+    createdByUserId: int("createdByUserId").notNull().references(() => users.id),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  table => [
+    uniqueIndex("memory_entries_project_version_unique").on(table.projectId, table.version),
+    index("memory_entries_project_created_index").on(table.projectId, table.createdAt),
+  ],
+);
+
+export const essenceProfiles = mysqlTable(
+  "essenceProfiles",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    projectId: int("projectId").notNull().references(() => projects.id),
+    memoryEntryId: int("memoryEntryId").notNull().references(() => memoryEntries.id),
+    version: int("version").default(1).notNull(),
+    status: mysqlEnum("status", ["draft", "approved", "needs_revision"]).default("draft").notNull(),
+    emotionalCenter: varchar("emotionalCenter", { length: 255 }).notNull(),
+    atmosphere: varchar("atmosphere", { length: 255 }).notNull(),
+    movement: varchar("movement", { length: 255 }).notNull(),
+    visualTension: varchar("visualTension", { length: 255 }).notNull(),
+    paletteDirection: varchar("paletteDirection", { length: 255 }).notNull(),
+    expression: text("expression").notNull(),
+    avoidances: json("avoidances").notNull(),
+    sourceGrounding: json("sourceGrounding").notNull(),
+    unsupportedClaims: json("unsupportedClaims").notNull(),
+    generationSource: mysqlEnum("generationSource", generationSourceValues).default("manual").notNull(),
+    createdByUserId: int("createdByUserId").notNull().references(() => users.id),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    approvedAt: timestamp("approvedAt"),
+  },
+  table => [
+    uniqueIndex("essence_profiles_project_version_unique").on(table.projectId, table.version),
+    index("essence_profiles_project_status_index").on(table.projectId, table.status),
+  ],
+);
+
+export const memoryStories = mysqlTable(
+  "memoryStories",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    projectId: int("projectId").notNull().references(() => projects.id),
+    memoryEntryId: int("memoryEntryId").notNull().references(() => memoryEntries.id),
+    essenceProfileId: int("essenceProfileId").notNull().references(() => essenceProfiles.id),
+    version: int("version").default(1).notNull(),
+    status: mysqlEnum("status", ["draft", "approved", "needs_revision"]).default("draft").notNull(),
+    excerpt: text("excerpt").notNull(),
+    body: text("body").notNull(),
+    designSignals: json("designSignals").notNull(),
+    sourceGrounding: json("sourceGrounding").notNull(),
+    unsupportedClaims: json("unsupportedClaims").notNull(),
+    generationSource: mysqlEnum("generationSource", generationSourceValues).default("manual").notNull(),
+    createdByUserId: int("createdByUserId").notNull().references(() => users.id),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    approvedAt: timestamp("approvedAt"),
+  },
+  table => [
+    uniqueIndex("memory_stories_project_version_unique").on(table.projectId, table.version),
+    index("memory_stories_project_status_index").on(table.projectId, table.status),
+  ],
+);
+
+export const guidedStageStates = mysqlTable(
+  "guidedStageStates",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    projectId: int("projectId").notNull().references(() => projects.id),
+    currentStage: mysqlEnum("currentStage", guidedWreathStageValues).default("memory").notNull(),
+    status: mysqlEnum("status", guidedStageStatusValues).default("draft").notNull(),
+    blockReason: text("blockReason"),
+    updatedByUserId: int("updatedByUserId").notNull().references(() => users.id),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  },
+  table => [uniqueIndex("guided_stage_states_project_unique").on(table.projectId)],
+);
+
+export const stageApprovals = mysqlTable(
+  "stageApprovals",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    projectId: int("projectId").notNull().references(() => projects.id),
+    stage: mysqlEnum("stage", guidedWreathStageValues).notNull(),
+    entityType: varchar("entityType", { length: 80 }).notNull(),
+    entityId: int("entityId").notNull(),
+    entityVersion: int("entityVersion").notNull(),
+    decision: mysqlEnum("decision", guidedApprovalDecisionValues).notNull(),
+    note: text("note"),
+    decidedByUserId: int("decidedByUserId").notNull().references(() => users.id),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  table => [
+    index("stage_approvals_project_stage_index").on(table.projectId, table.stage, table.createdAt),
+    index("stage_approvals_entity_index").on(table.entityType, table.entityId),
+  ],
+);
+
+export const memoryThreadEvents = mysqlTable(
+  "memoryThreadEvents",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    projectId: int("projectId").notNull().references(() => projects.id),
+    stage: mysqlEnum("stage", guidedWreathStageValues).notNull(),
+    sourceType: varchar("sourceType", { length: 80 }).notNull(),
+    sourceId: int("sourceId").notNull(),
+    sourceVersion: int("sourceVersion").notNull(),
+    summary: text("summary").notNull(),
+    isDirectSource: boolean("isDirectSource").default(false).notNull(),
+    createdByUserId: int("createdByUserId").notNull().references(() => users.id),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  table => [index("memory_thread_events_project_created_index").on(table.projectId, table.createdAt)],
+);
+
+export const memoryConsents = mysqlTable(
+  "memoryConsents",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    projectId: int("projectId").notNull().references(() => projects.id),
+    consentType: mysqlEnum("consentType", consentTypeValues).notNull(),
+    isGranted: boolean("isGranted").default(false).notNull(),
+    visibility: mysqlEnum("visibility", visibilityValues).default("private").notNull(),
+    decidedByUserId: int("decidedByUserId").notNull().references(() => users.id),
+    decidedAt: timestamp("decidedAt").defaultNow().notNull(),
+    revokedAt: timestamp("revokedAt"),
+  },
+  table => [uniqueIndex("memory_consents_project_type_unique").on(table.projectId, table.consentType)],
+);
+
 export const auditLogs = mysqlTable(
   "auditLogs",
   {

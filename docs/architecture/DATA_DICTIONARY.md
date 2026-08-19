@@ -1,6 +1,6 @@
 # Evercrafted Canonical Data Dictionary
 
-> **Verification status:** Verified against `drizzle/schema.ts` and the generated Drizzle artifacts through `0003_messy_gambit` on 2026-08-19. The migration ledger is the application-history companion to this dictionary.
+> **Verification status:** Verified against `drizzle/schema.ts` and the generated Drizzle artifacts through `0004_certain_blonde_phantom` on 2026-08-19. The migration ledger is the application-history companion to this dictionary.
 
 | Entity | Scope | Purpose and primary relationship | Sensitive or controlled data | Migration state |
 |---|---|---|---|---|
@@ -24,6 +24,13 @@
 | `workspaceEntitlements` | Tenant | Evaluated capability and optional usage-limit record | Capability status only | Foundation |
 | `featureFlags` | Platform/tenant | Global or workspace-scoped feature switch | Flag description and scope | Foundation |
 | `platformIntegrationControls` | Platform | Exact-owner managed non-secret readiness and enablement intent | Review note and reviewer identity; never credentials/tokens | `0003_messy_gambit` |
+| `memoryEntries` | Tenant/project | Versioned client-provided source memory for Guided Wreath Creation | Private memory body and chosen visibility; never silently repurposed as public content | `0004_certain_blonde_phantom` |
+| `essenceProfiles` | Tenant/project | Versioned, client-reviewable interpretation of a memory before Story or material selection | Grounding evidence, unsupported-claim flags, generation source, approval state | `0004_certain_blonde_phantom` |
+| `memoryStories` | Tenant/project | Versioned Memory Story and abstract Design Signals linked to an approved Essence source | Story body, grounding evidence, unsupported-claim flags, generation source, approval state; no direct inventory or construction data | `0004_certain_blonde_phantom` |
+| `guidedStageStates` | Tenant/project | Current guided Wreath stage and explicit dependency block reason | Stage navigation and block explanation; never a client-side-only authority | `0004_certain_blonde_phantom` |
+| `stageApprovals` | Tenant/project | Append-only decision for a particular version of an Essence or Story artifact | Decision note, actor, entity/version relationship | `0004_certain_blonde_phantom` |
+| `memoryThreadEvents` | Tenant/project | Expandable source-to-interpretation provenance trail across guided stages | Source type/version, direct-source marker, concise event summary | `0004_certain_blonde_phantom` |
+| `memoryConsents` | Tenant/project | Separately revocable consent and visibility setting for memory, story, wreath image, Lookbook, marketing, and anonymous improvement | Consent decision, visibility, decision/revocation time; no implied publishing permission | `0004_certain_blonde_phantom` |
 | `auditLogs` | Tenant/platform | Append-only security and business-action record | Actor/target metadata minimized | Foundation |
 | `leads` | Platform | Consent-based public interest submission | Email, optional name, stated interest | Foundation |
 
@@ -31,4 +38,4 @@
 
 Every tenant-bound record must preserve its workspace relationship, and repository procedures must apply tenant/role policy before data access. Files are stored in S3 with metadata only in the database. Payment data, provider credentials, and customer-generated reviews, ratings, testimonials, or endorsements are outside this schema and fixture model.
 
-Each persistent change requires a schema update, generated Drizzle migration, SQL review, managed application, journal/snapshot artifact, ledger entry, repository policy, deterministic test evidence, and this dictionary update.
+Each persistent change requires a schema update, generated Drizzle migration, SQL review, managed application, journal/snapshot artifact, ledger entry, repository policy, deterministic test evidence, and this dictionary update. Guided Wreath data adds a stricter rule: a client’s memory is private source material by default; an interpretation or Story must retain its source/approval version; and sharing a wreath never implies consent to publish the memory.

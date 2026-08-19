@@ -830,3 +830,38 @@ The validated Wix CMS refinement-boundary increment was committed and pushed suc
 ### GitHub synchronization
 
 The repository evidence for this approved live data operation was committed and pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `03af73b` (`docs: record first studio project walkthrough`).
+
+## Run EC-RUN-0028 — Authoritative Evercrafted product correction, Checkpoint A
+
+**Date:** 2026-08-19 EDT
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`
+**Work items:** `EC-CORRECT-001`, `EC-CORRECT-006`
+**Objective:** Correct the managed application from generic project/Studio product framing to the user-supplied Evercrafted memory-to-wreath architecture, then implement and present the first Guided Journey Shell only.
+
+| Area | Evidence and result |
+|---|---|
+| Source authority | Reviewed the supplied master handoff and extracted console, Moodoor, pipeline, showcase, and wreath packages without executing uploaded code. Repository records now preserve the required product sequence, route map, source-package disposition, and delivery gates. |
+| Public product correction | The live public site now visibly offers **Create From a Memory**, **Signature Wreaths**, **Moodoor**, and **How It Works**. The generic public workspace narrative is no longer the primary Evercrafted entry. Pricing/access is visible but makes no unconfigured commercial claim. |
+| Guided Journey Shell | `/create` opens a private workspace project entry and `/create/:projectId` supplies Memory, Essence, Story, Florals, Recipe, Blueprint, Wreath, and Outcome progress. Only Memory, source-grounded Essence, and Story are actionable in Checkpoint A; later stages explain their exact dependency rather than displaying simulated materials or outcomes. |
+| Source grounding | The server-side structured-output service uses the live model catalog, records direct source details, flags unverified details and unsupported biographical claims, labels fallback output, and blocks approval until flagged claims are resolved. It never selects florals, materials, quantities, recipe items, or construction details. |
+| Persistence and policy | Applied reviewed additive Drizzle migration `0004_certain_blonde_phantom`: `memoryEntries` (7 columns), `essenceProfiles` (18), `memoryStories` (15), `guidedStageStates` (8), `stageApprovals` (10), `memoryThreadEvents` (10), and `memoryConsents` (8). Every typed procedure checks existing workspace membership and project scope before use; private memory, approval, consent, and provenance records are auditable. |
+| Moodoor boundary | The public Moodoor entry states the correct **render → upload → analyze → package → publish** pipeline but does not expose a false upload/analysis flow. Its restoration follows customer-shell review and must preserve safe source-render, provenance, package, and publication boundaries. |
+| Visual review | Desktop captures of `/`, `/how-it-works`, `/create`, `/moodoor`, and `/pricing` render the corrected public information architecture and authenticated project-start state. |
+| Validation | `pnpm test` passed: 48 Vitest files / 122 tests. `pnpm check` and `pnpm build` passed. Database verification returned all seven new tables with expected column counts. The production build retains only the existing non-blocking client-chunk-size advisory. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Created | `docs/architecture/AUTHORITATIVE_PRODUCT_HANDOFF_INVENTORY.md` | Source-of-truth contract and supplied-package disposition. |
+| Created | `docs/roadmap/AUTHORITATIVE_PRODUCT_CORRECTION_PLAN.md` | Current/target reconciliation, Checkpoint A scope, and staged gate plan. |
+| Created | `drizzle/0004_certain_blonde_phantom.sql` | Reviewed additive Guided Wreath persistence migration. |
+| Created | `server/guidedWreath.ts`, `server/guidedWreathDb.ts` | Source-grounded draft service and tenant-scoped Guided Wreath persistence. |
+| Created | `client/src/pages/WreathCreation.tsx`, `client/src/pages/WreathPublic.tsx` | Guided customer shell and corrected public product routes. |
+| Created | `server/guided.wreath.grounding.test.ts`, `server/authoritative.product.correction.contract.test.ts` | Grounding and authoritative-product regression evidence. |
+| Updated | `drizzle/schema.ts`, `server/routers.ts`, `client/src/App.tsx`, `client/src/pages/Home.tsx` | Guided data/API/route integration and visible public entry correction. |
+| Updated | `docs/architecture/DATA_DICTIONARY.md`, `docs/roadmap/MIGRATION_LEDGER.md`, `docs/quality/TEST_MATRIX.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Schema, validation, scope-change, and delivery evidence. |
+
+### GitHub synchronization
+
+The validated Checkpoint A correction increment is pending commit and push to `pipersmyfurbae-hash/Evercrafted6-18` on `main`.
