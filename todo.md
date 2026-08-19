@@ -10,7 +10,7 @@
 - [x] EC-P03-AUD-001 Implement auditable activity and sensitive support-action records.
 - [x] EC-P05-PUB-001 Build the responsive Evercrafted public landing, product, pricing, and lead-capture pages with an authenticated onboarding path.
 - [x] EC-P05-ONB-001 Build authenticated onboarding that creates or opens a personal workspace and supports organization workspace creation.
-- [ ] EC-P05-APP-001 Build the authenticated SaaS workspace shell with context-safe navigation, workspace switcher, project list/detail, global search, notifications, profile, and settings states. (Navigation, switcher, projects, search, notifications, and settings are complete; a profile management page remains.)
+- [x] EC-P05-APP-001 Build the authenticated SaaS workspace shell with context-safe navigation, workspace switcher, project list/detail, global search, notifications, profile, and settings states.
 - [ ] EC-P06-UX-001 Build the Moodoor Studio shell with studio project navigation, creation, review, approval, delivery, and publishing flows. (Navigation, review, approval, and delivery preparation are complete; provider-neutral publishing handoff remains.)
 - [ ] EC-P04-STO-001 Implement tenant-scoped S3-backed asset metadata, governed upload intent, asset versioning, and signed-access policy. (Upload, S3 metadata, initial v1 records, and signed access are complete; subsequent versions and history UI remain.)
 - [ ] EC-P04-WF-001 Implement shared project/studio workflow statuses, review, approval, assignment, delivery, and audit events. (Statuses, reviews, approvals, delivery, and audits are complete; reviewer/member assignment interface remains.)
@@ -27,7 +27,7 @@
 - [ ] EC-P11-GOV-001 Update all documentation, test evidence, affected-file inventory, and this TODO checklist after each execution run; commit and push the synchronized increment to GitHub. (EC-RUN-0002 was synchronized; this remains an ongoing delivery control.)
 - [x] EC-P11-GOV-002 Commit and push the initial governance-document set and first validated implementation increment to the designated GitHub branch, recording the commit ID and push result in RUN_LOG.md.
 - [ ] EC-P02-DB-002 Generate, review, and test Drizzle migration artifacts using the documented database workflow; record executable migration evidence.
-- [ ] EC-P05-PROFILE-001 Build authenticated profile view and editing with loading, error, and success states.
+- [x] EC-P05-PROFILE-001 Build authenticated profile view and editing with loading, error, and success states.
 - [ ] EC-P06-PUB-001 Build a provider-neutral Studio publishing handoff flow and audit event without enabling an external provider until separately approved.
 - [ ] EC-P04-STO-002 Add tenant-scoped asset re-upload/new-version creation, version history query, and Studio version history UI.
 - [ ] EC-P04-WF-002 Add assigned reviewer/member selection and assignment state UI for Studio review workflow.

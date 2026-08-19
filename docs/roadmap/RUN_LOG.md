@@ -150,6 +150,31 @@ The reconciled source history and validated unified-platform increment were push
 
 The protected-workspace test increment was pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `b886c29` (`test: cover protected workspace router policies`).
 
+## Run EC-RUN-0004 — Authenticated profile-management completion
+
+**Date:** 2026-08-19 EDT  
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`  
+**Work items:** `EC-P05-PROFILE-001`, `EC-P05-APP-001`  
+**Objective:** Complete the Client workspace profile-management form with explicit operational states, typed persistence, and identity-cache refresh.
+
+| Area | Evidence | Result |
+|---|---|---|
+| Loading and recovery | `client/src/pages/Profile.tsx` | Profile loading state and profile-query retry control are explicit. |
+| Form behavior | `client/src/pages/Profile.tsx` | Name and optional email validation, pending submit state, mutation error state, and success announcement are explicit and keyboard-submittable. |
+| Identity coherence | Typed profile mutation plus `utils.auth.me.invalidate()` | The signed-in identity cache is invalidated after a successful profile update; server writes a profile audit record. |
+| Regression coverage | `server/profile.page.contract.test.ts` and existing profile router test | UI-state contract and typed update/audit behavior are covered. |
+| Browser review | Anonymous `/profile` preview | Protected route resolves to the existing Client sign-in state without exposing profile information. Authenticated form state is covered by the component contract and typed mutation test. |
+| Validation | `pnpm test`, `pnpm check`, `pnpm build` | Passed: 9 Vitest files / 23 tests, TypeScript check, and production build. The existing non-blocking client-chunk-size advisory remains. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Updated | `client/src/pages/Profile.tsx` | Accessible profile form with loading, retry, validation, pending, error, and success states. |
+| Created | `server/profile.page.contract.test.ts` | Regression checks for profile UX states and identity-cache invalidation. |
+| Updated | `docs/quality/TEST_MATRIX.md` | Records profile-management evidence. |
+| Updated | `todo.md` | Marks completed profile and Client workspace shell work. |
+
 ### Next actions
 
 The next actions are to refine the Wix CMS foundation with production field types, references, indexes, and Velo data-access policy; transform the hybrid template while removing all template testimonial content; build the custom member dashboard; then complete the remaining test, payment/provider, scheduler, and legacy-source audit work.
