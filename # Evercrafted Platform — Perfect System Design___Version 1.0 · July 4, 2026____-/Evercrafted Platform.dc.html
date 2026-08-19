@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,300;1,6..72,400&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  @keyframes ec-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+</style>
+</helmet>
+<x-import component-from-global-scope="image-slot" from="./image-slot.js"></x-import>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+  <!-- ============ 1. TITLE ============ -->
+  <section data-label="Title" data-screen-label="01 Title" data-speaker-notes="The thesis in one line: one engine, three surfaces. Everything downstream is a consequence of this compression." style="width:100%;height:100%;background:#221E17;color:#F4EFE6;font-family:'Instrument Sans',sans-serif;padding:96px 110px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:0;right:0;width:44%;height:100%;opacity:0.5;">
+      <image-slot id="ec-title-atmos" style="width:100%;height:100%;" shape="rect" fit="cover" placeholder="atmospheric signal image"></image-slot>
+    </div>
+    <div style="position:absolute;top:0;right:0;width:52%;height:100%;background:linear-gradient(90deg,#221E17 6%,rgba(34,30,23,0.35) 60%,rgba(34,30,23,0) 100%);pointer-events:none;"></div>
+    <div style="position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;letter-spacing:0.28em;text-transform:uppercase;color:#B5623C;">Evercrafted Platform</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;letter-spacing:0.22em;text-transform:uppercase;color:#8B8172;">System Design · v1.0</span>
+    </div>
+    <div style="position:relative;z-index:2;max-width:1020px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:15px;letter-spacing:0.2em;text-transform:uppercase;color:#8B8172;margin-bottom:28px;">The Perfect System</div>
+      <h1 style="font-family:'Newsreader',serif;font-weight:400;font-size:132px;line-height:0.96;letter-spacing:-0.02em;margin:0;">One engine.<br><span style="font-style:italic;color:#C8895F;">Three surfaces.</span></h1>
+      <p style="font-family:'Newsreader',serif;font-weight:300;font-size:30px;line-height:1.5;color:#D8D0C2;max-width:720px;margin:38px 0 0;">Not a larger version of what you have — a simpler one. One pipeline instead of three. One database instead of two. One AI backbone, and three faces that all draw from the same deterministic engine.</p>
+    </div>
+    <div style="position:relative;z-index:2;display:flex;gap:56px;font-family:'IBM Plex Mono',monospace;font-size:14px;letter-spacing:0.16em;text-transform:uppercase;color:#8B8172;">
+      <span>moodoor.com</span><span>studio.evercrafted.com</span><span>foundry.evercrafted.com</span>
+    </div>
+  </section>
+
+  <!-- ============ 2. THE INSIGHT ============ -->
+  <section data-label="The Insight" data-screen-label="02 Insight" data-speaker-notes="Moodoor and Evercrafted were never two products. Consumer face and creator face of one engine." style="width:100%;height:100%;background:#F4EFE6;color:#2A241C;font-family:'Instrument Sans',sans-serif;padding:96px 110px;display:flex;flex-direction:column;justify-content:center;position:relative;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;letter-spacing:0.24em;text-transform:uppercase;color:#B5623C;">The central insight</span>
+    <h2 style="font-family:'Newsreader',serif;font-weight:400;font-size:76px;line-height:1.08;letter-spacing:-0.015em;max-width:1360px;margin:30px 0 0;">Moodoor and Evercrafted are not two products. They are the <span style="font-style:italic;color:#B5623C;">consumer face</span> and the <span style="font-style:italic;color:#6E7A55;">creator face</span> of the same engine.</h2>
+    <p style="font-family:'Newsreader',serif;font-weight:300;font-size:28px;line-height:1.55;color:#5B5245;max-width:980px;margin:40px 0 0;">The engine is the platform. The surfaces are how different audiences access it. What the perfect system adds is compression — the reduction of parallel systems into one coherent mechanism that feels like a single thing from every side.</p>
+    <div style="position:absolute;bottom:80px;left:110px;font-family:'IBM Plex Mono',monospace;font-size:14px;letter-spacing:0.18em;color:#A79C8B;">02</div>
+  </section>
+
+  <!-- ============ 3. THREE SURFACES ============ -->
+  <section data-label="Three Surfaces" data-screen-label="03 Surfaces" data-speaker-notes="Same engine, three access patterns: consumer commerce, creator SaaS, blueprint marketplace." style="width:100%;height:100%;background:#F4EFE6;color:#2A241C;font-family:'Instrument Sans',sans-serif;padding:84px 110px;display:flex;flex-direction:column;position:relative;">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;">
+      <div>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;letter-spacing:0.24em;text-transform:uppercase;color:#B5623C;">The three surfaces</span>
+        <h2 style="font-family:'Newsreader',serif;font-weight:400;font-size:60px;line-height:1;letter-spacing:-0.015em;margin:18px 0 0;">Three faces of one engine</h2>
+      </div>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;letter-spacing:0.18em;color:#A79C8B;">03</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:30px;margin-top:56px;flex:1;">
+      <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:44px 38px;display:flex;flex-direction:column;">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:0.16em;color:#B5623C;">moodoor.com</span>
+        <h3 style="font-family:'Newsreader',serif;font-weight:400;font-size:44px;margin:16px 0 6px;">Moodoor</h3>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:#8B8172;margin-bottom:22px;">B2C emotional commerce</div>
+        <p style="font-family:'Newsreader',serif;font-weight:300;font-size:22px;line-height:1.5;color:#5B5245;margin:0 0 24px;">Consumers don't browse a catalog — they give a memory and receive a wreath. Discovery is emotional. Navigation is by territory, not SKU. Purchase under five taps.</p>
+        <div style="margin-top:auto;display:flex;flex-direction:column;gap:10px;font-family:'Instrument Sans',sans-serif;font-size:16px;color:#403A30;">
+          <span>· One atmospheric signal, one input</span>
+          <span>· 3-second EVS analysis → territory reveal</span>
+          <span>· Drop culture, waitlists, scarcity</span>
+        </div>
+      </div>
+      <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:44px 38px;display:flex;flex-direction:column;">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:0.16em;color:#6E7A55;">studio.evercrafted.com</span>
+        <h3 style="font-family:'Newsreader',serif;font-weight:400;font-size:44px;margin:16px 0 6px;">Studio</h3>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:#8B8172;margin-bottom:22px;">Creator SaaS &amp; design OS</div>
+        <p style="font-family:'Newsreader',serif;font-weight:300;font-size:22px;line-height:1.5;color:#5B5245;margin:0 0 24px;">For wreath makers, Etsy sellers, and stylists. Client intake → EVS → blueprint → render prompt → build guide → delivery. Four subscription tiers.</p>
+        <div style="margin-top:auto;display:flex;flex-direction:column;gap:10px;font-family:'Instrument Sans',sans-serif;font-size:16px;color:#403A30;">
+          <span>· Operator console: queue, generator, tracker</span>
+          <span>· MakerStudio polar PIE canvas (R1–R18)</span>
+          <span>· Live 6-metric scoring radar</span>
+        </div>
+      </div>
+      <div style="background:#221E17;color:#EDE6D8;border:1px solid #221E17;border-radius:4px;padding:44px 38px;display:flex;flex-direction:column;">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:0.16em;color:#C8895F;">foundry.evercrafted.com</span>
+        <h3 style="font-family:'Newsreader',serif;font-weight:400;font-size:44px;margin:16px 0 6px;">The Foundry</h3>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:#9A9080;margin-bottom:22px;">Blueprint marketplace</div>
+        <p style="font-family:'Newsreader',serif;font-weight:300;font-size:22px;line-height:1.5;color:#CFC7B9;margin:0 0 24px;">Makers publish blueprints; consumers buy to build or commission. Stripe Connect automates royalties. The Genome string is the portable design fingerprint.</p>
+        <div style="margin-top:auto;display:flex;flex-direction:column;gap:10px;font-family:'Instrument Sans',sans-serif;font-size:16px;color:#BCB2A2;">
+          <span>· 15% platform / 85% creator</span>
+          <span>· WGS genome: shareable, remixable</span>
+          <span>· Attribution built into the string</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. THE PIPELINE ============ -->
+  <section data-label="Engine Pipeline" data-screen-label="04 Pipeline" data-speaker-notes="Four stages. All deterministic except Stage 1. Claude touches only 1 and 3 — never coordinates." style="width:100%;height:100%;background:#F4EFE6;color:#2A241C;font-family:'Instrument Sans',sans-serif;padding:84px 110px;display:flex;flex-direction:column;position:relative;">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;">
+      <div>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;letter-spacing:0.24em;text-transform:uppercase;color:#B5623C;">The engine pipeline</span>
+        <h2 style="font-family:'Newsreader',serif;font-weight:400;font-size:60px;line-height:1;letter-spacing:-0.015em;margin:18px 0 0;">Emotion in, product out</h2>
+      </div>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;letter-spacing:0.18em;color:#A79C8B;">04</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:20px;margin-top:60px;flex:1;">
+      <div style="display:flex;flex-direction:column;background:#FBF7EF;border:1px solid #E0D6C4;border-top:3px solid #B5623C;border-radius:4px;padding:36px 30px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-family:'Newsreader',serif;font-size:56px;color:#E0D6C4;line-height:1;">01</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:#B5623C;background:#F1E4D8;padding:5px 10px;border-radius:3px;">Claude API</span></div>
+        <h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:30px;margin:22px 0 10px;">EVS Core</h3>
+        <p style="font-family:'Instrument Sans',sans-serif;font-size:16px;line-height:1.5;color:#5B5245;margin:0;">Any emotional signal → EVSVector (7 dims) + territory + composition formula. Emotion tags and narrative only.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;background:#FBF7EF;border:1px solid #E0D6C4;border-top:3px solid #6E7A55;border-radius:4px;padding:36px 30px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-family:'Newsreader',serif;font-size:56px;color:#E0D6C4;line-height:1;">02</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:#6E7A55;background:#E8ECDD;padding:5px 10px;border-radius:3px;">Deterministic</span></div>
+        <h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:30px;margin:22px 0 10px;">Blueprint / PIE</h3>
+        <p style="font-family:'Instrument Sans',sans-serif;font-size:16px;line-height:1.5;color:#5B5245;margin:0;">Vector + formula + seed → EC_WR_V2 JSON. Mulberry32 seeding. R1–R18 place every stem. Same seed, same layout.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;background:#FBF7EF;border:1px solid #E0D6C4;border-top:3px solid #B5623C;border-radius:4px;padding:36px 30px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-family:'Newsreader',serif;font-size:56px;color:#E0D6C4;line-height:1;">03</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:#8B8172;background:#EDE6D8;padding:5px 10px;border-radius:3px;">AI + det.</span></div>
+        <h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:30px;margin:22px 0 10px;">Output Pipeline</h3>
+        <p style="font-family:'Instrument Sans',sans-serif;font-size:16px;line-height:1.5;color:#5B5245;margin:0;">One blueprint → four parallel artifacts: render prompt, build-guide PDF, genome string, listing copy.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;background:#FBF7EF;border:1px solid #E0D6C4;border-top:3px solid #6E7A55;border-radius:4px;padding:36px 30px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-family:'Newsreader',serif;font-size:56px;color:#E0D6C4;line-height:1;">04</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:#6E7A55;background:#E8ECDD;padding:5px 10px;border-radius:3px;">Deterministic</span></div>
+        <h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:30px;margin:22px 0 10px;">Commerce</h3>
+        <p style="font-family:'Instrument Sans',sans-serif;font-size:16px;line-height:1.5;color:#5B5245;margin:0;">Product + payment intent → fulfilled order. Stripe, Stripe Connect, signed-URL delivery, ShipStation labels.</p>
+      </div>
+    </div>
+    <p style="font-family:'IBM Plex Mono',monospace;font-size:15px;letter-spacing:0.06em;color:#8B8172;margin:40px 0 0;">Claude API touches only Stage 1 and Stage 3 — the language outputs. It never outputs coordinates.</p>
+  </section>
+
+  <!-- ============ 5. STAGE 1 EVS CORE ============ -->
+  <section data-label="Stage 1 · EVS" data-screen-label="05 Stage 1" data-speaker-notes="The only AI-interpretation stage. Seven dimensions, six territories, twelve formulas." style="width:100%;height:100%;background:#F4EFE6;color:#2A241C;font-family:'Instrument Sans',sans-serif;padding:84px 110px;display:flex;flex-direction:column;position:relative;">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;">
+      <div>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;letter-spacing:0.24em;text-transform:uppercase;color:#B5623C;">Stage 1 · EVS Core · Claude API</span>
+        <h2 style="font-family:'Newsreader',serif;font-weight:400;font-size:56px;line-height:1;letter-spacing:-0.015em;margin:18px 0 0;">The system reads the feeling</h2>
+      </div>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;letter-spacing:0.18em;color:#A79C8B;">05</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:34px;margin-top:52px;flex:1;">
+      <div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:#8B8172;margin-bottom:20px;">EVSVector · 7 dimensions</div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="display:flex;align-items:center;gap:14px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:15px;width:96px;color:#403A30;">warmth</span><div style="flex:1;height:8px;background:#E4DACA;border-radius:4px;overflow:hidden;"><div style="width:82%;height:100%;background:#B5623C;"></div></div></div>
+          <div style="display:flex;align-items:center;gap:14px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:15px;width:96px;color:#403A30;">energy</span><div style="flex:1;height:8px;background:#E4DACA;border-radius:4px;overflow:hidden;"><div style="width:38%;height:100%;background:#B5623C;"></div></div></div>
+          <div style="display:flex;align-items:center;gap:14px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:15px;width:96px;color:#403A30;">nostalgia</span><div style="flex:1;height:8px;background:#E4DACA;border-radius:4px;overflow:hidden;"><div style="width:91%;height:100%;background:#6E7A55;"></div></div></div>
+          <div style="display:flex;align-items:center;gap:14px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:15px;width:96px;color:#403A30;">valence</span><div style="flex:1;height:8px;background:#E4DACA;border-radius:4px;overflow:hidden;"><div style="width:64%;height:100%;background:#B5623C;"></div></div></div>
+          <div style="display:flex;align-items:center;gap:14px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:15px;width:96px;color:#403A30;">intimacy</span><div style="flex:1;height:8px;background:#E4DACA;border-radius:4px;overflow:hidden;"><div style="width:74%;height:100%;background:#6E7A55;"></div></div></div>
+          <div style="display:flex;align-items:center;gap:14px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:15px;width:96px;color:#403A30;">restraint</span><div style="flex:1;height:8px;background:#E4DACA;border-radius:4px;overflow:hidden;"><div style="width:88%;height:100%;background:#6E7A55;"></div></div></div>
+          <div style="display:flex;align-items:center;gap:14px;"><span style="font-family:'IBM Plex Mono',monospace;font-size:15px;width:96px;color:#403A30;">seasonal</span><div style="flex:1;height:8px;background:#E4DACA;border-radius:4px;overflow:hidden;"><div style="width:70%;height:100%;background:#B5623C;"></div></div></div>
+        </div>
+        <p style="font-family:'Instrument Sans',sans-serif;font-size:15px;line-height:1.5;color:#8B8172;margin:22px 0 0;">Each dimension 0.0–1.0. Extracted from memory text, mood keywords, occasion, image, or seasonal intent.</p>
+      </div>
+      <div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:#8B8172;margin-bottom:20px;">6 emotional territories</div>
+        <div style="display:flex;flex-direction:column;gap:11px;">
+          <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:14px 18px;display:flex;gap:14px;align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#B5623C;">I</span><span style="font-family:'Newsreader',serif;font-size:24px;">Comfort</span></div>
+          <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:14px 18px;display:flex;gap:14px;align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#B5623C;">II</span><span style="font-family:'Newsreader',serif;font-size:24px;">Celebration</span></div>
+          <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:14px 18px;display:flex;gap:14px;align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#B5623C;">III</span><span style="font-family:'Newsreader',serif;font-size:24px;">Remembrance</span></div>
+          <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:14px 18px;display:flex;gap:14px;align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#6E7A55;">IV</span><span style="font-family:'Newsreader',serif;font-size:24px;">Renewal</span></div>
+          <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:14px 18px;display:flex;gap:14px;align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#6E7A55;">V</span><span style="font-family:'Newsreader',serif;font-size:24px;">Connection</span></div>
+          <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:14px 18px;display:flex;gap:14px;align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#6E7A55;">VI</span><span style="font-family:'Newsreader',serif;font-size:24px;">Seasonal Nostalgia</span></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:#8B8172;margin-bottom:20px;">12 canonical formulas</div>
+        <div style="display:flex;flex-wrap:wrap;gap:9px;">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;background:#FBF7EF;border:1px solid #E0D6C4;border-radius:20px;padding:9px 16px;">Crescent</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;background:#FBF7EF;border:1px solid #E0D6C4;border-radius:20px;padding:9px 16px;">Side Sweep</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;background:#FBF7EF;border:1px solid #E0D6C4;border-radius:20px;padding:9px 16px;">Bottom Heavy</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;background:#FBF7EF;border:1px solid #E0D6C4;border-radius:20px;padding:9px 16px;">Diagonal Flow</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;background:#FBF7EF;border:1px solid #E0D6C4;border-radius:20px;padding:9px 16px;">Twin Cluster</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;background:#FBF7EF;border:1px solid #E0D6C4;border-radius:20px;padding:9px 16px;">Corner Cluster</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;background:#FBF7EF;border:1px solid #E0D6C4;border-radius:20px;padding:9px 16px;">Wild Asymmetry</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;background:#FBF7EF;border:1px solid #E0D6C4;border-radius:20px;padding:9px 16px;">Half Ring</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;background:#FBF7EF;border:1px solid #E0D6C4;border-radius:20px;padding:9px 16px;">Top Cluster</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;background:#FBF7EF;border:1px solid #E0D6C4;border-radius:20px;padding:9px 16px;">Spiral Flow</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;background:#FBF7EF;border:1px solid #E0D6C4;border-radius:20px;padding:9px 16px;">Classic Balanced</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;background:#FBF7EF;border:1px solid #E0D6C4;border-radius:20px;padding:9px 16px;">Garden Scatter</span>
+        </div>
+        <div style="margin-top:26px;background:#221E17;color:#CFC7B9;border-radius:4px;padding:20px 22px;font-family:'IBM Plex Mono',monospace;font-size:14px;line-height:1.6;">signal → <span style="color:#C8895F;">EVSVector</span> → territory → <span style="color:#9BA879;">formula</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. CARDINAL RULE (divider) ============ -->
+  <section data-label="Cardinal Rule" data-screen-label="06 Cardinal Rule" data-speaker-notes="The single load-bearing constraint. AI never crosses into geometry." style="width:100%;height:100%;background:#221E17;color:#F4EFE6;font-family:'Instrument Sans',sans-serif;padding:96px 110px;display:flex;flex-direction:column;justify-content:center;position:relative;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;letter-spacing:0.26em;text-transform:uppercase;color:#C8895F;">The cardinal rule</span>
+    <h2 style="font-family:'Newsreader',serif;font-weight:400;font-size:104px;line-height:1.02;letter-spacing:-0.02em;margin:34px 0 0;max-width:1400px;">AI interprets emotion.<br><span style="font-style:italic;color:#9BA879;">Geometry places.</span></h2>
+    <p style="font-family:'Newsreader',serif;font-weight:300;font-size:30px;line-height:1.5;color:#CFC7B9;max-width:900px;margin:42px 0 0;">Two separate processes that never cross. Claude reads the feeling and names it. The deterministic engine — Mulberry32-seeded, R1–R18 governed — decides where every stem goes. Same seed, same layout, always.</p>
+    <div style="position:absolute;bottom:80px;left:110px;font-family:'IBM Plex Mono',monospace;font-size:14px;letter-spacing:0.18em;color:#8B8172;">06</div>
+  </section>
+
+  <!-- ============ 7. STAGE 2 BLUEPRINT ============ -->
+  <section data-label="Stage 2 · Blueprint" data-screen-label="07 Stage 2" data-speaker-notes="Deterministic blueprint output. The EC_WR_V2 schema is the contract for the whole pipeline." style="width:100%;height:100%;background:#F4EFE6;color:#2A241C;font-family:'Instrument Sans',sans-serif;padding:84px 110px;display:flex;flex-direction:column;position:relative;">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;">
+      <div>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;letter-spacing:0.24em;text-transform:uppercase;color:#6E7A55;">Stage 2 · Blueprint Engine / PIE · deterministic</span>
+        <h2 style="font-family:'Newsreader',serif;font-weight:400;font-size:56px;line-height:1;letter-spacing:-0.015em;margin:18px 0 0;">Geometry produces the blueprint</h2>
+      </div>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;letter-spacing:0.18em;color:#A79C8B;">07</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1.05fr;gap:44px;margin-top:48px;flex:1;">
+      <div style="display:flex;flex-direction:column;">
+        <p style="font-family:'Newsreader',serif;font-weight:300;font-size:24px;line-height:1.55;color:#5B5245;margin:0 0 26px;">EVSVector + territory + formula + seed integer resolve to one <b style="font-weight:500;color:#2A241C;">EC_WR_V2 Blueprint JSON</b>. The Placement Intelligence Engine governs every spatial decision — coverage classes, bloom nesting, density fields, negative-space enforcement, genome generation.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:auto;">
+          <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:18px;"><div style="font-family:'Newsreader',serif;font-size:34px;color:#6E7A55;">R1–R18</div><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.08em;color:#8B8172;margin-top:6px;">placement rules</div></div>
+          <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:18px;"><div style="font-family:'Newsreader',serif;font-size:34px;color:#6E7A55;">6</div><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.08em;color:#8B8172;margin-top:6px;">score metrics</div></div>
+          <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:18px;"><div style="font-family:'Newsreader',serif;font-size:34px;color:#6E7A55;">1×</div><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.08em;color:#8B8172;margin-top:6px;">seed = 1 layout</div></div>
+        </div>
+      </div>
+      <div style="background:#221E17;border-radius:6px;padding:32px 34px;font-family:'IBM Plex Mono',monospace;font-size:15.5px;line-height:1.62;color:#CFC7B9;overflow:hidden;">
+<span style="color:#6E7266;">// EC_WR_V2</span><br>
+{<br>
+&nbsp;&nbsp;<span style="color:#C8895F;">"blueprint_id"</span>: <span style="color:#9BA879;">"EC_WR_V2_42"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C8895F;">"formula"</span>: <span style="color:#9BA879;">"Crescent"</span>, <span style="color:#C8895F;">"seed"</span>: <span style="color:#D8CFA0;">42</span>,<br>
+&nbsp;&nbsp;<span style="color:#C8895F;">"canvas"</span>: { type: <span style="color:#9BA879;">"polar"</span>, diameter_cm: <span style="color:#D8CFA0;">61</span> },<br>
+&nbsp;&nbsp;<span style="color:#C8895F;">"clusters"</span>: [{ id: <span style="color:#9BA879;">"C1"</span>, type: <span style="color:#9BA879;">"focal"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;angle_deg: <span style="color:#D8CFA0;">315</span>, radius_norm: <span style="color:#D8CFA0;">0.62</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;stems: [{ <span style="color:#9BA879;">"Ivory Garden Rose"</span> ×<span style="color:#D8CFA0;">3</span> }] }],<br>
+&nbsp;&nbsp;<span style="color:#C8895F;">"silence_arcs"</span>: [{ from: <span style="color:#D8CFA0;">45</span>, to: <span style="color:#D8CFA0;">135</span> }],<br>
+&nbsp;&nbsp;<span style="color:#C8895F;">"scores"</span>: { balance: <span style="color:#D8CFA0;">.88</span>, rhythm: <span style="color:#D8CFA0;">.91</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;silhouette: <span style="color:#D8CFA0;">.93</span>, inventory_fit: <span style="color:#D8CFA0;">1.0</span> },<br>
+&nbsp;&nbsp;<span style="color:#C8895F;">"genome"</span>: <span style="color:#9BA879;">"WGS-CR-NOS-7542-A"</span><br>
+}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 8. STAGE 3 OUTPUT ============ -->
+  <section data-label="Stage 3 · Output" data-screen-label="08 Stage 3" data-speaker-notes="One blueprint fans out to four artifacts in parallel. Two AI, two deterministic." style="width:100%;height:100%;background:#F4EFE6;color:#2A241C;font-family:'Instrument Sans',sans-serif;padding:84px 110px;display:flex;flex-direction:column;position:relative;">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;">
+      <div>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;letter-spacing:0.24em;text-transform:uppercase;color:#B5623C;">Stage 3 · Output Pipeline · parallel</span>
+        <h2 style="font-family:'Newsreader',serif;font-weight:400;font-size:56px;line-height:1;letter-spacing:-0.015em;margin:18px 0 0;">One blueprint, four artifacts</h2>
+      </div>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;letter-spacing:0.18em;color:#A79C8B;">08</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:22px;margin-top:56px;flex:1;">
+      <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:34px 28px;display:flex;flex-direction:column;">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#B5623C;">Claude → Flux</span>
+        <h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:28px;margin:14px 0 12px;">Render Prompt</h3>
+        <p style="font-family:'Instrument Sans',sans-serif;font-size:15.5px;line-height:1.5;color:#5B5245;margin:0;">Composition language compiled to render vocabulary with WREATH_STYLE_DNA locked: 24″ asymmetrical form, odd-count clusters, matte petals + semi-gloss foliage, side-lit 12–2pm, 85mm f/3.5.</p>
+      </div>
+      <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:34px 28px;display:flex;flex-direction:column;">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#6E7A55;">Deterministic</span>
+        <h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:28px;margin:14px 0 12px;">Build Guide PDF</h3>
+        <p style="font-family:'Instrument Sans',sans-serif;font-size:15.5px;line-height:1.5;color:#5B5245;margin:0;">Physical construction, sequenced by R1–R18: anchors first, drama next, fills last. Material quantities with yield factors. Attachment notes. Assembly-time estimate.</p>
+      </div>
+      <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:34px 28px;display:flex;flex-direction:column;">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#6E7A55;">Deterministic</span>
+        <h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:28px;margin:14px 0 12px;">WGS Genome</h3>
+        <p style="font-family:'Instrument Sans',sans-serif;font-size:15.5px;line-height:1.5;color:#5B5245;margin:0;">Compact portable fingerprint encoding formula, territory, seed, dominant species, register, size class. Readable, shareable, mutation-ready.</p>
+        <div style="margin-top:auto;padding-top:18px;font-family:'IBM Plex Mono',monospace;font-size:16px;color:#B5623C;">WGS-CR-NOS-7542-A</div>
+      </div>
+      <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:34px 28px;display:flex;flex-direction:column;">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#B5623C;">Claude API</span>
+        <h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:28px;margin:14px 0 12px;">Listing Copy</h3>
+        <p style="font-family:'Instrument Sans',sans-serif;font-size:15.5px;line-height:1.5;color:#5B5245;margin:0;">Etsy title, description, tags, pricing narrative from blueprint metadata. Marketplace Intelligence applies SEO weighting and scarcity language for drops.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 9. DATA MODEL ============ -->
+  <section data-label="Data Model" data-screen-label="09 Data" data-speaker-notes="Single Postgres instance. No Firebase, no parallel databases. RLS by role." style="width:100%;height:100%;background:#F4EFE6;color:#2A241C;font-family:'Instrument Sans',sans-serif;padding:84px 110px;display:flex;flex-direction:column;position:relative;">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;">
+      <div>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;letter-spacing:0.24em;text-transform:uppercase;color:#B5623C;">The data model</span>
+        <h2 style="font-family:'Newsreader',serif;font-weight:400;font-size:56px;line-height:1;letter-spacing:-0.015em;margin:18px 0 0;">One database, three roles</h2>
+      </div>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;letter-spacing:0.18em;color:#A79C8B;">09</span>
+    </div>
+    <p style="font-family:'Newsreader',serif;font-weight:300;font-size:24px;color:#5B5245;margin:22px 0 0;max-width:1100px;">A single Supabase PostgreSQL instance. Row-level security governs access. No Firebase. No Firestore. No parallel databases.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:26px;margin-top:44px;flex:1;">
+      <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:30px 30px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:#B5623C;margin-bottom:18px;">Core</div>
+        <div style="display:flex;flex-direction:column;gap:14px;font-family:'IBM Plex Mono',monospace;font-size:15px;color:#403A30;">
+          <div><b style="color:#2A241C;">users</b><br><span style="color:#8B8172;font-size:13.5px;">role · tier · auth_provider</span></div>
+          <div><b style="color:#2A241C;">memory_sessions</b><br><span style="color:#8B8172;font-size:13.5px;">raw_input · evs_vector · territory</span></div>
+          <div><b style="color:#2A241C;">blueprints</b><br><span style="color:#8B8172;font-size:13.5px;">blueprint_json · genome · score</span></div>
+        </div>
+      </div>
+      <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:30px 30px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:#6E7A55;margin-bottom:18px;">Commerce</div>
+        <div style="display:flex;flex-direction:column;gap:14px;font-family:'IBM Plex Mono',monospace;font-size:15px;color:#403A30;">
+          <div><b style="color:#2A241C;">products</b><br><span style="color:#8B8172;font-size:13.5px;">finished · blueprint · bundle · kit</span></div>
+          <div><b style="color:#2A241C;">collections</b> · <b style="color:#2A241C;">drops</b><br><span style="color:#8B8172;font-size:13.5px;">season · release_at · waitlist</span></div>
+          <div><b style="color:#2A241C;">orders</b> · <b style="color:#2A241C;">waitlist</b><br><span style="color:#8B8172;font-size:13.5px;">stripe_payment · status</span></div>
+        </div>
+      </div>
+      <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:30px 30px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:#B5623C;margin-bottom:18px;">Creator</div>
+        <div style="display:flex;flex-direction:column;gap:14px;font-family:'IBM Plex Mono',monospace;font-size:15px;color:#403A30;">
+          <div><b style="color:#2A241C;">inventory_items</b><br><span style="color:#8B8172;font-size:13.5px;">fisa_json · emotional_tags · size</span></div>
+          <div><b style="color:#2A241C;">genome_strings</b><br><span style="color:#8B8172;font-size:13.5px;">encoded · version · mutations</span></div>
+          <div><b style="color:#2A241C;">creator_profiles</b><br><span style="color:#8B8172;font-size:13.5px;">signature_territory · dna_string</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 10. AI ARCHITECTURE ============ -->
+  <section data-label="AI Architecture" data-screen-label="10 AI" data-speaker-notes="Clean split: Claude for language, Flux for pixels, math for geometry. Keys server-side only." style="width:100%;height:100%;background:#F4EFE6;color:#2A241C;font-family:'Instrument Sans',sans-serif;padding:84px 110px;display:flex;flex-direction:column;position:relative;">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;">
+      <div>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;letter-spacing:0.24em;text-transform:uppercase;color:#B5623C;">The AI architecture</span>
+        <h2 style="font-family:'Newsreader',serif;font-weight:400;font-size:56px;line-height:1;letter-spacing:-0.015em;margin:18px 0 0;">A clean division of labor</h2>
+      </div>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;letter-spacing:0.18em;color:#A79C8B;">10</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:26px;margin-top:52px;flex:1;">
+      <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-top:3px solid #B5623C;border-radius:4px;padding:34px 30px;display:flex;flex-direction:column;">
+        <h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:30px;margin:0 0 4px;">Claude API</h3>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#8B8172;margin-bottom:20px;">claude-sonnet-4-6 · language</div>
+        <div style="display:flex;flex-direction:column;gap:9px;font-family:'Instrument Sans',sans-serif;font-size:16px;color:#403A30;">
+          <span>· EVS vector extraction</span>
+          <span>· Territory narrative</span>
+          <span>· Wreath critique + scoring copy</span>
+          <span>· Listing copy (Etsy, Shopify)</span>
+          <span>· Client intake synthesis (CDIE)</span>
+          <span>· Design copilot + genome text</span>
+        </div>
+      </div>
+      <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-top:3px solid #6E7A55;border-radius:4px;padding:34px 30px;display:flex;flex-direction:column;">
+        <h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:30px;margin:0 0 4px;">Flux · Replicate</h3>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#8B8172;margin-bottom:20px;">Flux 1.1 Pro · pixels</div>
+        <div style="display:flex;flex-direction:column;gap:9px;font-family:'Instrument Sans',sans-serif;font-size:16px;color:#403A30;">
+          <span>· Photoreal render from Style DNA</span>
+          <span>· Product image editing</span>
+          <span>· Lifestyle / door / room scenes</span>
+          <span>· Seasonal variant rendering</span>
+          <span>· Mutated-genome renders</span>
+        </div>
+      </div>
+      <div style="background:#221E17;color:#EDE6D8;border-radius:4px;padding:34px 30px;display:flex;flex-direction:column;">
+        <h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:30px;margin:0 0 4px;">Deterministic</h3>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#9A9080;margin-bottom:20px;">no AI · pure math</div>
+        <div style="display:flex;flex-direction:column;gap:9px;font-family:'Instrument Sans',sans-serif;font-size:16px;color:#CFC7B9;">
+          <span>· Blueprint geometry (PIE, R1–R18)</span>
+          <span>· Coordinate calculation</span>
+          <span>· 6-metric scoring math</span>
+          <span>· Genome encode / decode (WGS)</span>
+          <span>· Inventory validation</span>
+          <span>· Seasonal drift + coverage</span>
+        </div>
+      </div>
+    </div>
+    <p style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:#8B8172;margin:34px 0 0;">Both AI providers called server-side only. API keys never reach the client. One locked system prompt per engine — prompts never cross functions.</p>
+  </section>
+
+  <!-- ============ 11. TECH STACK ============ -->
+  <section data-label="Tech Stack" data-screen-label="11 Stack" data-speaker-notes="Next.js + FastAPI + Supabase + Stripe + Resend. Vercel and Railway." style="width:100%;height:100%;background:#F4EFE6;color:#2A241C;font-family:'Instrument Sans',sans-serif;padding:84px 110px;display:flex;flex-direction:column;position:relative;">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;">
+      <div>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;letter-spacing:0.24em;text-transform:uppercase;color:#B5623C;">The tech stack</span>
+        <h2 style="font-family:'Newsreader',serif;font-weight:400;font-size:56px;line-height:1;letter-spacing:-0.015em;margin:18px 0 0;">One coherent build</h2>
+      </div>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;letter-spacing:0.18em;color:#A79C8B;">11</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:22px;margin-top:52px;flex:1;">
+      <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:28px 30px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#B5623C;">Frontend</div><h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:12px 0 8px;">Next.js 14 · TS · Tailwind</h3><p style="font-family:'Instrument Sans',sans-serif;font-size:15px;line-height:1.45;color:#5B5245;margin:0;">App Router, SSR product pages, shared layouts across Moodoor + Studio. Vercel.</p></div>
+      <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:28px 30px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#6E7A55;">Backend</div><h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:12px 0 8px;">API routes + FastAPI</h3><p style="font-family:'Instrument Sans',sans-serif;font-size:15px;line-height:1.45;color:#5B5245;margin:0;">Light endpoints in Next; Python FastAPI for PIE, scoring, genome. Railway.</p></div>
+      <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:28px 30px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#B5623C;">Database</div><h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:12px 0 8px;">Supabase</h3><p style="font-family:'Instrument Sans',sans-serif;font-size:15px;line-height:1.45;color:#5B5245;margin:0;">Postgres + Auth + Realtime + Storage. Realtime powers the operator queue.</p></div>
+      <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:28px 30px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#6E7A55;">AI</div><h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:12px 0 8px;">Claude + Replicate</h3><p style="font-family:'Instrument Sans',sans-serif;font-size:15px;line-height:1.45;color:#5B5245;margin:0;">claude-sonnet-4-6 via Anthropic SDK; Flux 1.1 Pro. Server-side only.</p></div>
+      <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:28px 30px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#B5623C;">Payments</div><h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:12px 0 8px;">Stripe + Connect</h3><p style="font-family:'Instrument Sans',sans-serif;font-size:15px;line-height:1.45;color:#5B5245;margin:0;">Consumer checkout + creator payouts. Webhooks sync order status live.</p></div>
+      <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:28px 30px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#6E7A55;">Email + Delivery</div><h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:12px 0 8px;">Resend · react-pdf</h3><p style="font-family:'Instrument Sans',sans-serif;font-size:15px;line-height:1.45;color:#5B5245;margin:0;">Transactional email; signed-URL downloads; PDF build guides on Railway.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ 12. EXPERIENCE ============ -->
+  <section data-label="Experience" data-screen-label="12 Experience" data-speaker-notes="Two journeys off one engine, plus the drop cadence that orchestrates demand." style="width:100%;height:100%;background:#F4EFE6;color:#2A241C;font-family:'Instrument Sans',sans-serif;padding:84px 110px;display:flex;flex-direction:column;position:relative;">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;">
+      <div>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;letter-spacing:0.24em;text-transform:uppercase;color:#B5623C;">The experience architecture</span>
+        <h2 style="font-family:'Newsreader',serif;font-weight:400;font-size:56px;line-height:1;letter-spacing:-0.015em;margin:18px 0 0;">Two journeys, one engine</h2>
+      </div>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;letter-spacing:0.18em;color:#A79C8B;">12</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:34px;margin-top:44px;">
+      <div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:#B5623C;margin-bottom:16px;">Consumer · Moodoor</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;gap:14px;align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#A79C8B;width:22px;">01</span><span style="font-family:'Newsreader',serif;font-size:22px;">Discovery</span><span style="font-family:'Instrument Sans',sans-serif;font-size:15px;color:#8B8172;">— one signal, "this is for me"</span></div>
+          <div style="display:flex;gap:14px;align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#A79C8B;width:22px;">02</span><span style="font-family:'Newsreader',serif;font-size:22px;">Matching</span><span style="font-family:'Instrument Sans',sans-serif;font-size:15px;color:#8B8172;">— EVS reveal, felt-understood</span></div>
+          <div style="display:flex;gap:14px;align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#A79C8B;width:22px;">03</span><span style="font-family:'Newsreader',serif;font-size:22px;">Exploration</span><span style="font-family:'Instrument Sans',sans-serif;font-size:15px;color:#8B8172;">— territories as editorial worlds</span></div>
+          <div style="display:flex;gap:14px;align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#A79C8B;width:22px;">04</span><span style="font-family:'Newsreader',serif;font-size:22px;">Possession</span><span style="font-family:'Instrument Sans',sans-serif;font-size:15px;color:#8B8172;">— story, then price. 60-sec checkout</span></div>
+          <div style="display:flex;gap:14px;align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#A79C8B;width:22px;">05</span><span style="font-family:'Newsreader',serif;font-size:22px;">Belonging</span><span style="font-family:'Instrument Sans',sans-serif;font-size:15px;color:#8B8172;">— you join a territory, not a list</span></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:#6E7A55;margin-bottom:16px;">Creator · Studio</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;gap:14px;align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#A79C8B;width:22px;">01</span><span style="font-family:'Newsreader',serif;font-size:22px;">Onboarding</span><span style="font-family:'Instrument Sans',sans-serif;font-size:15px;color:#8B8172;">— tier + first blueprint in-flow</span></div>
+          <div style="display:flex;gap:14px;align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#A79C8B;width:22px;">02</span><span style="font-family:'Newsreader',serif;font-size:22px;">Client Work</span><span style="font-family:'Instrument Sans',sans-serif;font-size:15px;color:#8B8172;">— CDIE brief, live polar canvas</span></div>
+          <div style="display:flex;gap:14px;align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#A79C8B;width:22px;">03</span><span style="font-family:'Newsreader',serif;font-size:22px;">Production</span><span style="font-family:'Instrument Sans',sans-serif;font-size:15px;color:#8B8172;">— PDF guide, R1–R18 sequence</span></div>
+          <div style="display:flex;gap:14px;align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#A79C8B;width:22px;">04</span><span style="font-family:'Newsreader',serif;font-size:22px;">Growth</span><span style="font-family:'Instrument Sans',sans-serif;font-size:15px;color:#8B8172;">— publish to Foundry, remix attrib.</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:40px;background:#221E17;border-radius:6px;padding:28px 36px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:#C8895F;margin-bottom:20px;">Drop architecture · 4× / year</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative;">
+        <div style="position:absolute;top:9px;left:8%;right:8%;height:2px;background:#403A30;"></div>
+        <div style="position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:12px;"><div style="width:18px;height:18px;border-radius:50%;background:#6E7A55;"></div><div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#9BA879;">−7 days</div><div style="font-family:'Instrument Sans',sans-serif;font-size:15px;color:#CFC7B9;">Territory signal · waitlist opens</div></div>
+        <div style="position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:12px;"><div style="width:18px;height:18px;border-radius:50%;background:#6E7A55;"></div><div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#9BA879;">−4 days</div><div style="font-family:'Instrument Sans',sans-serif;font-size:15px;color:#CFC7B9;">Territory narrative published</div></div>
+        <div style="position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:12px;"><div style="width:18px;height:18px;border-radius:50%;background:#6E7A55;"></div><div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#9BA879;">−1 day</div><div style="font-family:'Instrument Sans',sans-serif;font-size:15px;color:#CFC7B9;">Genome teaser · no render</div></div>
+        <div style="position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:12px;"><div style="width:18px;height:18px;border-radius:50%;background:#C8895F;"></div><div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#C8895F;">Drop day</div><div style="font-family:'Instrument Sans',sans-serif;font-size:15px;color:#EDE6D8;">Full reveal · 2-hr early access</div></div>
+        <div style="position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:12px;"><div style="width:18px;height:18px;border-radius:50%;background:#6E7A55;"></div><div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#9BA879;">Post-drop</div><div style="font-family:'Instrument Sans',sans-serif;font-size:15px;color:#CFC7B9;">Archive · genome stays buildable</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 13. REVENUE ============ -->
+  <section data-label="Revenue" data-screen-label="13 Revenue" data-speaker-notes="Three revenue streams off one engine: product, subscription, marketplace." style="width:100%;height:100%;background:#F4EFE6;color:#2A241C;font-family:'Instrument Sans',sans-serif;padding:84px 110px;display:flex;flex-direction:column;position:relative;">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;">
+      <div>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;letter-spacing:0.24em;text-transform:uppercase;color:#B5623C;">The revenue model</span>
+        <h2 style="font-family:'Newsreader',serif;font-weight:400;font-size:56px;line-height:1;letter-spacing:-0.015em;margin:18px 0 0;">Three streams, one engine</h2>
+      </div>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;letter-spacing:0.18em;color:#A79C8B;">13</span>
+    </div>
+    <div style="display:grid;grid-template-columns:0.9fr 1.25fr 0.9fr;gap:26px;margin-top:52px;flex:1;">
+      <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:32px 30px;display:flex;flex-direction:column;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:#B5623C;">Moodoor · B2C product</div>
+        <div style="display:flex;flex-direction:column;gap:16px;margin-top:24px;">
+          <div><div style="font-family:'Newsreader',serif;font-size:32px;">$295–450</div><div style="font-family:'Instrument Sans',sans-serif;font-size:15px;color:#8B8172;">Finished wreaths</div></div>
+          <div><div style="font-family:'Newsreader',serif;font-size:32px;">$32–45</div><div style="font-family:'Instrument Sans',sans-serif;font-size:15px;color:#8B8172;">Digital blueprints + PDF</div></div>
+          <div><div style="font-family:'Newsreader',serif;font-size:32px;">$120–200</div><div style="font-family:'Instrument Sans',sans-serif;font-size:15px;color:#8B8172;">Bundle sets</div></div>
+          <div><div style="font-family:'Newsreader',serif;font-size:32px;">+20–40%</div><div style="font-family:'Instrument Sans',sans-serif;font-size:15px;color:#8B8172;">Limited drop premium</div></div>
+        </div>
+      </div>
+      <div style="background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:32px 30px;display:flex;flex-direction:column;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:#6E7A55;">Studio · SaaS tiers</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:22px;">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #E7DECE;padding-bottom:10px;"><span style="font-family:'Newsreader',serif;font-size:24px;">Seed</span><span style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:#8B8172;">Free · 5/mo</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #E7DECE;padding-bottom:10px;"><span style="font-family:'Newsreader',serif;font-size:24px;">Bloom</span><span style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:#2A241C;">$49/mo · unlimited</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #E7DECE;padding-bottom:10px;"><span style="font-family:'Newsreader',serif;font-size:24px;">Studio</span><span style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:#2A241C;">$149/mo · clients + API</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;padding-bottom:2px;"><span style="font-family:'Newsreader',serif;font-size:24px;">Atelier</span><span style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:#2A241C;">$499/mo · agency</span></div>
+        </div>
+        <p style="font-family:'Instrument Sans',sans-serif;font-size:14.5px;color:#8B8172;margin:20px 0 0;line-height:1.45;">Watermarked exports on Seed; full pipeline + Foundry from Bloom; genome mutation + white-label up-tier.</p>
+      </div>
+      <div style="background:#221E17;color:#EDE6D8;border-radius:4px;padding:32px 30px;display:flex;flex-direction:column;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:#C8895F;">Foundry · marketplace</div>
+        <div style="margin-top:auto;margin-bottom:auto;text-align:center;">
+          <div style="font-family:'Newsreader',serif;font-size:88px;line-height:1;color:#9BA879;">85<span style="font-size:44px;">%</span></div>
+          <div style="font-family:'Instrument Sans',sans-serif;font-size:16px;color:#CFC7B9;margin-top:8px;">to the creator</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#9A9080;margin-top:20px;">15% platform · Stripe Connect</div>
+        </div>
+        <p style="font-family:'Instrument Sans',sans-serif;font-size:14.5px;color:#BCB2A2;margin:0;line-height:1.45;">Future: genome licensing royalties on every remix and mutation resold.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 14. BUILD SEQUENCE ============ -->
+  <section data-label="Build Sequence" data-screen-label="14 Build" data-speaker-notes="Ten weeks to consolidate the parallel tracks into one, then ongoing enrichment." style="width:100%;height:100%;background:#F4EFE6;color:#2A241C;font-family:'Instrument Sans',sans-serif;padding:84px 110px;display:flex;flex-direction:column;position:relative;">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;">
+      <div>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;letter-spacing:0.24em;text-transform:uppercase;color:#B5623C;">Build sequence</span>
+        <h2 style="font-family:'Newsreader',serif;font-weight:400;font-size:56px;line-height:1;letter-spacing:-0.015em;margin:18px 0 0;">Collapse the parallels</h2>
+      </div>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;letter-spacing:0.18em;color:#A79C8B;">14</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-top:56px;flex:1;">
+      <div style="display:flex;flex-direction:column;background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:26px 22px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#B5623C;letter-spacing:0.08em;">Phase 0</div><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#A79C8B;margin:4px 0 12px;">Wk 1–2</div><h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:23px;margin:0 0 12px;line-height:1.1;">Consolidate</h3><p style="font-family:'Instrument Sans',sans-serif;font-size:14px;line-height:1.45;color:#5B5245;margin:0;">Master branch. Port studio.html + cart. Migrate 5 routes to Claude.</p></div>
+      <div style="display:flex;flex-direction:column;background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:26px 22px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#B5623C;letter-spacing:0.08em;">Phase 1</div><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#A79C8B;margin:4px 0 12px;">Wk 3–4</div><h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:23px;margin:0 0 12px;line-height:1.1;">Schema Bridge</h3><p style="font-family:'Instrument Sans',sans-serif;font-size:14px;line-height:1.45;color:#5B5245;margin:0;">EVSVector → EC_WR_V2. Polar PIE canvas. PDF pipeline. Style DNA.</p></div>
+      <div style="display:flex;flex-direction:column;background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:26px 22px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6E7A55;letter-spacing:0.08em;">Phase 2</div><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#A79C8B;margin:4px 0 12px;">Wk 5–6</div><h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:23px;margin:0 0 12px;line-height:1.1;">Data Unify</h3><p style="font-family:'Instrument Sans',sans-serif;font-size:14px;line-height:1.45;color:#5B5245;margin:0;">Firebase → Supabase. RLS by role. Migrate data + auth.</p></div>
+      <div style="display:flex;flex-direction:column;background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:26px 22px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6E7A55;letter-spacing:0.08em;">Phase 3</div><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#A79C8B;margin:4px 0 12px;">Wk 7–8</div><h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:23px;margin:0 0 12px;line-height:1.1;">Productize</h3><p style="font-family:'Instrument Sans',sans-serif;font-size:14px;line-height:1.45;color:#5B5245;margin:0;">SaaS tiers. Inventory + FISA. WGS on all. Foundry + Connect.</p></div>
+      <div style="display:flex;flex-direction:column;background:#FBF7EF;border:1px solid #E0D6C4;border-radius:4px;padding:26px 22px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#B5623C;letter-spacing:0.08em;">Phase 4</div><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#A79C8B;margin:4px 0 12px;">Wk 9–10</div><h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:23px;margin:0 0 12px;line-height:1.1;">Commerce</h3><p style="font-family:'Instrument Sans',sans-serif;font-size:14px;line-height:1.45;color:#5B5245;margin:0;">Drops, waitlist, early access. Email flows. Shipping integration.</p></div>
+      <div style="display:flex;flex-direction:column;background:#221E17;color:#EDE6D8;border-radius:4px;padding:26px 22px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#C8895F;letter-spacing:0.08em;">Phase 5</div><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#9A9080;margin:4px 0 12px;">Ongoing</div><h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:23px;margin:0 0 12px;line-height:1.1;">Enrichment</h3><p style="font-family:'Instrument Sans',sans-serif;font-size:14px;line-height:1.45;color:#CFC7B9;margin:0;">FISA the catalog. Collections. Creator identity. Genome SEO.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ 15. THE BRIDGE (closing) ============ -->
+  <section data-label="The Bridge" data-screen-label="15 Bridge" data-speaker-notes="The single most important architecture. Close on it." style="width:100%;height:100%;background:#221E17;color:#F4EFE6;font-family:'Instrument Sans',sans-serif;padding:96px 110px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;letter-spacing:0.26em;text-transform:uppercase;color:#C8895F;">The one piece that matters most</span>
+    <div style="display:flex;align-items:center;gap:34px;margin:40px 0 0;flex-wrap:wrap;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:30px;color:#C8895F;background:#2C2720;border:1px solid #443D33;border-radius:6px;padding:18px 30px;">EVSVector</span>
+      <span style="font-family:'Newsreader',serif;font-style:italic;font-size:44px;color:#9BA879;">→</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:30px;color:#9BA879;background:#2C2720;border:1px solid #443D33;border-radius:6px;padding:18px 30px;">EC_WR_V2</span>
+    </div>
+    <p style="font-family:'Newsreader',serif;font-weight:300;font-size:34px;line-height:1.5;color:#D8D0C2;max-width:1180px;margin:44px 0 0;">Once a memory maps to a vector and a vector produces a blueprint, Moodoor becomes the emotional discovery layer for Evercrafted-designed products — and Evercrafted becomes the invisible precision engine behind what consumers experience as intuitive wreath commerce.</p>
+    <p style="font-family:'Newsreader',serif;font-size:38px;color:#F4EFE6;margin:36px 0 0;">That's the platform.</p>
+    <div style="position:absolute;bottom:80px;left:110px;font-family:'IBM Plex Mono',monospace;font-size:14px;letter-spacing:0.18em;color:#8B8172;">Evercrafted Platform · System Design v1.0 · July 2026</div>
+  </section>
+
+</x-import>
+</x-dc>
+</body>
+</html>

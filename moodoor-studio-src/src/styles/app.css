@@ -1,0 +1,326 @@
+/* Application shell: the masthead shared by both tools, and the settings dialog. */
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 0 24px;
+  height: 58px;
+  background: var(--ec-white);
+  border-bottom: 1px solid var(--ec-border);
+  flex-shrink: 0;
+  z-index: 20;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand .wm {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.brand .wm span {
+  color: var(--ec-green);
+}
+
+.brand .badge {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ec-green);
+  background: var(--ec-green-pale);
+  border: 1px solid rgba(107, 143, 103, 0.3);
+  padding: 4px 9px;
+  border-radius: var(--r-full);
+  white-space: nowrap;
+}
+
+.topbar-mid {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ec-gray-400);
+  flex: 1;
+}
+
+@media (max-width: 1080px) {
+  .topbar-mid {
+    display: none;
+  }
+}
+
+.topnav {
+  display: flex;
+  gap: 8px;
+}
+
+/* The nav reads left to right as the pipeline: 1 Brief → 2 Compose → 3 Prompts. */
+.pipenav {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.pipeslot {
+  display: flex;
+  align-items: center;
+}
+
+.pipearrow {
+  padding: 0 7px;
+  font-size: 12px;
+  color: var(--ec-gray-300);
+  user-select: none;
+}
+
+.pipestep {
+  gap: 7px;
+}
+
+.pipe-n {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--r-full);
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 400;
+  background: var(--ec-gray-100);
+  color: var(--ec-gray-500);
+  transition: all var(--tr);
+}
+
+.pipestep:hover .pipe-n {
+  background: var(--ec-green-dim);
+  color: var(--ec-green);
+}
+
+.pipestep.active .pipe-n {
+  background: var(--ec-green);
+  color: var(--ec-white);
+}
+
+@media (max-width: 900px) {
+  .pipearrow {
+    padding: 0 3px;
+  }
+
+  .pipestep {
+    padding: 7px 11px;
+  }
+}
+
+.navbtn {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 16px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid var(--ec-border);
+  background: transparent;
+  color: var(--ec-gray-500);
+  transition: all var(--tr);
+  /* The cross-tool links are anchors; keep them visually identical to buttons. */
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.navbtn:hover {
+  border-color: var(--ec-green-light);
+  color: var(--ec-green);
+}
+
+.navbtn.active {
+  border-color: var(--ec-green);
+  background: var(--ec-green-pale);
+  color: var(--ec-green);
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.pillbtn {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--ec-gray-500);
+  background: none;
+  border: 1px solid var(--ec-border);
+  border-radius: var(--r-full);
+  padding: 6px 14px;
+  transition: all var(--tr);
+  white-space: nowrap;
+}
+
+.pillbtn:hover {
+  border-color: var(--ec-green-light);
+  color: var(--ec-green);
+}
+
+/* Amber when no key is configured — generation will fail until one is set. */
+.pillbtn.warn {
+  border-color: rgba(196, 146, 42, 0.5);
+  color: var(--ec-warning);
+}
+
+/* ---- Settings dialog ---- */
+
+.modal-scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.28);
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.modal {
+  background: var(--ec-white);
+  border: 1px solid var(--ec-border);
+  border-radius: var(--r-lg);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.16);
+  width: 100%;
+  max-width: 520px;
+  padding: 26px 28px 22px;
+}
+
+.modal h2 {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.modal p {
+  font-size: 12.5px;
+  color: var(--ec-gray-500);
+  line-height: 1.65;
+  margin-bottom: 18px;
+}
+
+.modal-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ec-gray-500);
+  margin-bottom: 6px;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1px solid var(--ec-border);
+  border-radius: var(--r-sm);
+  font-family: var(--mono);
+  font-size: 12.5px;
+  background: var(--ec-off-white);
+  color: var(--ec-black);
+}
+
+.modal-note {
+  font-size: 11.5px;
+  color: var(--ec-gray-400);
+  line-height: 1.6;
+  margin-top: 10px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.btn-ghost {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 10px 18px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--ec-border);
+  background: var(--ec-white);
+  color: var(--ec-gray-500);
+}
+
+.btn-ghost:hover {
+  color: var(--ec-black);
+}
+
+.btn-solid {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--ec-green);
+  background: var(--ec-green);
+  color: #fff;
+}
+
+.btn-solid:hover {
+  background: var(--ec-green-light);
+  border-color: var(--ec-green-light);
+}
+
+/* ---- Toast ---- */
+
+.toast {
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  z-index: 80;
+  background: var(--ec-black);
+  color: #fff;
+  font-size: 13px;
+  padding: 12px 22px;
+  border-radius: var(--r-full);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  opacity: 0;
+  animation: toast-in 0.3s ease forwards;
+}
+
+/* The one-time reset notice can coincide with a page toast — stack, don't overlap. */
+.toast.notice {
+  bottom: 76px;
+  max-width: min(560px, calc(100vw - 40px));
+  cursor: pointer;
+  line-height: 1.5;
+}
+
+@keyframes toast-in {
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
