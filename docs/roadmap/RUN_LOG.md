@@ -302,6 +302,10 @@ The governed asset-versioning increment was pushed successfully to `pipersmyfurb
 | Updated | `client/src/pages/Studio.tsx` | Renders the reviewer-assignment summary alongside the selected project workflow. |
 | Updated | `todo.md` | Marks shared workflow assignment and Studio assignment UI complete. |
 
+### GitHub synchronization
+
+The Studio reviewer-assignment increment was pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `66a2859` (`feat: surface Studio reviewer assignments`).
+
 ### Next actions
 
 The next actions are to refine the Wix CMS foundation with production field types, references, indexes, and Velo data-access policy; transform the hybrid template while removing all template testimonial content; build the custom member dashboard; then complete the remaining test, payment/provider, scheduler, and legacy-source audit work.
