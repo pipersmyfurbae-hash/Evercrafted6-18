@@ -567,3 +567,54 @@ The workspace identity lifecycle assurance increment was pushed successfully to 
 ### GitHub synchronization
 
 The persisted Personal integration-control increment was pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `a458db5` (`feat: persist personal integration controls`).
+
+## Run EC-RUN-0018 — Full accessibility and responsive journey verification
+
+**Date:** 2026-08-19 EDT
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`
+**Work item:** `EC-P10-A11Y-001`
+**Objective:** Complete keyboard, semantic, status, recovery, motion, and mobile verification across all implemented experience routes.
+
+| Area | Evidence | Result |
+|---|---|---|
+| Public keyboard navigation | `Product.tsx`, `Pricing.tsx`, `NotFound.tsx`, existing editorial/Client routes | Every implemented public shell now has a skip link, `main-content` target, and an explicitly named navigation landmark. |
+| Protected forms and status | `Settings.tsx`, `Admin.tsx`, Studio and Personal components | Invitation controls have explicit accessible names. Client, Studio, Admin, and Personal retain loading, error, retry, status/live, and authorization-denial affordances under their distinct layouts. |
+| Focus and motion | `index.css` | Global `:focus-visible` treatment remains visible. A `prefers-reduced-motion: reduce` rule suppresses nonessential transitions and animations. |
+| Automated contract evidence | `accessibility.contract.test.ts`, `accessibility.journey.contract.test.ts` | Six assertions cover shared and route-level landmarks, form names, alerts/status, Personal recovery, focus, and reduced motion. |
+| Responsive visual review | Mobile captures for `/`, `/client`, `/settings`, `/studio`, `/admin`, `/personal`, `/product`, and `/pricing` | Primary public and protected layouts retain readable controls, complete information hierarchy, and no clipped action areas at 375 px width. |
+| Validation | `pnpm test`, `pnpm check`, `pnpm build` | Passed: 33 Vitest files / 85 tests, TypeScript check, and production build. The existing non-blocking client chunk-size advisory remains. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Updated | `client/src/pages/Product.tsx`, `client/src/pages/Pricing.tsx`, `client/src/pages/NotFound.tsx` | Adds shared skip links, main targets, and unique public navigation labels. |
+| Updated | `client/src/pages/Settings.tsx`, `client/src/index.css` | Adds explicit invitation-form names, alert semantics, and reduced-motion behavior. |
+| Created | `server/accessibility.journey.contract.test.ts` | Locks in public/protected route, status, form, focus, and motion accessibility evidence. |
+| Updated | `docs/quality/TEST_MATRIX.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Records completion and validation evidence. |
+
+## Run EC-RUN-0019 — Accessibility assurance completion
+
+**Date:** 2026-08-19 EDT
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`
+**Work item:** `EC-P10-A11Y-001`
+**Objective:** Close the outstanding full-route keyboard/state and contrast evidence gaps after the initial accessibility pass.
+
+| Area | Evidence | Result |
+|---|---|---|
+| Complete route inventory | `accessibility.route-inventory.test.ts` | Covers all registered editorial, Client public, protected workspace, Studio, Notifications, Settings, Profile, Admin, Personal, invitation, and fallback routes. It verifies shared workspace main-landmark ownership and independently checks Personal, invitation, and fallback states. |
+| Keyboard behavior | `skip-link.behavior.test.ts` in a browser-like test environment | An actual Tab then Enter interaction on the shared skip link moves focus to `main-content` and updates the fragment. This replaces source-only assurance for that critical navigation behavior. |
+| Semantic and recovery corrections | `Notifications.tsx`, `Invite.tsx` | Notifications no longer nests a second main landmark inside `DashboardLayout`. Invitation acceptance has a unique heading, main target, loading live region, success status, and explicit error alert. |
+| Contrast evidence | `contrast.tokens.test.ts` | Implements relative-luminance contrast computation against the actual OKLCH semantic tokens and direct Evercrafted, Client, administration, and Personal surface pairs. All asserted normal-text pairs meet or exceed 4.5:1. |
+| Visual review | Mobile primary-route and desktop editorial/invitation captures | Reviewed `/`, Client public, Settings, Studio, Admin, Personal, editorial secondary routes, and invitation acceptance. Controls remain readable and no clipped action area was observed at the tested viewports. |
+| Validation | `pnpm test`, `pnpm check`, `pnpm build` | Passed: 36 Vitest files / 91 tests, TypeScript check, and production build. The existing non-blocking client chunk-size advisory remains. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Updated | `client/src/components/SkipLink.tsx` | Transfers keyboard focus into the main landmark after skip activation. |
+| Updated | `client/src/pages/Notifications.tsx`, `client/src/pages/Invite.tsx` | Corrects nested landmark and completes invitation heading/status/alert semantics. |
+| Added | `server/skip-link.behavior.test.ts`, `server/contrast.tokens.test.ts`, `server/accessibility.route-inventory.test.ts` | Provides browser-like keyboard behavior, executable contrast, and all-route semantic inventory evidence. |
+| Updated | `package.json`, `pnpm-lock.yaml` | Adds browser-test utilities used exclusively for verifiable accessibility interaction testing. |
+| Updated | `docs/quality/TEST_MATRIX.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Records full accessibility completion evidence. |

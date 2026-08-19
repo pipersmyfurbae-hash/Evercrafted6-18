@@ -28,7 +28,7 @@
 - [x] EC-PROJECT-017 Add owner-only personal-workspace project visibility and integration-readiness status to the Personal command, with owner-policy regression coverage.
 - [x] EC-P08-ADM-002 Build a restricted administration and support console for tenant overview, feature flags, entitlement assistance, job/integration health, and audited access.
 - [x] EC-P10-TEST-001 Add Vitest coverage for tenant isolation, role policy, personal-workspace provisioning, activity/audit records, and critical typed API behavior.
-- [ ] EC-P10-A11Y-001 Verify keyboard, semantic, contrast, loading, empty, error, and authorization states for all implemented user journeys.
+- [x] EC-P10-A11Y-001 Verify keyboard, semantic, contrast, loading, empty, error, and authorization states for all implemented user journeys.
 - [ ] EC-P11-GOV-001 Update all documentation, test evidence, affected-file inventory, and this TODO checklist after each execution run; commit and push the synchronized increment to GitHub. (EC-RUN-0002 was synchronized; this remains an ongoing delivery control.)
 - [x] EC-P11-GOV-002 Commit and push the initial governance-document set and first validated implementation increment to the designated GitHub branch, recording the commit ID and push result in RUN_LOG.md.
 - [x] EC-P02-DB-002 Generate, review, and test Drizzle migration artifacts using the documented database workflow; record executable migration evidence.
