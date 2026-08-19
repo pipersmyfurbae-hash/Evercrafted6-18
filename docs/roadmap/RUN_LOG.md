@@ -811,3 +811,22 @@ The validated Wix migration-decision increment was committed and pushed successf
 ### GitHub synchronization
 
 The validated Wix CMS refinement-boundary increment was committed and pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `69d3c93` (`docs: record wix cms harmony boundary`).
+
+## Run EC-RUN-0027 — First Client workspace project and Moodoor Studio walkthrough
+
+**Date:** 2026-08-19 EDT
+**Status:** `COMPLETED — GITHUB SYNCHRONIZATION PENDING`
+**Work item:** `EC-LIVE-001`
+**Authorization:** The authenticated platform user explicitly requested creation of the first project in Bret Baden’s personal workspace and a Moodoor Studio walkthrough.
+
+| Step | Observed outcome |
+|---|---|
+| Workspace context | The authenticated user’s personal owner workspace, `Bret Baden’s space`, was selected through the normal Client workspace selector. |
+| Approved data creation | Created one project: `Evercrafted Foundation`, with the user-approved workflow description. The project is visible only in the selected workspace and begins in `draft`. |
+| Project verification | The protected Projects view shows the project card, its `draft` status, description, and current update date. No other workspace’s data was displayed. |
+| Studio workflow walkthrough | The selected project exposes governed stage progression (`draft`, `active`, `in review`, `approved`, and `delivered`), an asset upload boundary (5 MiB maximum), review request assignment, delivery preparation, version history, and provider-neutral handoff controls. |
+| Preserved boundaries | No asset upload, review request, approval, delivery record, status transition, invitation, provider connection, or publishing handoff was created. External publishing remains disconnected and cannot be entered until a delivery is ready and a separately approved provider adapter exists. |
+
+### GitHub synchronization
+
+The repository evidence for this approved live data operation is pending commit and push to `pipersmyfurbae-hash/Evercrafted6-18` on `main`.
