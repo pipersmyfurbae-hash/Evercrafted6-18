@@ -339,12 +339,16 @@ export async function listWorkspaceInvitations(workspaceId: number) {
   return db.select().from(workspaceInvitations).where(eq(workspaceInvitations.workspaceId, workspaceId)).orderBy(desc(workspaceInvitations.createdAt));
 }
 
+export function isWorkspaceInvitationAcceptable(invitation: { revokedAt: Date | null; acceptedAt: Date | null; expiresAt: Date }, now = new Date()) {
+  return !invitation.revokedAt && !invitation.acceptedAt && invitation.expiresAt >= now;
+}
+
 export async function acceptWorkspaceInvitation(input: { token: string; user: User }) {
   const db = requireDb(await getDb());
   const invitationRows = await db.select().from(workspaceInvitations).where(eq(workspaceInvitations.token, input.token)).limit(1);
   const invitation = invitationRows[0];
   if (!invitation) throw new Error("Invitation not found");
-  if (invitation.revokedAt || invitation.acceptedAt || invitation.expiresAt < new Date()) throw new Error("Invitation is no longer valid");
+  if (!isWorkspaceInvitationAcceptable(invitation)) throw new Error("Invitation is no longer valid");
   if (!input.user.email || invitation.email.toLowerCase() !== input.user.email.toLowerCase()) throw new Error("Invitation email does not match this account");
 
   await db.transaction(async tx => {

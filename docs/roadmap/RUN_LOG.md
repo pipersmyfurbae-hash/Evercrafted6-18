@@ -508,3 +508,27 @@ The completed restricted administration-console increment was pushed successfull
 ### GitHub synchronization
 
 The completed subscription, usage, and entitlement increment was pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `f42c567` (`feat: complete subscription usage entitlements`).
+
+## Run EC-RUN-0016 — Workspace identity lifecycle assurance
+
+**Date:** 2026-08-19 EDT
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`
+**Work items:** `EC-P03-IAM-001`, `EC-P03-AUTHZ-001`
+**Objective:** Complete deterministic acceptance and negative-path evidence for personal provisioning, organization workspaces, invitations, memberships, role administration, tenant isolation, and the exact platform-owner boundary.
+
+| Area | Evidence | Result |
+|---|---|---|
+| Personal and organization workspaces | Existing bootstrap policy plus `workspace.lifecycle.acceptance.test.ts` | Personal bootstrap provisions before listing member spaces. Organization creation passes the authenticated caller as the initial owner. |
+| Invitation lifecycle | Typed caller acceptance tests plus `isWorkspaceInvitationAcceptable` | An administrator can create/list a role-scoped invitation; an authenticated user accepts a bounded token; an active client member can read workspace member state. Revoked, previously accepted, and expired invitations are invalidated by the shared predicate. A member or client is rejected before invitation administration writes. |
+| Role lifecycle | Typed caller acceptance and negative tests | An owner or administrator can update a member role; a non-administrator is rejected before the role repository write. An inactive membership is rejected before member data is queried. |
+| Cross-surface negative authorization | `authorization.surface.negative.test.ts` | A viewer is denied asset upload and Studio review before storage/workflow calls; a client is denied invitations; a non-administrator is denied tenant overview and support-audit creation before repository actions. |
+| Owner-only boundary | Exact owner procedure test | A caller who might otherwise own a workspace but does not match `OWNER_OPEN_ID` receives `FORBIDDEN` from the Personal command before any command-center data action. |
+| Validation | `pnpm test`, `pnpm check`, `pnpm build` | Passed: 31 Vitest files / 76 tests, TypeScript check, and production build. The existing non-blocking client chunk-size advisory remains. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Created | `server/workspace.lifecycle.acceptance.test.ts`, `server/authorization.surface.negative.test.ts` | Deterministic organization, invitation-state, membership, role, exact-owner, and cross-surface negative-path coverage. |
+| Updated | `server/db.ts` | Extracts the invitation validity predicate used by invitation acceptance and its lifecycle tests. |
+| Updated | `docs/quality/TEST_MATRIX.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Completes IAM and authorization work-item evidence. |
