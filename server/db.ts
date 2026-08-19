@@ -743,6 +743,51 @@ export async function recoverStaleBackgroundJobs(staleBefore: Date) {
   return { requeued: retryableIds.length, failed: exhaustedIds.length };
 }
 
+export function getQueuedJobClaimTransition(job: { status: "queued" | "running" | "succeeded" | "failed" | "cancelled"; attempts: number; maxAttempts: number }) {
+  if (job.status !== "queued") return undefined;
+  if (job.attempts >= job.maxAttempts) return { status: "failed" as const, attempts: job.attempts };
+  return { status: "running" as const, attempts: job.attempts + 1 };
+}
+
+/**
+ * Atomically claims queued jobs with a compare-and-swap update. This function
+ * intentionally only claims durable work; provider workers consume the claimed
+ * records through their own reviewed adapters rather than inside a cron HTTP request.
+ */
+export async function claimQueuedBackgroundJobs(limit = 25) {
+  const db = requireDb(await getDb());
+  const candidates = await db.select({ id: backgroundJobs.id, attempts: backgroundJobs.attempts, maxAttempts: backgroundJobs.maxAttempts })
+    .from(backgroundJobs)
+    .where(eq(backgroundJobs.status, "queued"))
+    .orderBy(asc(backgroundJobs.createdAt))
+    .limit(limit);
+  const claimedJobIds: number[] = [];
+  let exhausted = 0;
+
+  for (const job of candidates) {
+    const transition = getQueuedJobClaimTransition({ status: "queued", attempts: job.attempts, maxAttempts: job.maxAttempts });
+    if (!transition) continue;
+    const isExhausted = transition.status === "failed";
+    const result = await db.update(backgroundJobs).set(isExhausted ? {
+      status: "failed",
+      completedAt: new Date(),
+      errorMessage: "Maximum recovery attempts reached",
+      updatedAt: new Date(),
+    } : {
+      status: "running",
+      attempts: transition.attempts,
+      startedAt: new Date(),
+      errorMessage: null,
+      updatedAt: new Date(),
+    }).where(and(eq(backgroundJobs.id, job.id), eq(backgroundJobs.status, "queued"), eq(backgroundJobs.attempts, job.attempts)));
+    const affectedRows = Number((result as unknown as { affectedRows?: number }).affectedRows ?? 0);
+    if (affectedRows !== 1) continue;
+    if (isExhausted) exhausted += 1;
+    else claimedJobIds.push(job.id);
+  }
+  return { claimed: claimedJobIds.length, exhausted, jobIds: claimedJobIds };
+}
+
 export async function getBackgroundJobHealth() {
   const db = requireDb(await getDb());
   const rows = await db.select({ id: backgroundJobs.id, status: backgroundJobs.status, createdAt: backgroundJobs.createdAt, updatedAt: backgroundJobs.updatedAt })

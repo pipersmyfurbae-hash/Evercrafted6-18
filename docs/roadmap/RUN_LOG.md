@@ -306,6 +306,23 @@ The governed asset-versioning increment was pushed successfully to `pipersmyfurb
 
 The Studio reviewer-assignment increment was pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `66a2859` (`feat: surface Studio reviewer assignments`).
 
+## Run EC-RUN-0009 — Scheduled-recovery deployment-control closure
+
+**Date:** 2026-08-19 EDT  
+**Status:** `VALIDATED — NO HEARTBEAT TASK CREATED`  
+**Work items:** `EC-P04-JOB-003`, `EC-PROJECT-012`  
+**Objective:** Record the deployment prerequisite and intentional cadence decision after completing idempotent queued/retryable job claims.
+
+| Control | Decision and evidence |
+|---|---|
+| Handler deployment prerequisite | Save and publish a checkpoint containing this handler before creating a Heartbeat task. The platform schedule must only call the published `/api/scheduled/recover-jobs` endpoint. |
+| Cadence decision | No project-level Heartbeat schedule is configured. A recovery cadence is intentionally deferred until it is approved, rather than creating recurring execution speculatively. |
+| Durable execution boundary | Recovery authenticates cron callers, requeues stale retryable jobs, fails exhausted jobs, and claims queued jobs with a status-and-attempt compare-and-swap. It does not execute a heavy-media provider or start an in-process timer. |
+| Regression evidence | `server/scheduled.recovery.contract.test.ts` verifies the route, cron-only auth, recovery/claim wiring, no-timer/provider boundary, and explicit deployment/cadence record. |
+
+| Repeated-run state evidence | `server/job.recovery.transition.test.ts` | A queued job transitions to running exactly once; a second recovery pass sees the running state and does not claim it again. A recovered queued job advances once more, while an exhausted queued job deterministically fails. |
+| Final validation | `pnpm test`, `pnpm check`, `pnpm build` | Passed: 19 Vitest files / 42 tests, TypeScript check, and production build. The existing non-blocking client-chunk-size advisory remains. |
+
 ### Next actions
 
 The next actions are to refine the Wix CMS foundation with production field types, references, indexes, and Velo data-access policy; transform the hybrid template while removing all template testimonial content; build the custom member dashboard; then complete the remaining test, payment/provider, scheduler, and legacy-source audit work.

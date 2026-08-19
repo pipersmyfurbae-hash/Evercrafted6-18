@@ -1,4 +1,4 @@
-import { getBackgroundJobHealth, recoverStaleBackgroundJobs } from "./db";
+import { claimQueuedBackgroundJobs, getBackgroundJobHealth, recoverStaleBackgroundJobs } from "./db";
 
 /**
  * Recovery is intentionally small and idempotent: it never performs a heavy
@@ -8,8 +8,9 @@ import { getBackgroundJobHealth, recoverStaleBackgroundJobs } from "./db";
 export async function runScheduledJobRecovery() {
   const staleBefore = new Date(Date.now() - 15 * 60 * 1000);
   const recovery = await recoverStaleBackgroundJobs(staleBefore);
+  const claims = await claimQueuedBackgroundJobs(25);
   const health = await getBackgroundJobHealth();
-  return { ...recovery, health, recoveredAt: new Date().toISOString() };
+  return { ...recovery, ...claims, claimedJobIds: claims.jobIds, health, recoveredAt: new Date().toISOString() };
 }
 
 export type HeavyMediaJobRequest = {
