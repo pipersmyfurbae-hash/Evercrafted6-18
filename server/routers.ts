@@ -8,6 +8,7 @@ import {
   acceptWorkspaceInvitation,
   captureLead,
   createPlan,
+  assignWorkspaceSubscription,
   createDelivery,
   getNotificationPreferences,
   createOrganizationWorkspace,
@@ -21,8 +22,12 @@ import {
   getProjectForWorkspace,
   getAssetForWorkspace,
   getBackgroundJobHealth,
+  getWorkspaceCommercialOverview,
+  getWorkspaceUsageMetric,
   getWorkspaceMembership,
   isWorkspaceCapabilityEnabled,
+  isSubscriptionStatusEligible,
+  incrementWorkspaceUsage,
   listAssetsForProject,
   listAssetVersionsForWorkspace,
   listBackgroundJobsForWorkspace,
@@ -37,6 +42,7 @@ import {
   listRecentSupportAudits,
   listRecentPlatformActivity,
   listWorkspaceEntitlements,
+  listWorkspaceSubscriptions,
   listWorkspaceInvitations,
   listWorkspaceMembers,
   listWorkspacesForUser,
@@ -75,10 +81,22 @@ async function requireWorkspaceRole(input: {
 
 async function requireWorkspaceCapability(workspaceId: number, capability: string) {
   const entitlements = await listWorkspaceEntitlements(workspaceId);
+  const explicitEntitlement = entitlements.find(entitlement => entitlement.capability === capability);
   if (!isWorkspaceCapabilityEnabled(entitlements, capability)) {
     throw new TRPCError({ code: "FORBIDDEN", message: `The ${capability} capability is not enabled for this workspace` });
   }
-  return { capability, source: entitlements.some(entitlement => entitlement.capability === capability) ? "explicit" as const : "default" as const };
+  const subscriptions = await listWorkspaceSubscriptions(workspaceId);
+  const currentSubscription = subscriptions[0];
+  if (!isSubscriptionStatusEligible(currentSubscription?.status)) {
+    throw new TRPCError({ code: "FORBIDDEN", message: `The current subscription status does not allow ${capability}` });
+  }
+  if (explicitEntitlement?.usageLimit !== null && explicitEntitlement?.usageLimit !== undefined) {
+    const usage = await getWorkspaceUsageMetric(workspaceId, capability);
+    if ((usage?.quantity ?? 0) >= explicitEntitlement.usageLimit) {
+      throw new TRPCError({ code: "FORBIDDEN", message: `The current-period usage limit has been reached for ${capability}` });
+    }
+  }
+  return { capability, source: explicitEntitlement ? "explicit" as const : "default" as const, usageLimit: explicitEntitlement?.usageLimit ?? null };
 }
 
 export const appRouter = router({
@@ -172,6 +190,12 @@ export const appRouter = router({
         await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: () => true });
         return listWorkspaceEntitlements(input.workspaceId);
       }),
+    commercialOverview: protectedProcedure
+      .input(z.object({ workspaceId: z.number().int().positive() }))
+      .query(async ({ ctx, input }) => {
+        await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: () => true });
+        return getWorkspaceCommercialOverview(input.workspaceId);
+      }),
   }),
   project: router({
     list: protectedProcedure
@@ -193,7 +217,9 @@ export const appRouter = router({
       .mutation(async ({ ctx, input }) => {
         await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: canManageWorkspace });
         await requireWorkspaceCapability(input.workspaceId, "project.create");
-        return createProject({ ...input, createdByUserId: ctx.user.id });
+        const project = await createProject({ ...input, createdByUserId: ctx.user.id });
+        await incrementWorkspaceUsage({ workspaceId: input.workspaceId, metric: "project.create" });
+        return project;
       }),
   }),
   asset: router({
@@ -236,7 +262,7 @@ export const appRouter = router({
         }
         const safeFileName = input.name.replace(/[^a-zA-Z0-9._-]/g, "-");
         const storageResult = await storagePut(`workspaces/${input.workspaceId}/assets/${safeFileName}`, bytes, input.mediaType);
-        return registerAsset({
+        const asset = await registerAsset({
           workspaceId: input.workspaceId,
           projectId: input.projectId,
           name: input.name,
@@ -247,6 +273,8 @@ export const appRouter = router({
           metadata: { url: storageResult.url },
           createdByUserId: ctx.user.id,
         });
+        await incrementWorkspaceUsage({ workspaceId: input.workspaceId, metric: "asset.upload" });
+        return asset;
       }),
     versionHistory: protectedProcedure
       .input(z.object({ workspaceId: z.number().int().positive(), assetId: z.number().int().positive() }))
@@ -269,6 +297,7 @@ export const appRouter = router({
         const storageResult = await storagePut(`workspaces/${input.workspaceId}/assets/${input.assetId}/revisions/${Date.now()}-${safeFileName}`, bytes, input.mediaType);
         const result = await createAssetVersion({ workspaceId: input.workspaceId, assetId: input.assetId, storageKey: storageResult.key, sizeBytes: bytes.byteLength, checksum: input.checksum, metadata: { url: storageResult.url }, createdByUserId: ctx.user.id });
         if (!result) throw new TRPCError({ code: "NOT_FOUND", message: "Asset not found in this workspace" });
+        await incrementWorkspaceUsage({ workspaceId: input.workspaceId, metric: "asset.versioning" });
         return result;
       }),
   }),
@@ -301,7 +330,9 @@ export const appRouter = router({
         await requireWorkspaceCapability(input.workspaceId, "studio.review");
         if (!await getProjectForWorkspace(input.projectId, input.workspaceId)) throw new TRPCError({ code: "NOT_FOUND", message: "Project not found in this workspace" });
         if (input.assetId && !await getAssetForWorkspace(input.assetId, input.workspaceId)) throw new TRPCError({ code: "NOT_FOUND", message: "Asset not found in this workspace" });
-        return createReviewRequest({ ...input, requestedByUserId: ctx.user.id });
+        const review = await createReviewRequest({ ...input, requestedByUserId: ctx.user.id });
+        await incrementWorkspaceUsage({ workspaceId: input.workspaceId, metric: "studio.review" });
+        return review;
       }),
     respondToReview: protectedProcedure
       .input(z.object({ workspaceId: z.number().int().positive(), reviewId: z.number().int().positive(), status: z.enum(["approved", "changes_requested"]), responseNote: z.string().trim().max(2000).optional() }))
@@ -324,7 +355,9 @@ export const appRouter = router({
         await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: canManageWorkspace });
         await requireWorkspaceCapability(input.workspaceId, "studio.delivery");
         if (!await getProjectForWorkspace(input.projectId, input.workspaceId)) throw new TRPCError({ code: "NOT_FOUND", message: "Project not found in this workspace" });
-        return createDelivery({ ...input, createdByUserId: ctx.user.id });
+        const delivery = await createDelivery({ ...input, createdByUserId: ctx.user.id });
+        await incrementWorkspaceUsage({ workspaceId: input.workspaceId, metric: "studio.delivery" });
+        return delivery;
       }),
     markDeliveryReady: protectedProcedure
       .input(z.object({ workspaceId: z.number().int().positive(), deliveryId: z.number().int().positive() }))
@@ -342,6 +375,7 @@ export const appRouter = router({
         const handoff = await queueDeliveryPublishingHandoff({ ...input, actorUserId: ctx.user.id });
         if (handoff.outcome === "not_found") throw new TRPCError({ code: "NOT_FOUND", message: "Delivery not found in this workspace" });
         if (handoff.outcome === "not_ready") throw new TRPCError({ code: "BAD_REQUEST", message: "Delivery must be ready before it can be handed off" });
+        await incrementWorkspaceUsage({ workspaceId: input.workspaceId, metric: "studio.publishing_handoff" });
         return { delivery: handoff.delivery, job: handoff.job };
       }),
   }),
@@ -406,9 +440,19 @@ export const appRouter = router({
         await writeAuditLog({ actorUserId: ctx.user!.id, action: "admin.plan.created", targetType: "plan", targetId: String(plan?.id ?? ""), metadata: { slug: input.slug } });
         return plan;
       }),
+    assignWorkspaceSubscription: adminProcedure
+      .input(z.object({ workspaceId: z.number().int().positive(), planId: z.number().int().positive(), status: z.enum(["trialing", "active", "past_due", "paused", "canceled", "expired"]), currentPeriodEnd: z.date().optional() }))
+      .mutation(async ({ ctx, input }) => {
+        const subscription = await assignWorkspaceSubscription(input);
+        await writeAuditLog({ workspaceId: input.workspaceId, actorUserId: ctx.user!.id, action: "admin.subscription.assigned", targetType: "workspace_subscription", targetId: String(subscription?.id ?? ""), metadata: { planId: input.planId, status: input.status } });
+        return subscription;
+      }),
     listEntitlements: adminProcedure
       .input(z.object({ workspaceId: z.number().int().positive() }))
       .query(async ({ input }) => listWorkspaceEntitlements(input.workspaceId)),
+    listWorkspaceSubscriptions: adminProcedure
+      .input(z.object({ workspaceId: z.number().int().positive() }))
+      .query(async ({ input }) => listWorkspaceSubscriptions(input.workspaceId)),
     setEntitlement: adminProcedure
       .input(z.object({ workspaceId: z.number().int().positive(), planId: z.number().int().positive().optional(), capability: z.string().trim().min(2).max(120), isEnabled: z.boolean(), usageLimit: z.number().int().nonnegative().optional() }))
       .mutation(async ({ ctx, input }) => {

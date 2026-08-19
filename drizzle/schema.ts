@@ -298,6 +298,54 @@ export const plans = mysqlTable(
   table => [uniqueIndex("plans_slug_unique").on(table.slug)],
 );
 
+/**
+ * Provider-neutral subscription lifecycle. No payment provider credentials or
+ * payment events are stored here until a provider is separately approved.
+ */
+export const workspaceSubscriptions = mysqlTable(
+  "workspaceSubscriptions",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    workspaceId: int("workspaceId").notNull().references(() => workspaces.id),
+    planId: int("planId").notNull().references(() => plans.id),
+    status: mysqlEnum("status", ["trialing", "active", "past_due", "paused", "canceled", "expired"]).default("trialing").notNull(),
+    provider: varchar("provider", { length: 80 }),
+    providerSubscriptionId: varchar("providerSubscriptionId", { length: 191 }),
+    currentPeriodStart: timestamp("currentPeriodStart").defaultNow().notNull(),
+    currentPeriodEnd: timestamp("currentPeriodEnd"),
+    cancelAtPeriodEnd: boolean("cancelAtPeriodEnd").default(false).notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  },
+  table => [
+    index("workspace_subscriptions_workspace_status_index").on(table.workspaceId, table.status),
+    index("workspace_subscriptions_plan_index").on(table.planId),
+    uniqueIndex("workspace_subscriptions_provider_identifier_unique").on(table.provider, table.providerSubscriptionId),
+  ],
+);
+
+/**
+ * Period-bucketed counters provide a tenant-scoped usage foundation without
+ * collecting payment data or implying a billing provider is configured.
+ */
+export const workspaceUsage = mysqlTable(
+  "workspaceUsage",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    workspaceId: int("workspaceId").notNull().references(() => workspaces.id),
+    metric: varchar("metric", { length: 120 }).notNull(),
+    periodStart: timestamp("periodStart").notNull(),
+    periodEnd: timestamp("periodEnd").notNull(),
+    quantity: int("quantity").default(0).notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  },
+  table => [
+    uniqueIndex("workspace_usage_metric_period_unique").on(table.workspaceId, table.metric, table.periodStart),
+    index("workspace_usage_workspace_period_index").on(table.workspaceId, table.periodStart),
+  ],
+);
+
 export const workspaceEntitlements = mysqlTable(
   "workspaceEntitlements",
   {

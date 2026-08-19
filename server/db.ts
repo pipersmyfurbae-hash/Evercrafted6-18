@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, inArray, like, lt } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, like, lt, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { nanoid } from "nanoid";
 import {
@@ -22,6 +22,8 @@ import {
   workspaceInvitations,
   workspaceMemberships,
   workspaceEntitlements,
+  workspaceSubscriptions,
+  workspaceUsage,
   type User,
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
@@ -910,6 +912,66 @@ export async function createPlan(input: { slug: string; name: string; descriptio
   if (!planId) throw new Error("Plan could not be created");
   const created = await db.select().from(plans).where(eq(plans.id, planId)).limit(1);
   return created[0];
+}
+
+export type SubscriptionStatus = "trialing" | "active" | "past_due" | "paused" | "canceled" | "expired";
+
+export function isSubscriptionStatusEligible(status: SubscriptionStatus | undefined) {
+  return !status || status === "trialing" || status === "active";
+}
+
+export function getCurrentUsagePeriod(now = new Date()) {
+  const periodStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
+  const periodEnd = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1));
+  return { periodStart, periodEnd };
+}
+
+export async function listWorkspaceSubscriptions(workspaceId: number) {
+  const db = requireDb(await getDb());
+  return db.select({ id: workspaceSubscriptions.id, planId: workspaceSubscriptions.planId, planName: plans.name, status: workspaceSubscriptions.status, currentPeriodStart: workspaceSubscriptions.currentPeriodStart, currentPeriodEnd: workspaceSubscriptions.currentPeriodEnd, cancelAtPeriodEnd: workspaceSubscriptions.cancelAtPeriodEnd, createdAt: workspaceSubscriptions.createdAt })
+    .from(workspaceSubscriptions)
+    .innerJoin(plans, eq(workspaceSubscriptions.planId, plans.id))
+    .where(eq(workspaceSubscriptions.workspaceId, workspaceId))
+    .orderBy(desc(workspaceSubscriptions.createdAt));
+}
+
+export async function assignWorkspaceSubscription(input: { workspaceId: number; planId: number; status: SubscriptionStatus; currentPeriodEnd?: Date | null }) {
+  const db = requireDb(await getDb());
+  const currentPeriodStart = new Date();
+  const [result] = await db.insert(workspaceSubscriptions).values({ ...input, provider: null, providerSubscriptionId: null, currentPeriodStart, currentPeriodEnd: input.currentPeriodEnd ?? null, cancelAtPeriodEnd: false }).$returningId();
+  const id = result?.id;
+  if (!id) throw new Error("Subscription lifecycle record could not be created");
+  const created = await db.select().from(workspaceSubscriptions).where(eq(workspaceSubscriptions.id, id)).limit(1);
+  return created[0];
+}
+
+export async function listWorkspaceUsage(workspaceId: number, now = new Date()) {
+  const db = requireDb(await getDb());
+  const { periodStart } = getCurrentUsagePeriod(now);
+  return db.select().from(workspaceUsage).where(and(eq(workspaceUsage.workspaceId, workspaceId), eq(workspaceUsage.periodStart, periodStart))).orderBy(asc(workspaceUsage.metric));
+}
+
+export async function getWorkspaceUsageMetric(workspaceId: number, metric: string, now = new Date()) {
+  const db = requireDb(await getDb());
+  const { periodStart } = getCurrentUsagePeriod(now);
+  const recorded = await db.select().from(workspaceUsage).where(and(eq(workspaceUsage.workspaceId, workspaceId), eq(workspaceUsage.metric, metric), eq(workspaceUsage.periodStart, periodStart))).limit(1);
+  return recorded[0];
+}
+
+export async function incrementWorkspaceUsage(input: { workspaceId: number; metric: string; amount?: number; now?: Date }) {
+  const db = requireDb(await getDb());
+  const amount = input.amount ?? 1;
+  const { periodStart, periodEnd } = getCurrentUsagePeriod(input.now);
+  await db.insert(workspaceUsage).values({ workspaceId: input.workspaceId, metric: input.metric, periodStart, periodEnd, quantity: amount }).onDuplicateKeyUpdate({
+    set: { quantity: sql`${workspaceUsage.quantity} + ${amount}`, periodEnd, updatedAt: new Date() },
+  });
+  const recorded = await db.select().from(workspaceUsage).where(and(eq(workspaceUsage.workspaceId, input.workspaceId), eq(workspaceUsage.metric, input.metric), eq(workspaceUsage.periodStart, periodStart))).limit(1);
+  return recorded[0];
+}
+
+export async function getWorkspaceCommercialOverview(workspaceId: number) {
+  const [subscriptions, entitlements, usage] = await Promise.all([listWorkspaceSubscriptions(workspaceId), listWorkspaceEntitlements(workspaceId), listWorkspaceUsage(workspaceId)]);
+  return { subscriptions, entitlements, usage, billingProvider: "unconfigured" as const };
 }
 
 export async function listWorkspaceEntitlements(workspaceId: number) {

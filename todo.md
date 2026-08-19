@@ -22,7 +22,7 @@
 - [x] EC-P04-NOT-001 Implement notification records, preference-ready delivery, and in-app workspace notification UI.
 - [x] EC-PROJECT-013 Persist notification delivery preferences, expand notifications to key workflow/job events, and add deterministic recipient-scoped policy coverage.
 - [x] EC-PROJECT-014 Add persisted-preference-gated notification creation for provider-neutral background-job handoff events with authorized-recipient regression evidence.
-- [ ] EC-P07-ENT-001 Implement plan, subscription, entitlement, and usage model scaffolding with server-enforced feature checks.
+- [x] EC-P07-ENT-001 Implement plan, subscription, entitlement, and usage model scaffolding with server-enforced feature checks.
 - [x] EC-PROJECT-016 Add persisted workspace capability resolution, enforce explicit disabled capability records in protected operations, and expose client-visible entitlement state.
 - [ ] EC-P08-ME-001 Build the owner-only Personal Command Center with private projects, cross-workspace activity overview, integration controls, and operational dashboards.
 - [x] EC-PROJECT-017 Add owner-only personal-workspace project visibility and integration-readiness status to the Personal command, with owner-policy regression coverage.

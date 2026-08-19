@@ -476,3 +476,31 @@ The next actions are to refine the Wix CMS foundation with production field type
 ### GitHub synchronization
 
 The completed restricted administration-console increment was pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `5456c43` (`feat: complete restricted administration console`).
+
+## Run EC-RUN-0015 — Provider-neutral subscription and usage foundation
+
+**Date:** 2026-08-19 EDT
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`
+**Work item:** `EC-P07-ENT-001`
+**Objective:** Complete the plan, subscription, entitlement, and usage model foundation without activating a payment provider or collecting payment data.
+
+| Area | Evidence | Result |
+|---|---|---|
+| Versioned lifecycle schema | `drizzle/schema.ts` and `0002_deep_the_phantom.sql` | Adds `workspaceSubscriptions` with trialing/active/past-due/paused/canceled/expired state, plan linkage, non-secret provider placeholders, and lifecycle dates; adds monthly `workspaceUsage` counters keyed by workspace, metric, and period. |
+| Managed database application | Reviewed additive SQL plus information-schema query | The migration applied successfully. Verification returned `workspaceSubscriptions` with 11 columns and `workspaceUsage` with 8 columns; no test data was inserted. |
+| Authorization and audit | Typed `workspace.commercialOverview`, `admin.listWorkspaceSubscriptions`, and `admin.assignWorkspaceSubscription` procedures | Any active workspace member can read only their workspace’s plan, entitlement, and usage state. Only an administrator can view lifecycle history or create a provider-neutral subscription record; assignment writes an audit event. |
+| Enforced lifecycle and quotas | Existing protected capability gate | Every governed capability now additionally denies a latest lifecycle status other than `trialing` or `active`. An explicit entitlement `usageLimit` checks the current UTC monthly metric before side effects and returns `FORBIDDEN` when exhausted. No subscription record preserves the documented unmanaged default policy. |
+| Usage foundation | `incrementWorkspaceUsage` after protected success paths | Successful project creation, asset upload/versioning, Studio review, delivery creation, and publishing handoff record tenant-scoped current-period metrics. Denied operations have no usage side effect. |
+| Client visibility | `Settings.tsx` | Client workspace settings render loading, retry/error, empty, current lifecycle, billing-provider-unconfigured, and current-period usage states without exposing commercial administration. |
+| Validation | `pnpm test`, `pnpm check`, `pnpm build`, authenticated `/settings` and `/admin` review | Passed: 29 Vitest files / 66 tests, TypeScript check, production build, applied migration verification, and visual review. The existing non-blocking client chunk-size advisory remains. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Updated | `drizzle/schema.ts`, `drizzle/meta/*` | Canonical lifecycle and usage schema plus generated Drizzle metadata. |
+| Created | `drizzle/0002_deep_the_phantom.sql` | Reviewed and applied additive subscription/usage migration. |
+| Updated | `server/db.ts`, `server/routers.ts` | Provider-neutral lifecycle/usage repository helpers, lifecycle/usage-limit protected gate, commercial overview, administrator lifecycle assignment/history, audit record, and governed-operation usage counters. |
+| Updated | `client/src/pages/Settings.tsx`, `client/src/pages/Admin.tsx` | Member-visible commercial state plus restricted lifecycle assignment/history controls. |
+| Created/updated | `server/subscription.lifecycle.policy.test.ts`, `server/usage.period.contract.test.ts`, `server/entitlement.policy.test.ts`, `server/asset.version.router.test.ts`, `server/studio.publishing.router.test.ts`, `server/admin.console.ui.contract.test.ts` | Lifecycle authorization, audit, tenant isolation, UTC period, Settings/Admin UI, lifecycle/usage-limit denial, and successful-operation usage assertions. |
+| Updated | `docs/quality/TEST_MATRIX.md`, `docs/roadmap/MIGRATION_LEDGER.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Completion, migration, and validation evidence. |

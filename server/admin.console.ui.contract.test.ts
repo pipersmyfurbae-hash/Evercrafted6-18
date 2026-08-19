@@ -12,6 +12,8 @@ describe("restricted administration console UI contract", () => {
     expect(adminPage).toContain("heavyMediaEscalationJobIds");
     expect(adminPage).toContain("providerHandoffEscalationJobIds");
     expect(adminPage).toContain("integrationHealth");
+    expect(adminPage).toContain("Subscription lifecycle");
+    expect(adminPage).toContain("assignWorkspaceSubscription");
   });
 
   it("provides recoverable query states and auditable-support mutation feedback", () => {
@@ -20,5 +22,6 @@ describe("restricted administration console UI contract", () => {
     expect(adminPage).toContain("recordSupport.isError");
     expect(adminPage).toContain("Support record created.");
     expect(adminPage).toContain("Administrator permission is required.");
+    expect(adminPage).toContain("Subscription lifecycle record assigned and audited.");
   });
 });

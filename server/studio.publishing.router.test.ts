@@ -3,6 +3,7 @@ import type { TrpcContext } from "./_core/context";
 
 const databaseMocks = vi.hoisted(() => ({
   getWorkspaceMembership: vi.fn(),
+  incrementWorkspaceUsage: vi.fn(),
   queueDeliveryPublishingHandoff: vi.fn(),
 }));
 
@@ -29,11 +30,13 @@ describe("Studio publishing handoff router", () => {
 
     await expect(appRouter.createCaller(createContext()).studio.queuePublishingHandoff({ workspaceId: 9, deliveryId: 11 })).resolves.toEqual({ delivery: result.delivery, job: result.job });
     expect(databaseMocks.queueDeliveryPublishingHandoff).toHaveBeenCalledWith({ workspaceId: 9, deliveryId: 11, actorUserId: 42 });
+    expect(databaseMocks.incrementWorkspaceUsage).toHaveBeenCalledWith({ workspaceId: 9, metric: "studio.publishing_handoff" });
   });
 
   it("rejects a viewer before an external-provider handoff record can be queued", async () => {
     databaseMocks.getWorkspaceMembership.mockResolvedValue(activeMembership("viewer"));
     await expect(appRouter.createCaller(createContext()).studio.queuePublishingHandoff({ workspaceId: 9, deliveryId: 11 })).rejects.toMatchObject({ code: "FORBIDDEN" });
     expect(databaseMocks.queueDeliveryPublishingHandoff).not.toHaveBeenCalled();
+    expect(databaseMocks.incrementWorkspaceUsage).not.toHaveBeenCalled();
   });
 });
