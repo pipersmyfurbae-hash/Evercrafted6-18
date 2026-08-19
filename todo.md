@@ -36,7 +36,7 @@
 - [x] EC-P06-PUB-001 Build a provider-neutral Studio publishing handoff flow and audit event without enabling an external provider until separately approved.
 - [x] EC-P04-STO-002 Add tenant-scoped asset re-upload/new-version creation, version history query, and Studio version history UI.
 - [x] EC-P04-WF-002 Add assigned reviewer/member selection and assignment state UI for Studio review workflow.
-- [ ] EC-WIX-001 Audit the connected Wix account, target site, enabled products, permissions, Velo availability, CMS collections, member areas, stores, automations, and current integrations; record the source-of-truth mapping.
+- [x] EC-WIX-001 Audit the connected Wix account, target site, enabled products, permissions, Velo availability, CMS collections, member areas, stores, automations, and current integrations; record the source-of-truth mapping. (Read-only audit reconciled all 17 manifest collections with complete paging metadata and ADMIN-only permissions; current installed-product automations are documented with no Evercrafted operational automation configured.)
 - [ ] EC-WIX-002 Write and maintain a Wix migration decision record that maps each Evercrafted engine capability to Wix-native data, members, Velo, CMS, automations, Stores, external services, or an explicit deferred state.
 - [ ] EC-WIX-003 Define a Restoration Hardware–inspired editorial design system for Wix: warm stone/ivory/charcoal palette, high-contrast serif/sans typography, restrained grid, architectural photography treatment, and accessible interaction standards.
 - [ ] EC-WIX-004 Build all Wix public pages in the approved editorial system: home, platform, Moodoor Studio, pricing, contact/lead capture, about, legal, sign-in, and 404 states.

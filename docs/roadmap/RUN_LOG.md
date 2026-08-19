@@ -730,3 +730,30 @@ The completed provider-neutral async job service increment was pushed successful
 
 The completed source-inventory audit increment was pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `5ed7506` (`docs: complete source inventory audit`).
 | Updated | `docs/quality/TEST_MATRIX.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Records the completed data-governance evidence. |
+
+## Run EC-RUN-0024 — Wix live-target audit completion
+
+**Date:** 2026-08-19 EDT
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`
+**Work item:** `EC-WIX-001`
+**Objective:** Complete the non-mutating audit of the connected Wix target and reconcile its live CMS and automation state with the versioned Evercrafted port records.
+
+| Audit area | Evidence and disposition |
+|---|---|
+| Target and products | `My Site 6` (`4a20e429-d686-4f4d-8282-13454219024a`) remains the published Wix Free-plan future port target. Odeditor and Velo availability, plus Wix Stores Catalog V3, Members Area, Forms, Invoices, and Promote SEO, were observed without configuration mutation. |
+| CMS reconciliation | The documented collection-list method returned an ID-and-permissions page with `count: 17`, `offset: 0`, `total: 17`, and `tooManyToCount: false`. All 17 manifest collection IDs are present and have `ADMIN` collection permissions for insert, update, remove, and read. The prior apparent absence of workspaces, memberships, and invitations was a first-page visibility issue, not a missing-resource condition. |
+| Automation inventory | The installed-app inventory includes Wix preinstalled automations. The origin-filtered query returned exactly three active `APPLICATION` Wix Forms email notifications: Mailing list 1, Contact Form, and Mailing list. No `USER` origin automation or Evercrafted operational automation was observed. No automation state changed. |
+| Explicit non-claims | This audit does not establish Velo role/tenant enforcement, deployed Velo modules, Harmony/editor availability, Store payment configuration, member access behavior, or live page architecture. Those controls remain deferred. |
+| Validation | `pnpm test` passed: 43 Vitest files / 107 tests, including 4 Wix live-audit contract assertions. `pnpm check` and `pnpm build` passed. The existing client-chunk-size advisory and pnpm configuration-field warnings are non-blocking. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Added | `docs/wix/WIX_LIVE_AUDIT.md` | Records the final read-only site, CMS, permission, product, automation, integration, and source-of-truth evidence. |
+| Added | `server/wix.live.audit.contract.test.ts` | Locks target-site identity, 17-collection manifest reconciliation, CMS permission/paging evidence, automation scope, deferred-policy boundary, and no-testimonial rule. |
+| Updated | `docs/quality/TEST_MATRIX.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Records validation evidence, material scope state, and milestone completion. |
+
+### GitHub synchronization
+
+The validated Wix live-audit increment is pending commit and push to `pipersmyfurbae-hash/Evercrafted6-18` on `main`.
