@@ -504,3 +504,7 @@ The completed restricted administration-console increment was pushed successfull
 | Updated | `client/src/pages/Settings.tsx`, `client/src/pages/Admin.tsx` | Member-visible commercial state plus restricted lifecycle assignment/history controls. |
 | Created/updated | `server/subscription.lifecycle.policy.test.ts`, `server/usage.period.contract.test.ts`, `server/entitlement.policy.test.ts`, `server/asset.version.router.test.ts`, `server/studio.publishing.router.test.ts`, `server/admin.console.ui.contract.test.ts` | Lifecycle authorization, audit, tenant isolation, UTC period, Settings/Admin UI, lifecycle/usage-limit denial, and successful-operation usage assertions. |
 | Updated | `docs/quality/TEST_MATRIX.md`, `docs/roadmap/MIGRATION_LEDGER.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Completion, migration, and validation evidence. |
+
+### GitHub synchronization
+
+The completed subscription, usage, and entitlement increment was pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `f42c567` (`feat: complete subscription usage entitlements`).
