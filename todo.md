@@ -17,7 +17,8 @@
 - [ ] EC-P04-JOB-001 Implement observable asynchronous job records and service contracts for processing, notifications, webhook retries, and long-running Studio operations. (Durable record, typed queue, health, and recovery foundations complete; provider worker adapters remain.)
 - [x] EC-P04-JOB-002 Implement the approved hybrid job policy: request-driven short actions, durable idempotent job records, bounded retry/recovery processing, and provider-neutral heavy-media handoff contracts.
 - [x] EC-P04-JOB-003 Add a scheduled recovery handler for queued/retryable jobs with idempotent claim semantics, documented deployment requirement, and no in-process timers. (Endpoint and state machine are deployed and tested; deploy-before-schedule and deferred-cadence controls are recorded.)
-- [ ] EC-P04-JOB-004 Add job health, queue latency, retry, dead-letter, and heavy-media escalation telemetry so an always-on worker can be introduced from measured demand without redesign.
+- [x] EC-P04-JOB-004 Add job health, queue latency, retry, dead-letter, and heavy-media escalation telemetry so an always-on worker can be introduced from measured demand without redesign.
+- [x] EC-PROJECT-015 Define and test provider-neutral heavy-media job classification and escalation telemetry alongside Studio provider handoffs.
 - [x] EC-P04-NOT-001 Implement notification records, preference-ready delivery, and in-app workspace notification UI.
 - [x] EC-PROJECT-013 Persist notification delivery preferences, expand notifications to key workflow/job events, and add deterministic recipient-scoped policy coverage.
 - [x] EC-PROJECT-014 Add persisted-preference-gated notification creation for provider-neutral background-job handoff events with authorized-recipient regression evidence.

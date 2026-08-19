@@ -359,6 +359,31 @@ The hardened scheduled-recovery increment was pushed successfully to `pipersmyfu
 
 The persisted notification-delivery increment was pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `626a9af` (`feat: persist workspace notification delivery`).
 
+## Run EC-RUN-0011 — Durable job telemetry and provider-neutral escalation
+
+**Date:** 2026-08-19 EDT
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`
+**Work items:** `EC-P04-JOB-004`, `EC-PROJECT-015`
+**Objective:** Provide measured queue health evidence so future always-on worker adoption can be based on observable durable-job demand rather than a redesign.
+
+| Telemetry | Evidence and result |
+|---|---|
+| Queue latency | Calculates age of the oldest queued durable job in milliseconds. |
+| Retry and dead-letter health | Counts queued/running jobs with prior attempts and failed jobs that exhausted their allowed attempts. |
+| Heavy-media escalation | Classifies generic `media.*`, asset render/transcode/video-processing, and Studio provider-handoff jobs; queues older than 15 minutes or failed jobs are exposed as owner-visible escalation candidates. |
+| Access boundary | Metrics appear only in the owner-only Personal command. No client workspace navigation, provider configuration, or heavy-media execution was added. |
+| Regression evidence | `server/job.health.telemetry.test.ts` uses deterministic timestamps to prove queue latency, retry/dead-letter counts, provider-handoff escalation, and broader heavy-media escalation. |
+| Validation | `pnpm test`, `pnpm check`, `pnpm build` passed: 23 Vitest files / 50 tests, TypeScript check, and production build. The existing non-blocking client-chunk-size advisory remains. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Updated | `server/db.ts` | Durable-job telemetry aggregate and provider-neutral heavy-media classification. |
+| Updated | `client/src/pages/Personal.tsx` | Owner-only queue retry, dead-letter, and heavy-media attention indicators. |
+| Created | `server/job.health.telemetry.test.ts` | Deterministic telemetry regression coverage. |
+| Updated | `todo.md` | Marks measured job telemetry and generic heavy-media escalation complete. |
+
 ### Next actions
 
 The next actions are to refine the Wix CMS foundation with production field types, references, indexes, and Velo data-access policy; transform the hybrid template while removing all template testimonial content; build the custom member dashboard; then complete the remaining test, payment/provider, scheduler, and legacy-source audit work.

@@ -841,18 +841,34 @@ export async function claimQueuedBackgroundJobs(limit = 25) {
   return { claimed: claimedJobIds.length, exhausted, jobIds: claimedJobIds };
 }
 
-export async function getBackgroundJobHealth() {
-  const db = requireDb(await getDb());
-  const rows = await db.select({ id: backgroundJobs.id, status: backgroundJobs.status, createdAt: backgroundJobs.createdAt, updatedAt: backgroundJobs.updatedAt })
-    .from(backgroundJobs)
-    .orderBy(desc(backgroundJobs.createdAt))
-    .limit(250);
+type BackgroundJobTelemetryRow = { id: number; jobType: string; status: "queued" | "running" | "succeeded" | "failed" | "cancelled"; attempts: number; maxAttempts: number; createdAt: Date; updatedAt: Date; startedAt: Date | null; completedAt: Date | null };
+const PROVIDER_HANDOFF_ESCALATION_MS = 15 * 60 * 1000;
+
+export function isHeavyMediaJobType(jobType: string) {
+  return jobType === "studio.provider_handoff" || jobType.startsWith("media.") || ["asset.render", "asset.transcode", "asset.video_processing"].includes(jobType);
+}
+
+export function summarizeBackgroundJobTelemetry(rows: BackgroundJobTelemetryRow[], now = new Date()) {
   const counts = rows.reduce<Record<string, number>>((accumulator, row) => {
     accumulator[row.status] = (accumulator[row.status] ?? 0) + 1;
     return accumulator;
   }, {});
   const oldestQueued = rows.filter(row => row.status === "queued").sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())[0];
-  return { counts, oldestQueuedAt: oldestQueued?.createdAt ?? null };
+  const queueLatencyMs = oldestQueued ? Math.max(0, now.getTime() - oldestQueued.createdAt.getTime()) : 0;
+  const retryingJobs = rows.filter(row => ["queued", "running"].includes(row.status) && row.attempts > 0).length;
+  const deadLetterJobs = rows.filter(row => row.status === "failed" && row.attempts >= row.maxAttempts).length;
+  const providerHandoffEscalationJobIds = rows.filter(row => row.jobType === "studio.provider_handoff" && (row.status === "failed" || (row.status === "queued" && now.getTime() - row.createdAt.getTime() >= PROVIDER_HANDOFF_ESCALATION_MS))).map(row => row.id);
+  const heavyMediaEscalationJobIds = rows.filter(row => isHeavyMediaJobType(row.jobType) && (row.status === "failed" || (row.status === "queued" && now.getTime() - row.createdAt.getTime() >= PROVIDER_HANDOFF_ESCALATION_MS))).map(row => row.id);
+  return { counts, oldestQueuedAt: oldestQueued?.createdAt ?? null, queueLatencyMs, retryingJobs, deadLetterJobs, providerHandoffEscalationJobIds, heavyMediaEscalationJobIds };
+}
+
+export async function getBackgroundJobHealth() {
+  const db = requireDb(await getDb());
+  const rows = await db.select({ id: backgroundJobs.id, jobType: backgroundJobs.jobType, status: backgroundJobs.status, attempts: backgroundJobs.attempts, maxAttempts: backgroundJobs.maxAttempts, createdAt: backgroundJobs.createdAt, updatedAt: backgroundJobs.updatedAt, startedAt: backgroundJobs.startedAt, completedAt: backgroundJobs.completedAt })
+    .from(backgroundJobs)
+    .orderBy(desc(backgroundJobs.createdAt))
+    .limit(250);
+  return summarizeBackgroundJobTelemetry(rows);
 }
 
 export async function listPlatformWorkspaces() {
