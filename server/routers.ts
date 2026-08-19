@@ -385,6 +385,11 @@ export const appRouter = router({
   }),
   admin: router({
     listWorkspaces: adminProcedure.query(async () => listPlatformWorkspaces()),
+    integrationHealth: adminProcedure.query(() => [
+      { key: "publishing", label: "Publishing provider", status: "unconfigured" as const, detail: "No external publishing provider is enabled." },
+      { key: "email", label: "External email", status: "unconfigured" as const, detail: "In-app delivery remains the active notification channel." },
+      { key: "recovery", label: "Job recovery", status: "ready" as const, detail: "Cron-authenticated recovery endpoint is deployed; cadence remains deferred." },
+    ]),
     listFeatureFlags: adminProcedure.query(async () => listPlatformFeatureFlags()),
     setFeatureFlag: adminProcedure
       .input(z.object({ key: z.string().trim().min(2).max(120), workspaceId: z.number().int().positive().optional(), isEnabled: z.boolean(), description: z.string().trim().max(2000).optional() }))

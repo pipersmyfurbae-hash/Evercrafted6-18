@@ -447,3 +447,28 @@ The Personal command increment was pushed successfully to `pipersmyfurbae-hash/E
 ### Next actions
 
 The next actions are to refine the Wix CMS foundation with production field types, references, indexes, and Velo data-access policy; transform the hybrid template while removing all template testimonial content; build the custom member dashboard; then complete the remaining test, payment/provider, scheduler, and legacy-source audit work.
+
+## Run EC-RUN-0014 — Restricted administration and support-console completion
+
+**Date:** 2026-08-19 EDT
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`
+**Work item:** `EC-P08-ADM-002`
+**Objective:** Complete the administrator-restricted operations surface without exposing provider credentials, impersonating users, or bypassing tenant authorization.
+
+| Area | Evidence | Result |
+|---|---|---|
+| Tenant and commercial controls | Existing typed `admin` router plus `Admin.tsx` | Administrators can inspect tenant scope, set scoped flags, inspect or set workspace entitlements, and create controlled plan records. Every mutation writes an audit action. |
+| Job and integration health | Typed `job.health` plus new `admin.integrationHealth` query | The console displays durable queue telemetry and three non-secret provider-boundary descriptors: publishing unconfigured, external email unconfigured, and cron-authenticated recovery ready with cadence deferred. |
+| Audited support boundary | `admin.recordSupportAccess` | Support requires an administrator, an explicit workspace, and a 10+ character reason; it appends a `support.access.requested` audit record and does not impersonate a member or grant cross-tenant data access. |
+| Regression evidence | `server/admin.console.policy.test.ts` | A non-administrator is rejected before workspace data is queried; integration readiness is administrator-only; an allowed support action records the expected scoped audit payload. |
+| Recovery and UI evidence | `Admin.tsx` plus `server/admin.console.ui.contract.test.ts` | The console shows oldest queue age, retrying jobs, dead-letter jobs, and heavy-media/provider-handoff escalation counts, with loading, retry, error, empty, success, and unauthorized states. |
+| Validation | `pnpm test`, `pnpm check`, `pnpm build`, authenticated `/admin` review | Passed: 27 Vitest files / 58 tests, TypeScript check, production build, and visual review of the populated administrator console. The build retains the existing non-blocking client chunk-size advisory. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Updated | `server/routers.ts` | Adds the administrator-only, non-secret integration readiness descriptor contract. |
+| Updated | `client/src/pages/Admin.tsx` | Displays complete job telemetry and integration readiness alongside tenant, feature-flag, entitlement, plan, and audited-support controls, with recoverable query and mutation states. |
+| Created | `server/admin.console.policy.test.ts`, `server/admin.console.ui.contract.test.ts` | Deterministic administrator denial, readiness visibility, support-audit, telemetry-display, and UI-state regression coverage. |
+| Updated | `docs/quality/TEST_MATRIX.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Records completion state and test evidence. |
