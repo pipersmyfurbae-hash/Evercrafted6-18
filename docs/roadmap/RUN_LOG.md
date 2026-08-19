@@ -563,3 +563,7 @@ The workspace identity lifecycle assurance increment was pushed successfully to 
 | Updated | `client/src/pages/Personal.tsx` | Adds private projects plus persisted control editing and main dashboard loading/error/retry/empty states. |
 | Updated/created | `server/personal.command.contract.test.ts`, `server/personal.command.ui.contract.test.ts` | Protects owner-only project, usage, audit, integration-control, and UI recovery contracts. |
 | Updated | `docs/quality/TEST_MATRIX.md`, `docs/roadmap/MIGRATION_LEDGER.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Records completion, migration, and validation evidence. |
+
+### GitHub synchronization
+
+The persisted Personal integration-control increment was pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `a458db5` (`feat: persist personal integration controls`).
