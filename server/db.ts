@@ -639,6 +639,22 @@ export async function markDeliveryReady(input: { workspaceId: number; deliveryId
   return updated[0];
 }
 
+export async function queueDeliveryPublishingHandoff(input: { workspaceId: number; deliveryId: number; actorUserId: number }) {
+  const db = requireDb(await getDb());
+  const deliveryRows = await db.select().from(deliveries).where(and(eq(deliveries.id, input.deliveryId), eq(deliveries.workspaceId, input.workspaceId))).limit(1);
+  const delivery = deliveryRows[0];
+  if (!delivery) return { outcome: "not_found" as const };
+  if (delivery.status !== "ready") return { outcome: "not_ready" as const, delivery };
+  const job = await enqueueBackgroundJob({
+    workspaceId: input.workspaceId,
+    jobType: "studio.provider_handoff",
+    idempotencyKey: `delivery:${input.deliveryId}:provider_handoff`,
+    payload: { deliveryId: input.deliveryId, projectId: delivery.projectId, destinationType: delivery.destinationType, destinationRef: delivery.destinationRef ?? null },
+  });
+  await writeAuditLog({ workspaceId: input.workspaceId, actorUserId: input.actorUserId, action: "studio.delivery.publish_handoff.queued", targetType: "delivery", targetId: String(input.deliveryId), metadata: { jobId: job?.id ?? null, provider: "unconfigured" } });
+  return { outcome: "queued" as const, delivery, job };
+}
+
 export async function listNotificationsForUser(userId: number) {
   const db = requireDb(await getDb());
   return db.select().from(notifications).where(eq(notifications.recipientUserId, userId)).orderBy(desc(notifications.createdAt));

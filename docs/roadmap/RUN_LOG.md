@@ -208,6 +208,39 @@ The profile-management increment was pushed successfully to `pipersmyfurbae-hash
 
 The shared accessibility foundation was pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `650ac6a` (`feat: add shared accessibility foundation`).
 
+## Run EC-RUN-0006 — Provider-neutral Studio publishing handoff
+
+**Date:** 2026-08-19 EDT  
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`  
+**Work items:** `EC-P06-PUB-001`, `EC-P06-UX-001`  
+**Objective:** Introduce a governed publishing handoff without enabling an external provider.
+
+| Area | Evidence | Result |
+|---|---|---|
+| Durable handoff record | `queueDeliveryPublishingHandoff` in `server/db.ts` | A ready delivery creates or reuses an idempotent `studio.provider_handoff` background job keyed by delivery. |
+| Auditability | Shared audit-log write | Queuing records `studio.delivery.publish_handoff.queued` with an explicit `unconfigured` provider marker. |
+| Authorization | Typed Studio tRPC mutation and role test | Only workspace-management roles can queue a delivery handoff; a viewer receives `FORBIDDEN` before the handoff repository helper is invoked. |
+| Studio controls | `StudioPublishingHandoff.tsx` | Ready deliveries show a queue action, job confirmation, no-provider notice, and mutation error state. |
+| Validation | `pnpm test`, `pnpm check`, `pnpm build` | Passed: 11 Vitest files / 27 tests, TypeScript check, and production build. Studio preview reached the protected-shell loading state; the role and workflow behavior are covered by deterministic typed-router tests. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Created | `client/src/components/StudioPublishingHandoff.tsx` | Client-visible durable-handoff control with explicit provider-neutral status. |
+| Created | `server/studio.publishing.router.test.ts` | Member success and viewer-denial typed-router coverage. |
+| Updated | `server/db.ts`, `server/routers.ts` | Idempotent job creation, audit write, and role-protected typed mutation. |
+| Updated | `client/src/pages/Studio.tsx` | Adds the handoff control to the selected Studio project. |
+| Updated | `todo.md` | Marks provider-neutral Studio publishing and the completed Studio shell flow. |
+
+### Studio creation gap closure
+
+The Studio shell now includes a workspace-scoped creation card that calls the typed `project.create` procedure and selects the new project on success. `server/studio.creation.page.contract.test.ts` verifies the typed mutation, pending/error states, and Studio entry point. The combined Studio increment now passes 12 Vitest files / 29 tests, TypeScript check, and production build.
+
+### Studio recovery-state closure
+
+The Studio shell now aggregates error/retry controls for workspace, project, member, asset, review, and delivery queries, plus explicit error/success feedback for stage transitions, review request/response, delivery creation, and delivery readiness. `server/studio.feedback.contract.test.ts` covers the expected UI wiring. The complete Studio increment now passes 13 Vitest files / 31 tests, TypeScript check, and production build.
+
 ### Next actions
 
 The next actions are to refine the Wix CMS foundation with production field types, references, indexes, and Velo data-access policy; transform the hybrid template while removing all template testimonial content; build the custom member dashboard; then complete the remaining test, payment/provider, scheduler, and legacy-source audit work.

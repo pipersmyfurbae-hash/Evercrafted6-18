@@ -9,7 +9,7 @@
 | Workspace provisioning and roles | EC-P03-IAM-001, EC-P10-TEST-001 | Typed router bootstrap/provisioning and member/viewer authorization tests | `PASS: 2026-08-19, deterministic tRPC-caller coverage; 21 Vitest tests pass` |
 | Drizzle schema/migrations | EC-P02-DB-001, EC-P03-DATA-001 | Fresh-install and upgrade migration tests | `NOT_STARTED` |
 | Asset access and versioning | EC-P04-STO-001 | Policy/repository tests and storage adapter tests | `NOT_STARTED` |
-| Studio review and delivery | EC-P06-UX-001 | End-to-end role/project/asset workflow tests | `NOT_STARTED` |
+| Studio review, delivery, creation, publishing handoff, and recovery | EC-P06-UX-001, EC-P06-PUB-001, EC-PROJECT-009, EC-PROJECT-010 | Typed project creation, provider-neutral handoff mutation, member/viewer role-gate tests, durable job record, audit-event contract, Studio-entry UI contract, query retry controls, and mutation feedback | `PASS: 2026-08-19, 6 Studio assertions within 13 Vitest files / 31 tests; TypeScript check and production build pass. No external provider is configured or called.` |
 | Owner-only command controls | EC-P08-ME-001 | Negative authorization and UI routing tests | `NOT_STARTED` |
 | Audited support access | EC-P08-ADM-002 | Role, reason, audit-log, and expiry tests | `NOT_STARTED` |
 | Hybrid asynchronous processing | EC-P04-JOB-001 through EC-P04-JOB-004 | Durable job state, idempotency, stale-job recovery, cron handler, health telemetry, and provider-boundary tests | `IN_PROGRESS: durable schema and handler implemented; scheduled deployment and recovery test pending` |

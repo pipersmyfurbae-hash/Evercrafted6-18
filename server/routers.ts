@@ -14,6 +14,7 @@ import {
   createReviewRequest,
   createWorkspaceInvitation,
   enqueueBackgroundJob,
+  queueDeliveryPublishingHandoff,
   ensurePersonalWorkspace,
   getProjectForWorkspace,
   getAssetForWorkspace,
@@ -284,6 +285,15 @@ export const appRouter = router({
         const delivery = await markDeliveryReady({ ...input, actorUserId: ctx.user.id });
         if (!delivery) throw new TRPCError({ code: "NOT_FOUND", message: "Delivery not found in this workspace" });
         return delivery;
+      }),
+    queuePublishingHandoff: protectedProcedure
+      .input(z.object({ workspaceId: z.number().int().positive(), deliveryId: z.number().int().positive() }))
+      .mutation(async ({ ctx, input }) => {
+        await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: canManageWorkspace });
+        const handoff = await queueDeliveryPublishingHandoff({ ...input, actorUserId: ctx.user.id });
+        if (handoff.outcome === "not_found") throw new TRPCError({ code: "NOT_FOUND", message: "Delivery not found in this workspace" });
+        if (handoff.outcome === "not_ready") throw new TRPCError({ code: "BAD_REQUEST", message: "Delivery must be ready before it can be handed off" });
+        return { delivery: handoff.delivery, job: handoff.job };
       }),
   }),
   notification: router({

@@ -11,7 +11,7 @@
 - [x] EC-P05-PUB-001 Build the responsive Evercrafted public landing, product, pricing, and lead-capture pages with an authenticated onboarding path.
 - [x] EC-P05-ONB-001 Build authenticated onboarding that creates or opens a personal workspace and supports organization workspace creation.
 - [x] EC-P05-APP-001 Build the authenticated SaaS workspace shell with context-safe navigation, workspace switcher, project list/detail, global search, notifications, profile, and settings states.
-- [ ] EC-P06-UX-001 Build the Moodoor Studio shell with studio project navigation, creation, review, approval, delivery, and publishing flows. (Navigation, review, approval, and delivery preparation are complete; provider-neutral publishing handoff remains.)
+- [x] EC-P06-UX-001 Build the Moodoor Studio shell with studio project navigation, creation, review, approval, delivery, and publishing flows.
 - [ ] EC-P04-STO-001 Implement tenant-scoped S3-backed asset metadata, governed upload intent, asset versioning, and signed-access policy. (Upload, S3 metadata, initial v1 records, and signed access are complete; subsequent versions and history UI remain.)
 - [ ] EC-P04-WF-001 Implement shared project/studio workflow statuses, review, approval, assignment, delivery, and audit events. (Statuses, reviews, approvals, delivery, and audits are complete; reviewer/member assignment interface remains.)
 - [ ] EC-P04-JOB-001 Implement observable asynchronous job records and service contracts for processing, notifications, webhook retries, and long-running Studio operations. (Durable record, typed queue, health, and recovery foundations complete; provider worker adapters remain.)
@@ -28,7 +28,7 @@
 - [x] EC-P11-GOV-002 Commit and push the initial governance-document set and first validated implementation increment to the designated GitHub branch, recording the commit ID and push result in RUN_LOG.md.
 - [ ] EC-P02-DB-002 Generate, review, and test Drizzle migration artifacts using the documented database workflow; record executable migration evidence.
 - [x] EC-P05-PROFILE-001 Build authenticated profile view and editing with loading, error, and success states.
-- [ ] EC-P06-PUB-001 Build a provider-neutral Studio publishing handoff flow and audit event without enabling an external provider until separately approved.
+- [x] EC-P06-PUB-001 Build a provider-neutral Studio publishing handoff flow and audit event without enabling an external provider until separately approved.
 - [ ] EC-P04-STO-002 Add tenant-scoped asset re-upload/new-version creation, version history query, and Studio version history UI.
 - [ ] EC-P04-WF-002 Add assigned reviewer/member selection and assignment state UI for Studio review workflow.
 - [ ] EC-WIX-001 Audit the connected Wix account, target site, enabled products, permissions, Velo availability, CMS collections, member areas, stores, automations, and current integrations; record the source-of-truth mapping.
@@ -76,3 +76,5 @@
 - [ ] EC-3X-014 Apply the prepared Personal command specification only after owner-secret policy deployment; preserve generic access-denied states and audit sensitive data access.
 - [x] EC-3X-015 Execute and record the restored Wix shared-engine contract test suite, covering CMS manifest boundaries plus Client membership and Personal owner-policy artifacts.
 - [x] EC-PROJECT-008 Add a dedicated `/client/sign-in` route and Client SaaS sign-in state, then cover it with route-level test evidence.
+- [x] EC-PROJECT-009 Add a Studio-accessible project-creation flow and route/UI contract evidence, then revalidate the Studio workflow end to end.
+- [x] EC-PROJECT-010 Add explicit Studio query error/retry states plus user-facing mutation error/success handling for workflow transitions, reviews, and deliveries.
