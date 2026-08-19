@@ -323,6 +323,10 @@ The Studio reviewer-assignment increment was pushed successfully to `pipersmyfur
 | Repeated-run state evidence | `server/job.recovery.transition.test.ts` | A queued job transitions to running exactly once; a second recovery pass sees the running state and does not claim it again. A recovered queued job advances once more, while an exhausted queued job deterministically fails. |
 | Final validation | `pnpm test`, `pnpm check`, `pnpm build` | Passed: 19 Vitest files / 42 tests, TypeScript check, and production build. The existing non-blocking client-chunk-size advisory remains. |
 
+### GitHub synchronization
+
+The hardened scheduled-recovery increment was pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `e619fe5` (`feat: harden scheduled job recovery claims`).
+
 ### Next actions
 
 The next actions are to refine the Wix CMS foundation with production field types, references, indexes, and Velo data-access policy; transform the hybrid template while removing all template testimonial content; build the custom member dashboard; then complete the remaining test, payment/provider, scheduler, and legacy-source audit work.
