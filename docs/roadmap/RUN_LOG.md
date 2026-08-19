@@ -757,3 +757,30 @@ The completed source-inventory audit increment was pushed successfully to `piper
 ### GitHub synchronization
 
 The validated Wix live-audit increment was committed and pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `0a5d56d` (`docs: complete wix live audit`).
+
+## Run EC-RUN-0025 — Wix migration decision completion
+
+**Date:** 2026-08-19 EDT
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`
+**Work item:** `EC-WIX-002`
+**Objective:** Define the verified Wix-native migration path for every governed Evercrafted engine capability without representing a planning decision as a live Wix cutover.
+
+| Decision area | Evidence and disposition |
+|---|---|
+| Source of truth | `WIX_MIGRATION_DECISION_RECORD.md` retains the managed React/tRPC/Drizzle engine as the primary runtime. Wix is a staged port target, not an immediate replacement for tenant policy, durable jobs, S3 access, subscription enforcement, typed APIs, or owner-only control. |
+| Capability mapping | The decision covers editorial pages, Forms, Stores, Member identity, 17 collection CMS schema, Velo client and Personal policy artifacts, assets, notifications, automations, jobs, commercial state, secrets, and governance. Every capability is mapped to Wix-native, hybrid, managed-authoritative, prepared-but-not-deployed, or deferred status. |
+| Security boundaries | Member identity is distinct from active workspace membership. The Personal resolver requires the backend-only `EVERCRAFTED_PLATFORM_OWNER_MEMBER_ID` secret and rejects workspace ownership as a substitute. Store checkout and Forms notifications cannot confer SaaS tenant or Personal access. |
+| Operational boundaries | Wix Automations may support reviewed site event notices but are not treated as durable job, retry, heavy-media, webhook, or recovery workers. Secrets remain backend-only; no credential is placed in CMS, browser code, or source control. |
+| Validation | `pnpm test` passed: 44 Vitest files / 111 tests, including 4 migration-decision contract assertions. `pnpm check` and `pnpm build` passed. Existing pnpm configuration-field warnings and client-chunk-size advisory remain non-blocking. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Added | `docs/wix/WIX_MIGRATION_DECISION_RECORD.md` | Auditable, cited port mapping, explicit non-decisions, negative-path rules, and phased implementation gates. |
+| Added | `server/wix.migration.decision.contract.test.ts` | Locks source-of-truth, manifest scope, workspace/Personal authorization, Store/automation separation, and no-testimonial/non-mutation boundaries. |
+| Updated | `docs/quality/TEST_MATRIX.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Records validation evidence, architecture decision, and work-item completion. |
+
+### GitHub synchronization
+
+The validated Wix migration-decision increment is pending commit and push to `pipersmyfurbae-hash/Evercrafted6-18` on `main`.
