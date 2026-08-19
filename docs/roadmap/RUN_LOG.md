@@ -676,4 +676,27 @@ The completed data-governance assurance increment was pushed successfully to `pi
 ### GitHub synchronization
 
 The completed managed three-experience verification increment was pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `d332382` (`test: verify three experience system`).
+
+## Run EC-RUN-0022 — Provider-neutral async job service completion
+
+**Date:** 2026-08-19 EDT
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`
+**Work item:** `EC-P04-JOB-001`
+**Objective:** Complete the durable service contract for processing, notification, webhook retry, and long-running Studio work while retaining the approved recovery/scheduler boundary.
+
+| Area | Evidence | Result |
+|---|---|---|
+| Service-family classification | `classifyBackgroundJobService` | Classifies `asset.*`/`processing.*`, `notification.*`, `webhook.*`, and `studio.*`/heavy-media job records into typed service families; unknown work is rejected explicitly. |
+| Adapter boundary | `DurableJobServiceAdapter` and dispatcher | A matching approved adapter may return an accepted external reference. No adapter results in a typed deferred outcome. The module contains no actual provider integration, credentials, timers, or worker loop. |
+| Existing durability/recovery | `backgroundJobs`, `runScheduledJobRecovery`, existing telemetry/recovery tests | Durable state, idempotency, stale recovery, compare-and-swap claiming, exhaustion, cron-authenticated recovery, and escalation telemetry remain the authoritative execution/recovery base. |
+| Regression evidence | `job.service.contract.test.ts` | Covers all four service families, unconfigured safe deferral, matching-adapter dispatch, and unknown-work rejection. Existing scheduler contract continues to reject in-process timers and processor submission. |
+| Validation | `pnpm test`, `pnpm check`, `pnpm build` | Passed: 41 Vitest files / 101 tests, TypeScript check, and production build. The existing non-blocking client chunk-size advisory remains. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Updated | `server/jobs.ts` | Adds provider-neutral durable processing, notification, webhook, and Studio adapter types, classification, and safe dispatcher. |
+| Added | `server/job.service.contract.test.ts` | Verifies service-family routing, defer/reject behavior, and approved-adapter-only dispatch. |
+| Updated | `docs/quality/TEST_MATRIX.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Records job-service and reconciled migration/schema evidence. |
 | Updated | `docs/quality/TEST_MATRIX.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Records the completed data-governance evidence. |

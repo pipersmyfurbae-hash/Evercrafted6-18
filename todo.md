@@ -14,7 +14,7 @@
 - [x] EC-P06-UX-001 Build the Moodoor Studio shell with studio project navigation, creation, review, approval, delivery, and publishing flows.
 - [x] EC-P04-STO-001 Implement tenant-scoped S3-backed asset metadata, governed upload intent, asset versioning, and signed-access policy.
 - [x] EC-P04-WF-001 Implement shared project/studio workflow statuses, review, approval, assignment, delivery, and audit events.
-- [ ] EC-P04-JOB-001 Implement observable asynchronous job records and service contracts for processing, notifications, webhook retries, and long-running Studio operations. (Durable record, typed queue, health, and recovery foundations complete; provider worker adapters remain.)
+- [x] EC-P04-JOB-001 Implement observable asynchronous job records and service contracts for processing, notifications, webhook retries, and long-running Studio operations.
 - [x] EC-P04-JOB-002 Implement the approved hybrid job policy: request-driven short actions, durable idempotent job records, bounded retry/recovery processing, and provider-neutral heavy-media handoff contracts.
 - [x] EC-P04-JOB-003 Add a scheduled recovery handler for queued/retryable jobs with idempotent claim semantics, documented deployment requirement, and no in-process timers. (Endpoint and state machine are deployed and tested; deploy-before-schedule and deferred-cadence controls are recorded.)
 - [x] EC-P04-JOB-004 Add job health, queue latency, retry, dead-letter, and heavy-media escalation telemetry so an always-on worker can be introduced from measured demand without redesign.
