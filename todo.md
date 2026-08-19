@@ -25,6 +25,7 @@
 - [ ] EC-P07-ENT-001 Implement plan, subscription, entitlement, and usage model scaffolding with server-enforced feature checks.
 - [x] EC-PROJECT-016 Add persisted workspace capability resolution, enforce explicit disabled capability records in protected operations, and expose client-visible entitlement state.
 - [ ] EC-P08-ME-001 Build the owner-only Personal Command Center with private projects, cross-workspace activity overview, integration controls, and operational dashboards.
+- [x] EC-PROJECT-017 Add owner-only personal-workspace project visibility and integration-readiness status to the Personal command, with owner-policy regression coverage.
 - [ ] EC-P08-ADM-002 Build a restricted administration and support console for tenant overview, feature flags, entitlement assistance, job/integration health, and audited access.
 - [x] EC-P10-TEST-001 Add Vitest coverage for tenant isolation, role policy, personal-workspace provisioning, activity/audit records, and critical typed API behavior.
 - [ ] EC-P10-A11Y-001 Verify keyboard, semantic, contrast, loading, empty, error, and authorization states for all implemented user journeys.

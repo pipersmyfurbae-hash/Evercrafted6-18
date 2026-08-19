@@ -416,6 +416,30 @@ The durable-job telemetry increment was pushed successfully to `pipersmyfurbae-h
 
 The entitlement-enforcement increment was pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `de981de` (`feat: enforce workspace entitlements`).
 
+## Run EC-RUN-0013 — Owner-only Personal projects and integration readiness
+
+**Date:** 2026-08-19 EDT
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`
+**Work items:** `EC-P08-ME-001`, `EC-PROJECT-017`
+**Objective:** Extend the private Personal command without merging Client workspace data or enabling unapproved external integrations.
+
+| Area | Evidence | Result |
+|---|---|---|
+| Owner policy | `ownerProcedure` and typed Personal overview contract | The command remains available only to the exact configured platform owner. |
+| Private projects | Personal-workspace bootstrap plus scoped project listing | The owner sees projects from only their personal workspace, distinct from platform-wide activity and client membership surfaces. |
+| Integration readiness | Returned non-secret readiness descriptors | Publishing provider and external email remain explicitly unconfigured; cron-authenticated job recovery is ready but cadence remains deferred. No credentials or provider operations are exposed. |
+| Regression evidence | `server/personal.command.contract.test.ts` | Verifies personal-workspace project retrieval and provider-neutral readiness state through the owner-only tRPC caller. |
+| Validation | `pnpm test`, `pnpm check`, `pnpm build` | Passed: 25 Vitest files / 53 tests, TypeScript check, and production build. The existing non-blocking client-chunk-size advisory remains. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Updated | `server/routers.ts` | Owner-only Personal overview adds scoped private projects and integration readiness. |
+| Updated | `client/src/pages/Personal.tsx` | Renders private projects and integration readiness in the separate Personal layout. |
+| Created | `server/personal.command.contract.test.ts` | Owner-policy regression coverage for new Personal overview data. |
+| Updated | `todo.md` | Marks the focused Personal command extension complete. |
+
 ### Next actions
 
 The next actions are to refine the Wix CMS foundation with production field types, references, indexes, and Velo data-access policy; transform the hybrid template while removing all template testimonial content; build the custom member dashboard; then complete the remaining test, payment/provider, scheduler, and legacy-source audit work.

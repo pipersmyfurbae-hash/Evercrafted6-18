@@ -436,9 +436,22 @@ export const appRouter = router({
     overview: ownerProcedure.query(async ({ ctx }) => {
       const owner = ctx.user;
       if (!owner) throw new TRPCError({ code: "UNAUTHORIZED", message: "Authentication is required" });
-      const [workspaces, activity, jobHealth] = await Promise.all([listPlatformWorkspaces(), listRecentPlatformActivity(), getBackgroundJobHealth()]);
+      const personalWorkspace = await ensurePersonalWorkspace(owner);
+      const [workspaces, activity, jobHealth, privateProjects] = await Promise.all([listPlatformWorkspaces(), listRecentPlatformActivity(), getBackgroundJobHealth(), listProjectsForWorkspace(personalWorkspace.id)]);
       await writeAuditLog({ actorUserId: owner.id, action: "personal.command_center.overview_viewed", targetType: "command_center" });
-      return { workspaceCount: workspaces.length, recentWorkspaces: workspaces.slice(0, 8), recentActivity: activity.slice(0, 12), jobHealth };
+      return {
+        workspaceCount: workspaces.length,
+        personalWorkspace: { id: personalWorkspace.id, name: personalWorkspace.name, slug: personalWorkspace.slug },
+        privateProjects: privateProjects.slice(0, 8),
+        recentWorkspaces: workspaces.slice(0, 8),
+        recentActivity: activity.slice(0, 12),
+        jobHealth,
+        integrationReadiness: [
+          { key: "publishing_provider", label: "Publishing provider", status: "unconfigured" as const, detail: "Provider selection and scoped credentials have not been approved." },
+          { key: "external_email", label: "External email", status: "unconfigured" as const, detail: "In-app notices are active; external delivery remains intentionally unconfigured." },
+          { key: "job_recovery", label: "Job recovery", status: "ready" as const, detail: "Cron-authenticated recovery is deployed; task cadence remains explicitly deferred." },
+        ],
+      };
     }),
   }),
 });
