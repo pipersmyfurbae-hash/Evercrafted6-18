@@ -7,7 +7,7 @@ const pathway = [
   ["02", "Essence", "You recognize or correct the emotional center before anything moves forward."],
   ["03", "Story", "Evercrafted deepens meaning without inventing biography, materials, or construction."],
   ["04", "Florals", "You choose a small, source-versioned reference set by role and save it in My Wreath Tray—without an inventory or purchase claim."],
-  ["05", "Recipe to Wreath", "Your choices become a locked recipe, buildable Blueprint, reviewed render, and outcome."],
+  ["05", "Recipe to Wreath", "Your choices become a locked Recipe and simplified Blueprint hierarchy. Rendering and outcome follow only in later reviewed stages."],
 ] as const;
 
 export default function WreathPublic() {

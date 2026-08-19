@@ -67,6 +67,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { createSourceGroundedDraft } from "./guidedWreath";
 import { canOpenGuidedWreath, decideGuidedArtifact, getGuidedProjectForWorkspace, getGuidedWreathJourney, saveGroundedDraft, saveGuidedMemory, startGuidedWreathProject } from "./guidedWreathDb";
 import { generateGuidedFlorals, getGuidedFlorals, selectGuidedFloralCandidate } from "./guidedFloralsDb";
+import { generateGuidedWreathBlueprint, getGuidedRecipeBlueprint, lockGuidedWreathRecipe } from "./guidedRecipesDb";
 import { storageGetSignedUrl, storagePut } from "./storage";
 import { adminProcedure, ownerProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
 
@@ -240,7 +241,7 @@ export const appRouter = router({
         await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: () => true });
         const project = await getGuidedProjectForWorkspace(input.projectId, input.workspaceId);
         if (!project) throw new TRPCError({ code: "NOT_FOUND", message: "Guided Wreath project not found in this workspace" });
-        return { project, ...(await getGuidedWreathJourney(project.id)), florals: await getGuidedFlorals(project.id) };
+        return { project, ...(await getGuidedWreathJourney(project.id)), florals: await getGuidedFlorals(project.id), recipe: await getGuidedRecipeBlueprint(project.id) };
       }),
     saveMemory: protectedProcedure
       .input(z.object({ workspaceId: z.number().int().positive(), projectId: z.number().int().positive(), body: z.string().trim().min(20).max(8000), visibility: z.enum(["private", "private_story_shareable_wreath", "private_link_lookbook", "anonymous_gallery", "public_first_name", "fully_public"]).default("private") }))
@@ -295,6 +296,32 @@ export const appRouter = router({
           return await selectGuidedFloralCandidate({ ...input, selectedByUserId: ctx.user.id });
         } catch (error) {
           throw new TRPCError({ code: "BAD_REQUEST", message: error instanceof Error ? error.message : "Floral selection could not be saved" });
+        }
+      }),
+    lockRecipe: protectedProcedure
+      .input(z.object({ workspaceId: z.number().int().positive(), projectId: z.number().int().positive() }))
+      .mutation(async ({ ctx, input }) => {
+        await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: canOpenGuidedWreath });
+        await requireWorkspaceCapability(input.workspaceId, "guided_wreath.recipe");
+        const project = await getGuidedProjectForWorkspace(input.projectId, input.workspaceId);
+        if (!project) throw new TRPCError({ code: "NOT_FOUND", message: "Guided Wreath project not found in this workspace" });
+        try {
+          return await lockGuidedWreathRecipe({ ...input, lockedByUserId: ctx.user.id });
+        } catch (error) {
+          throw new TRPCError({ code: "BAD_REQUEST", message: error instanceof Error ? error.message : "Recipe could not be locked" });
+        }
+      }),
+    generateBlueprint: protectedProcedure
+      .input(z.object({ workspaceId: z.number().int().positive(), projectId: z.number().int().positive() }))
+      .mutation(async ({ ctx, input }) => {
+        await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: canOpenGuidedWreath });
+        await requireWorkspaceCapability(input.workspaceId, "guided_wreath.blueprint");
+        const project = await getGuidedProjectForWorkspace(input.projectId, input.workspaceId);
+        if (!project) throw new TRPCError({ code: "NOT_FOUND", message: "Guided Wreath project not found in this workspace" });
+        try {
+          return await generateGuidedWreathBlueprint({ ...input, createdByUserId: ctx.user.id });
+        } catch (error) {
+          throw new TRPCError({ code: "BAD_REQUEST", message: error instanceof Error ? error.message : "Simplified Blueprint could not be created" });
         }
       }),
   }),

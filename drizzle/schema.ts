@@ -662,6 +662,77 @@ export const guidedFloralCompatibilityReports = mysqlTable(
   table => [uniqueIndex("guided_floral_compatibility_role_set_unique").on(table.roleSetId)],
 );
 
+/**
+ * Checkpoint C snapshots a passing Guided Florals tray into a versioned Recipe,
+ * then derives a deliberately simplified customer-readable Blueprint. Neither
+ * entity represents inventory, quantity, geometry, a render, or a commercial
+ * transaction; later production workflows must introduce those contracts.
+ */
+export const guidedRecipeStatusValues = ["locked", "stale"] as const;
+export const guidedBlueprintStatusValues = ["ready", "stale"] as const;
+
+export const guidedWreathRecipes = mysqlTable(
+  "guidedWreathRecipes",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    projectId: int("projectId").notNull().references(() => projects.id),
+    roleSetId: int("roleSetId").notNull().references(() => guidedFloralRoleSets.id),
+    version: int("version").default(1).notNull(),
+    status: mysqlEnum("status", guidedRecipeStatusValues).default("locked").notNull(),
+    compatibilitySnapshot: json("compatibilitySnapshot").notNull(),
+    staleReason: text("staleReason"),
+    lockedByUserId: int("lockedByUserId").notNull().references(() => users.id),
+    lockedAt: timestamp("lockedAt").defaultNow().notNull(),
+    staleAt: timestamp("staleAt"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  table => [
+    uniqueIndex("guided_wreath_recipes_project_version_unique").on(table.projectId, table.version),
+    index("guided_wreath_recipes_project_status_index").on(table.projectId, table.status),
+  ],
+);
+
+export const guidedWreathRecipeItems = mysqlTable(
+  "guidedWreathRecipeItems",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    recipeId: int("recipeId").notNull().references(() => guidedWreathRecipes.id),
+    role: mysqlEnum("role", guidedFloralRoleValues).notNull(),
+    candidateId: int("candidateId").notNull().references(() => guidedFloralCandidates.id),
+    catalogItemId: int("catalogItemId").notNull().references(() => botanicalReferenceCatalog.id),
+    familyKeySnapshot: varchar("familyKeySnapshot", { length: 96 }).notNull(),
+    commonNameSnapshot: varchar("commonNameSnapshot", { length: 160 }).notNull(),
+    selectionRationaleSnapshot: text("selectionRationaleSnapshot"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  table => [
+    uniqueIndex("guided_recipe_items_recipe_role_unique").on(table.recipeId, table.role),
+    index("guided_recipe_items_recipe_index").on(table.recipeId),
+  ],
+);
+
+export const guidedWreathBlueprints = mysqlTable(
+  "guidedWreathBlueprints",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    projectId: int("projectId").notNull().references(() => projects.id),
+    recipeId: int("recipeId").notNull().references(() => guidedWreathRecipes.id),
+    version: int("version").default(1).notNull(),
+    status: mysqlEnum("status", guidedBlueprintStatusValues).default("ready").notNull(),
+    hierarchy: json("hierarchy").notNull(),
+    derivationNotes: json("derivationNotes").notNull(),
+    staleReason: text("staleReason"),
+    createdByUserId: int("createdByUserId").notNull().references(() => users.id),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    staleAt: timestamp("staleAt"),
+  },
+  table => [
+    uniqueIndex("guided_wreath_blueprints_project_version_unique").on(table.projectId, table.version),
+    uniqueIndex("guided_wreath_blueprints_recipe_unique").on(table.recipeId),
+    index("guided_wreath_blueprints_project_status_index").on(table.projectId, table.status),
+  ],
+);
+
 export const auditLogs = mysqlTable(
   "auditLogs",
   {

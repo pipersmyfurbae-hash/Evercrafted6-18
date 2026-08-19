@@ -7,6 +7,8 @@ import {
   guidedFloralCompatibilityReports,
   guidedFloralRoleSets,
   guidedStageStates,
+  guidedWreathBlueprints,
+  guidedWreathRecipes,
   guidedWreathTraySelections,
   memoryStories,
   memoryThreadEvents,
@@ -128,13 +130,26 @@ export async function selectGuidedFloralCandidate(input: { projectId: number; wo
   if (selected.catalog.provenance !== "reference_fixture" && selected.catalog.provenance !== "vetted") throw new Error("Floral candidate does not have approved reference provenance");
 
   await db.transaction(async tx => {
+    const previous = (await tx.select().from(guidedWreathTraySelections).where(and(eq(guidedWreathTraySelections.projectId, input.projectId), eq(guidedWreathTraySelections.role, selected.candidate.role))).limit(1))[0];
+    const selectionChanged = Boolean(previous && previous.candidateId !== selected.candidate.id);
+    if (selectionChanged) {
+      const activeRecipes = await tx.select({ id: guidedWreathRecipes.id, version: guidedWreathRecipes.version }).from(guidedWreathRecipes).where(and(eq(guidedWreathRecipes.projectId, input.projectId), eq(guidedWreathRecipes.roleSetId, input.roleSetId), eq(guidedWreathRecipes.status, "locked")));
+      if (activeRecipes.length) {
+        const recipeIds = activeRecipes.map(recipe => recipe.id);
+        const reason = `A saved ${selected.candidate.role.replaceAll("_", " ")} selection changed after Recipe lock.`;
+        await tx.update(guidedWreathRecipes).set({ status: "stale", staleReason: reason, staleAt: new Date() }).where(inArray(guidedWreathRecipes.id, recipeIds));
+        await tx.update(guidedWreathBlueprints).set({ status: "stale", staleReason: reason, staleAt: new Date() }).where(inArray(guidedWreathBlueprints.recipeId, recipeIds));
+        await tx.insert(memoryThreadEvents).values({ projectId: input.projectId, stage: "recipe", sourceType: "guided_wreath_recipe_invalidation", sourceId: recipeIds[0], sourceVersion: activeRecipes[0].version, summary: reason, isDirectSource: false, createdByUserId: input.selectedByUserId });
+        await tx.insert(auditLogs).values({ workspaceId: input.workspaceId, actorUserId: input.selectedByUserId, action: "guided_wreath.recipe.invalidated", targetType: "guided_wreath_recipe", targetId: recipeIds.join(","), metadata: { projectId: input.projectId, reason, invalidatedRecipeCount: recipeIds.length } });
+      }
+    }
     await tx.insert(guidedWreathTraySelections).values({ projectId: input.projectId, roleSetId: input.roleSetId, role: selected.candidate.role, candidateId: selected.candidate.id, catalogItemId: selected.catalog.id, selectionRationale: input.selectionRationale?.trim() || null, selectedByUserId: input.selectedByUserId }).onDuplicateKeyUpdate({ set: { roleSetId: input.roleSetId, candidateId: selected.candidate.id, catalogItemId: selected.catalog.id, selectionRationale: input.selectionRationale?.trim() || null, selectedByUserId: input.selectedByUserId, updatedAt: new Date() } });
     const tray = await tx.select({ selection: guidedWreathTraySelections, catalog: botanicalReferenceCatalog }).from(guidedWreathTraySelections).innerJoin(botanicalReferenceCatalog, eq(guidedWreathTraySelections.catalogItemId, botanicalReferenceCatalog.id)).where(eq(guidedWreathTraySelections.projectId, input.projectId));
     const compatibility = evaluateGuidedFloralCompatibility(tray.map(item => ({ role: item.selection.role as GuidedFloralRole, familyKey: item.catalog.familyKey, provenance: item.catalog.provenance })));
     await tx.insert(guidedFloralCompatibilityReports).values({ projectId: input.projectId, roleSetId: input.roleSetId, outcome: compatibility.outcome, checks: compatibility.checks }).onDuplicateKeyUpdate({ set: { outcome: compatibility.outcome, checks: compatibility.checks, updatedAt: new Date() } });
     const complete = compatibility.outcome !== "blocked";
     await tx.update(guidedFloralRoleSets).set({ status: complete ? "complete" : "draft", updatedAt: new Date() }).where(eq(guidedFloralRoleSets.id, input.roleSetId));
-    await tx.insert(guidedStageStates).values({ projectId: input.projectId, currentStage: complete ? "recipe" : "florals", status: "blocked", blockReason: complete ? "Your Wreath Tray is ready. Recipe lock is the next reviewed product checkpoint." : "Choose one reference candidate for each required role before Recipe can be reviewed.", updatedByUserId: input.selectedByUserId }).onDuplicateKeyUpdate({ set: { currentStage: complete ? "recipe" : "florals", status: "blocked", blockReason: complete ? "Your Wreath Tray is ready. Recipe lock is the next reviewed product checkpoint." : "Choose one reference candidate for each required role before Recipe can be reviewed.", updatedByUserId: input.selectedByUserId, updatedAt: new Date() } });
+    await tx.insert(guidedStageStates).values({ projectId: input.projectId, currentStage: complete ? "recipe" : "florals", status: "blocked", blockReason: complete ? "Your Wreath Tray is ready. Review it, then lock a Recipe from this passing snapshot." : "Choose one reference candidate for each required role before Recipe can be reviewed.", updatedByUserId: input.selectedByUserId }).onDuplicateKeyUpdate({ set: { currentStage: complete ? "recipe" : "florals", status: "blocked", blockReason: complete ? "Your Wreath Tray is ready. Review it, then lock a Recipe from this passing snapshot." : "Choose one reference candidate for each required role before Recipe can be reviewed.", updatedByUserId: input.selectedByUserId, updatedAt: new Date() } });
     await tx.insert(memoryThreadEvents).values({ projectId: input.projectId, stage: "florals", sourceType: "guided_wreath_tray_selection", sourceId: selected.candidate.id, sourceVersion: selected.roleSet.version, summary: `${selected.catalog.commonName} selected for ${selected.candidate.role.replaceAll("_", " ")}.`, isDirectSource: false, createdByUserId: input.selectedByUserId });
     await tx.insert(auditLogs).values({ workspaceId: input.workspaceId, actorUserId: input.selectedByUserId, action: "guided_wreath.florals.selected", targetType: "guided_floral_candidate", targetId: String(selected.candidate.id), metadata: { projectId: input.projectId, role: selected.candidate.role, catalogFamily: selected.catalog.familyKey, compatibilityOutcome: compatibility.outcome } });
   });

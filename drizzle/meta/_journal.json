@@ -43,6 +43,13 @@
       "when": 1787133192470,
       "tag": "0005_amusing_tarot",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1787137246868,
+      "tag": "0006_secret_ironclad",
+      "breakpoints": true
     }
   ]
 }

@@ -897,3 +897,35 @@ The validated Checkpoint A correction increment was committed and pushed success
 ### GitHub synchronization
 
 The validated Checkpoint B correction increment was committed and pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `acb5e83` (`feat: add guided florals wreath tray`).
+
+## Run EC-RUN-0030 — Authoritative Evercrafted product correction, Checkpoint C
+
+**Date:** 2026-08-19 EDT
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`
+**Work item:** `EC-CORRECT-008`
+**Authorization:** The user explicitly approved Checkpoint C after reviewing the live Guided Florals and My Wreath Tray increment.
+
+| Area | Evidence and result |
+|---|---|
+| Source contract | Reviewed the supplied `BLUEPRINT_SCHEMA.md` and `BLUEPRINT_VERSIONING.md` records. Checkpoint C preserves deterministic derivation, immutable version history, and stale provenance while stopping before the full physical Blueprint/compiler contract. |
+| Recipe lock | A protected transaction reads the latest role set, checks a complete four-role Tray, requires an explicit `pass` compatibility report, verifies approved reference provenance, then writes the Recipe, role-preserving Recipe items, stage approval, stage state, Memory Thread event, and audit record together. A failed prerequisite yields no partial Recipe. |
+| Simplified Blueprint | A protected deterministic compiler reads only the locked Recipe items and writes an ordered four-role hierarchy plus explicit derivation limits. It cannot add a family, select inventory, calculate quantity, create geometry, form a render prompt, invoke a provider, or create a commercial action. |
+| Invalidation | Replacing a saved Tray choice after a Recipe lock marks the affected `locked` Recipe and any derived Blueprint `stale`, writes an explanation and timestamp, and preserves history rather than mutating a prior snapshot. |
+| Migration | Migration `0006_secret_ironclad` adds `guidedWreathRecipes` (11 columns), `guidedWreathRecipeItems` (9), and `guidedWreathBlueprints` (11). Generated SQL was reviewed as additive. One 69-character foreign-key identifier was shortened before first execution; the single reviewed migration then applied successfully. |
+| UI and copy | The private Guided Wreath journey now presents lock-ready, locked, stale, Blueprint-ready, and simplified-hierarchy states. Public How It Works wording now distinguishes the live Recipe/Blueprint scope from later rendering and outcome work. |
+| Validation | `pnpm test` passed: 50 Vitest files / 128 tests. `pnpm check` and `pnpm build` passed. Database verification returned all three tables with expected column counts. Visual review of `/create` and `/how-it-works` passed. The production build retains only the existing client-chunk-size advisory. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Created | `docs/architecture/RECIPE_BLUEPRINT_CONTRACT.md` | Atomic lock, simplified Blueprint, stale-history, and non-goal contract. |
+| Created | `drizzle/0006_secret_ironclad.sql` | Reviewed additive Recipe/Blueprint migration with a database-safe foreign-key identifier. |
+| Created | `server/guidedRecipes.ts`, `server/guidedRecipesDb.ts` | Deterministic hierarchy compiler, protected Recipe lock, Blueprint creation, read model, and stale-state persistence. |
+| Created | `server/guided.recipe.contract.test.ts` | Four-role derivation, missing-role, transaction/stale, and no-commercial-data regression coverage. |
+| Updated | `drizzle/schema.ts`, `server/guidedFloralsDb.ts`, `server/routers.ts`, `client/src/pages/WreathCreation.tsx`, `client/src/pages/WreathPublic.tsx` | Versioned data, selection-change stale propagation, protected API, guided interface, and accurate public scope. |
+| Updated | `docs/architecture/DATA_DICTIONARY.md`, `docs/roadmap/MIGRATION_LEDGER.md`, `docs/quality/TEST_MATRIX.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Canonical schema, migration, validation, scope-change, and work-item evidence. |
+
+### GitHub synchronization
+
+The validated Checkpoint C correction increment is pending commit and push to `pipersmyfurbae-hash/Evercrafted6-18` on `main`.
