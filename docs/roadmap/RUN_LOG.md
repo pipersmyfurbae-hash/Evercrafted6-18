@@ -355,6 +355,10 @@ The hardened scheduled-recovery increment was pushed successfully to `pipersmyfu
 | Updated | `client/src/pages/Notifications.tsx` | Persisted delivery-state display and recoverable notification UI. |
 | Created | `docs/roadmap/MIGRATION_LEDGER.md` | Versioned migration application and review evidence. |
 
+### GitHub synchronization
+
+The persisted notification-delivery increment was pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `626a9af` (`feat: persist workspace notification delivery`).
+
 ### Next actions
 
 The next actions are to refine the Wix CMS foundation with production field types, references, indexes, and Velo data-access policy; transform the hybrid template while removing all template testimonial content; build the custom member dashboard; then complete the remaining test, payment/provider, scheduler, and legacy-source audit work.
