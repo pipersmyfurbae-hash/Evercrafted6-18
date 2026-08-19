@@ -788,7 +788,7 @@ The validated Wix migration-decision increment was committed and pushed successf
 ## Run EC-RUN-0026 — Wix CMS Harmony refinement boundary
 
 **Date:** 2026-08-19 EDT
-**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`
+**Status:** `VALIDATED — GITHUB SYNCHRONIZED`
 **Work items:** `EC-WIX-013`, `EC-WIX-018`, `EC-WIX-020`, `EC-HARMONY-001`
 **Objective:** Refine the versioned Wix CMS relationship and slug metadata only if the target Harmony site supports a fully documented, data-safe operation.
 
@@ -810,4 +810,4 @@ The validated Wix migration-decision increment was committed and pushed successf
 
 ### GitHub synchronization
 
-The validated Wix CMS refinement-boundary increment is pending commit and push to `pipersmyfurbae-hash/Evercrafted6-18` on `main`.
+The validated Wix CMS refinement-boundary increment was committed and pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `69d3c93` (`docs: record wix cms harmony boundary`).
