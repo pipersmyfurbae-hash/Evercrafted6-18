@@ -518,7 +518,35 @@ export async function listAssetsForProject(input: { workspaceId: number; project
   const db = requireDb(await getDb());
   const conditions = [eq(assets.workspaceId, input.workspaceId)];
   if (input.projectId) conditions.push(eq(assets.projectId, input.projectId));
-  return db.select().from(assets).where(and(...conditions)).orderBy(desc(assets.updatedAt));
+  const assetRows = await db.select().from(assets).where(and(...conditions)).orderBy(desc(assets.updatedAt));
+  const currentVersions = await Promise.all(assetRows.map(async asset => {
+    const version = await db.select({ versionNumber: assetVersions.versionNumber }).from(assetVersions).where(eq(assetVersions.assetId, asset.id)).orderBy(desc(assetVersions.versionNumber)).limit(1);
+    return version[0]?.versionNumber ?? 1;
+  }));
+  return assetRows.map((asset, index) => ({ ...asset, currentVersionNumber: currentVersions[index] }));
+}
+
+export async function listAssetVersionsForWorkspace(input: { workspaceId: number; assetId: number }) {
+  const asset = await getAssetForWorkspace(input.assetId, input.workspaceId);
+  if (!asset) return undefined;
+  const db = requireDb(await getDb());
+  const versions = await db.select().from(assetVersions).where(eq(assetVersions.assetId, input.assetId)).orderBy(desc(assetVersions.versionNumber));
+  return { asset, versions };
+}
+
+export async function createAssetVersion(input: { workspaceId: number; assetId: number; storageKey: string; sizeBytes: number; checksum?: string | null; metadata?: Record<string, unknown>; createdByUserId: number }) {
+  const db = requireDb(await getDb());
+  const asset = await getAssetForWorkspace(input.assetId, input.workspaceId);
+  if (!asset) return undefined;
+  const previous = await db.select().from(assetVersions).where(eq(assetVersions.assetId, input.assetId)).orderBy(desc(assetVersions.versionNumber)).limit(1);
+  const versionNumber = (previous[0]?.versionNumber ?? 0) + 1;
+  await db.transaction(async tx => {
+    await tx.insert(assetVersions).values({ assetId: input.assetId, versionNumber, storageKey: input.storageKey, sizeBytes: input.sizeBytes, checksum: input.checksum ?? null, createdByUserId: input.createdByUserId });
+    await tx.update(assets).set({ storageKey: input.storageKey, sizeBytes: input.sizeBytes, checksum: input.checksum ?? null, metadata: input.metadata ?? asset.metadata, updatedAt: new Date() }).where(eq(assets.id, input.assetId));
+    await tx.insert(auditLogs).values({ workspaceId: input.workspaceId, actorUserId: input.createdByUserId, action: "asset.version.created", targetType: "asset", targetId: String(input.assetId), metadata: { versionNumber } });
+  });
+  const updated = await getAssetForWorkspace(input.assetId, input.workspaceId);
+  return { asset: updated, versionNumber };
 }
 
 export async function transitionProjectStatus(input: {

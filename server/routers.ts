@@ -14,6 +14,7 @@ import {
   createReviewRequest,
   createWorkspaceInvitation,
   enqueueBackgroundJob,
+  createAssetVersion,
   queueDeliveryPublishingHandoff,
   ensurePersonalWorkspace,
   getProjectForWorkspace,
@@ -21,6 +22,7 @@ import {
   getBackgroundJobHealth,
   getWorkspaceMembership,
   listAssetsForProject,
+  listAssetVersionsForWorkspace,
   listBackgroundJobsForWorkspace,
   listDeliveries,
   listNotificationsForUser,
@@ -225,6 +227,28 @@ export const appRouter = router({
           metadata: { url: storageResult.url },
           createdByUserId: ctx.user.id,
         });
+      }),
+    versionHistory: protectedProcedure
+      .input(z.object({ workspaceId: z.number().int().positive(), assetId: z.number().int().positive() }))
+      .query(async ({ ctx, input }) => {
+        await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: () => true });
+        const history = await listAssetVersionsForWorkspace(input);
+        if (!history) throw new TRPCError({ code: "NOT_FOUND", message: "Asset not found in this workspace" });
+        return history;
+      }),
+    uploadVersionBase64: protectedProcedure
+      .input(z.object({ workspaceId: z.number().int().positive(), assetId: z.number().int().positive(), name: z.string().trim().min(1).max(255), mediaType: z.string().trim().min(3).max(128), base64: z.string().min(1).max(7_000_000), checksum: z.string().trim().max(128).optional() }))
+      .mutation(async ({ ctx, input }) => {
+        await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: canManageWorkspace });
+        const asset = await getAssetForWorkspace(input.assetId, input.workspaceId);
+        if (!asset) throw new TRPCError({ code: "NOT_FOUND", message: "Asset not found in this workspace" });
+        const bytes = Buffer.from(input.base64, "base64");
+        if (bytes.byteLength === 0 || bytes.byteLength > 5 * 1024 * 1024) throw new TRPCError({ code: "PAYLOAD_TOO_LARGE", message: "Uploads must be between 1 byte and 5 MiB" });
+        const safeFileName = input.name.replace(/[^a-zA-Z0-9._-]/g, "-");
+        const storageResult = await storagePut(`workspaces/${input.workspaceId}/assets/${input.assetId}/revisions/${Date.now()}-${safeFileName}`, bytes, input.mediaType);
+        const result = await createAssetVersion({ workspaceId: input.workspaceId, assetId: input.assetId, storageKey: storageResult.key, sizeBytes: bytes.byteLength, checksum: input.checksum, metadata: { url: storageResult.url }, createdByUserId: ctx.user.id });
+        if (!result) throw new TRPCError({ code: "NOT_FOUND", message: "Asset not found in this workspace" });
+        return result;
       }),
   }),
   studio: router({

@@ -245,6 +245,35 @@ The Studio shell now aggregates error/retry controls for workspace, project, mem
 
 The completed Studio workflow increment was pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `03680b6` (`feat: complete Studio workflow handoff`).
 
+## Run EC-RUN-0007 — Tenant-scoped asset versioning and Studio history
+
+**Date:** 2026-08-19 EDT  
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`  
+**Work items:** `EC-P04-STO-001`, `EC-P04-STO-002`  
+**Objective:** Add governed asset re-upload and version-history evidence without bypassing workspace authorization or S3 metadata controls.
+
+| Area | Evidence | Result |
+|---|---|---|
+| Version persistence | `createAssetVersion` and `assetVersions` unique constraint | New asset version rows are append-only, numbered per asset, and preserve the prior history while updating the current asset storage key. |
+| S3 boundary | Typed `asset.uploadVersionBase64` procedure | File bytes pass through the existing storage adapter; the database stores only the resulting S3 key and current-object metadata. |
+| Tenant authorization | Typed router policy test | A member can create an asset version only in their workspace; a viewer is rejected before the storage adapter is called. |
+| Studio evidence | `StudioAssetVersionHistory.tsx` | Users can select a project asset, upload a revision, and see ordered version records with a current-version indicator. |
+| Validation | `pnpm test`, `pnpm check`, `pnpm build` | Passed: 14 Vitest files / 33 tests, TypeScript check, and production build. The existing non-blocking client-chunk-size advisory remains. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Created | `client/src/components/StudioAssetVersionHistory.tsx` | Tenant-scoped Studio re-upload and version-history interface. |
+| Created | `server/asset.version.router.test.ts` | Management-role success and viewer-denial storage policy coverage. |
+| Updated | `server/db.ts`, `server/routers.ts` | Asset-version persistence, ordered history query, and typed S3-backed re-upload route. |
+| Updated | `client/src/pages/Studio.tsx` | Adds the asset-history component within selected Studio projects. |
+| Updated | `todo.md` | Marks governed versioning and Studio history complete. |
+
+### Current-version badge closure
+
+The tenant-scoped asset list now derives `currentVersionNumber` from ordered append-only version records, and the Studio asset card renders `v{asset.currentVersionNumber}` instead of a hardcoded revision. `server/asset.version.ui.contract.test.ts` verifies both the derivation and rendered dynamic value. The final asset increment passes 15 Vitest files / 35 tests, TypeScript check, and production build.
+
 ### Next actions
 
 The next actions are to refine the Wix CMS foundation with production field types, references, indexes, and Velo data-access policy; transform the hybrid template while removing all template testimonial content; build the custom member dashboard; then complete the remaining test, payment/provider, scheduler, and legacy-source audit work.
