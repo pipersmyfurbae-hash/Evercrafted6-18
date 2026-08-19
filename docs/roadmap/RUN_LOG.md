@@ -784,3 +784,30 @@ The validated Wix live-audit increment was committed and pushed successfully to 
 ### GitHub synchronization
 
 The validated Wix migration-decision increment was committed and pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `a8ef24e` (`docs: add wix migration decision`).
+
+## Run EC-RUN-0026 — Wix CMS Harmony refinement boundary
+
+**Date:** 2026-08-19 EDT
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`
+**Work items:** `EC-WIX-013`, `EC-WIX-018`, `EC-WIX-020`, `EC-HARMONY-001`
+**Objective:** Refine the versioned Wix CMS relationship and slug metadata only if the target Harmony site supports a fully documented, data-safe operation.
+
+| Audit or mutation step | Evidence and disposition |
+|---|---|
+| Data and schema preflight | A consistent count returned zero items for every one of the 17 Evercrafted collections. The live field inventory confirms relationship and route-slug candidates remain `TEXT`; all collection permissions remain `ADMIN` for insert, read, update, and remove. |
+| Reference transition | The documented patch method rejected the `REFERENCE` payload before mutation with `WDE0075` unsupported mask paths. The documented full-field update fallback gave the decisive result: `WDE0080`, reference type is not supported for this Harmony site. No reference field was converted. |
+| Slug transition | A documented full-field `SLUG` attempt was rejected with `WDE0075: Slug metadata not provided for slug field`. The verified field-update schema exposes the type but not the Harmony metadata object. No slug field was converted. |
+| Security posture | No collection permission, CMS record, page, Velo code, member setting, Store configuration, automation, or external integration was changed. The administrator-only baseline and pending-text manifest labels remain in force. |
+| Validation | `pnpm test` passed: 45 Vitest files / 114 tests, including 3 CMS-refinement contract assertions. `pnpm check` and `pnpm build` passed. Existing pnpm configuration-field warnings and client-chunk-size advisory remain non-blocking. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Added | `docs/wix/WIX_CMS_REFINEMENT_PREFLIGHT.md` | Records empty-data preflight, documented mutation requirements, Harmony validation outcomes, and explicit deferred-state policy. |
+| Added | `server/wix.cms.refinement.contract.test.ts` | Locks zero-record, administrator-only, no-inferred-payload, and deferred reference/slug boundaries. |
+| Updated | `docs/quality/TEST_MATRIX.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Records validation evidence, configuration limitation, and the remaining blocked work. |
+
+### GitHub synchronization
+
+The validated Wix CMS refinement-boundary increment is pending commit and push to `pipersmyfurbae-hash/Evercrafted6-18` on `main`.
