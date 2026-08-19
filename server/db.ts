@@ -13,6 +13,8 @@ import {
   notificationPreferences,
   organizations,
   platformIntegrationControls,
+  trustedCheckoutOrigins,
+  webhookReceipts,
   plans,
   projects,
   deliveries,
@@ -28,6 +30,7 @@ import {
   type User,
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
+import { assertNoInventoryCommitment, normalizeTrustedCheckoutOrigin } from "./productionSafety";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -521,38 +524,15 @@ export async function registerAsset(input: {
   createdByUserId: number;
 }) {
   const db = requireDb(await getDb());
-  const [assetResult] = await db.insert(assets).values({
-    workspaceId: input.workspaceId,
-    projectId: input.projectId ?? null,
-    name: input.name,
-    mediaType: input.mediaType,
-    storageKey: input.storageKey,
-    sizeBytes: input.sizeBytes,
-    checksum: input.checksum ?? null,
-    metadata: input.metadata ?? null,
-    status: "ready",
-    createdByUserId: input.createdByUserId,
-  }).$returningId();
-  const assetId = assetResult?.id;
-  if (!assetId) throw new Error("Asset metadata could not be created");
-
-  await db.insert(assetVersions).values({
-    assetId,
-    versionNumber: 1,
-    storageKey: input.storageKey,
-    sizeBytes: input.sizeBytes,
-    checksum: input.checksum ?? null,
-    createdByUserId: input.createdByUserId,
+  assertNoInventoryCommitment(input.metadata);
+  return db.transaction(async tx => {
+    const [assetResult] = await tx.insert(assets).values({ workspaceId: input.workspaceId, projectId: input.projectId ?? null, name: input.name, mediaType: input.mediaType, storageKey: input.storageKey, sizeBytes: input.sizeBytes, checksum: input.checksum ?? null, metadata: input.metadata ?? null, status: "ready", createdByUserId: input.createdByUserId }).$returningId();
+    const assetId = assetResult?.id;
+    if (!assetId) throw new Error("Asset metadata could not be created");
+    await tx.insert(assetVersions).values({ assetId, versionNumber: 1, storageKey: input.storageKey, sizeBytes: input.sizeBytes, checksum: input.checksum ?? null, createdByUserId: input.createdByUserId });
+    await tx.insert(auditLogs).values({ workspaceId: input.workspaceId, actorUserId: input.createdByUserId, action: "asset.created", targetType: "asset", targetId: String(assetId) });
+    return (await tx.select().from(assets).where(eq(assets.id, assetId)).limit(1))[0];
   });
-  await db.insert(auditLogs).values({
-    workspaceId: input.workspaceId,
-    actorUserId: input.createdByUserId,
-    action: "asset.created",
-    targetType: "asset",
-    targetId: String(assetId),
-  });
-  const result = await db.select().from(assets).where(eq(assets.id, assetId)).limit(1);
-  return result[0];
 }
 
 export async function getAssetForWorkspace(assetId: number, workspaceId: number) {
@@ -583,17 +563,57 @@ export async function listAssetVersionsForWorkspace(input: { workspaceId: number
 
 export async function createAssetVersion(input: { workspaceId: number; assetId: number; storageKey: string; sizeBytes: number; checksum?: string | null; metadata?: Record<string, unknown>; createdByUserId: number }) {
   const db = requireDb(await getDb());
-  const asset = await getAssetForWorkspace(input.assetId, input.workspaceId);
-  if (!asset) return undefined;
-  const previous = await db.select().from(assetVersions).where(eq(assetVersions.assetId, input.assetId)).orderBy(desc(assetVersions.versionNumber)).limit(1);
-  const versionNumber = (previous[0]?.versionNumber ?? 0) + 1;
-  await db.transaction(async tx => {
+  assertNoInventoryCommitment(input.metadata);
+  return db.transaction(async tx => {
+    const asset = (await tx.select().from(assets).where(and(eq(assets.id, input.assetId), eq(assets.workspaceId, input.workspaceId))).limit(1))[0];
+    if (!asset) return undefined;
+    const previous = await tx.select().from(assetVersions).where(eq(assetVersions.assetId, input.assetId)).orderBy(desc(assetVersions.versionNumber)).limit(1);
+    const versionNumber = (previous[0]?.versionNumber ?? 0) + 1;
     await tx.insert(assetVersions).values({ assetId: input.assetId, versionNumber, storageKey: input.storageKey, sizeBytes: input.sizeBytes, checksum: input.checksum ?? null, createdByUserId: input.createdByUserId });
     await tx.update(assets).set({ storageKey: input.storageKey, sizeBytes: input.sizeBytes, checksum: input.checksum ?? null, metadata: input.metadata ?? asset.metadata, updatedAt: new Date() }).where(eq(assets.id, input.assetId));
     await tx.insert(auditLogs).values({ workspaceId: input.workspaceId, actorUserId: input.createdByUserId, action: "asset.version.created", targetType: "asset", targetId: String(input.assetId), metadata: { versionNumber } });
+    const updated = (await tx.select().from(assets).where(eq(assets.id, input.assetId)).limit(1))[0];
+    return { asset: updated, versionNumber };
   });
-  const updated = await getAssetForWorkspace(input.assetId, input.workspaceId);
-  return { asset: updated, versionNumber };
+}
+
+export async function listTrustedCheckoutOrigins() {
+  const db = requireDb(await getDb());
+  return db.select({ id: trustedCheckoutOrigins.id, origin: trustedCheckoutOrigins.origin, status: trustedCheckoutOrigins.status, reviewNote: trustedCheckoutOrigins.reviewNote, reviewedAt: trustedCheckoutOrigins.reviewedAt, createdAt: trustedCheckoutOrigins.createdAt }).from(trustedCheckoutOrigins).orderBy(desc(trustedCheckoutOrigins.updatedAt));
+}
+
+export async function setTrustedCheckoutOrigin(input: { origin: string; status: "reviewed" | "disabled"; reviewNote?: string | null; reviewedByUserId: number }) {
+  const db = requireDb(await getDb());
+  const origin = normalizeTrustedCheckoutOrigin(input.origin);
+  await db.transaction(async tx => {
+    await tx.insert(trustedCheckoutOrigins).values({ origin, status: input.status, reviewNote: input.reviewNote?.trim() || null, reviewedByUserId: input.reviewedByUserId, reviewedAt: new Date() }).onDuplicateKeyUpdate({ set: { status: input.status, reviewNote: input.reviewNote?.trim() || null, reviewedByUserId: input.reviewedByUserId, reviewedAt: new Date(), updatedAt: new Date() } });
+    await tx.insert(auditLogs).values({ actorUserId: input.reviewedByUserId, action: "security.checkout_origin.reviewed", targetType: "trusted_checkout_origin", targetId: origin, metadata: { status: input.status } });
+  });
+  return (await db.select().from(trustedCheckoutOrigins).where(eq(trustedCheckoutOrigins.origin, origin)).limit(1))[0];
+}
+
+export async function isTrustedCheckoutOrigin(origin: string) {
+  const db = requireDb(await getDb());
+  const normalized = normalizeTrustedCheckoutOrigin(origin);
+  return Boolean((await db.select({ id: trustedCheckoutOrigins.id }).from(trustedCheckoutOrigins).where(and(eq(trustedCheckoutOrigins.origin, normalized), eq(trustedCheckoutOrigins.status, "reviewed"))).limit(1))[0]);
+}
+
+function isDuplicateKeyError(error: unknown) {
+  const code = error && typeof error === "object" ? (error as { code?: string; errno?: number }).code : undefined;
+  const errno = error && typeof error === "object" ? (error as { errno?: number }).errno : undefined;
+  return code === "ER_DUP_ENTRY" || errno === 1062;
+}
+
+export async function claimWebhookReceipt(input: { provider: string; eventId: string; payloadHash: string }) {
+  const db = requireDb(await getDb());
+  try {
+    const [created] = await db.insert(webhookReceipts).values({ provider: input.provider, eventId: input.eventId, payloadHash: input.payloadHash }).$returningId();
+    return { outcome: "received" as const, receiptId: created?.id ?? null };
+  } catch (error) {
+    if (!isDuplicateKeyError(error)) throw error;
+    const duplicate = (await db.select().from(webhookReceipts).where(and(eq(webhookReceipts.provider, input.provider), eq(webhookReceipts.eventId, input.eventId))).limit(1))[0];
+    return { outcome: "duplicate" as const, receiptId: duplicate?.id ?? null, status: duplicate?.status ?? null };
+  }
 }
 
 export async function transitionProjectStatus(input: {

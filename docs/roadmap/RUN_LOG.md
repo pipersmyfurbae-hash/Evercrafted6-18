@@ -961,3 +961,36 @@ The validated Checkpoint C correction increment was committed and pushed success
 ### GitHub synchronization
 
 The validated Checkpoint D correction increment was committed and pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `fbfa283` (`feat: add guided wreath render package`).
+
+## Run EC-RUN-0032 — Authoritative Evercrafted product correction, Checkpoint E
+
+**Date:** 2026-08-19 EDT
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`
+**Work item:** `EC-CORRECT-010`
+**Authorization:** The user explicitly approved continuation to Checkpoint E after reviewing the deployed render-package increment.
+
+| Area | Evidence and result |
+|---|---|
+| Central authorization | Added `authorizeWorkspaceOperation` as the shared active-membership, non-archived-workspace, optional project-scope, capability, subscription, and usage boundary. Existing workspace-role calls now delegate to it; sensitive asset procedures use the full role/project/capability gate before storage or database side effects. |
+| Upload hardening | Asset upload/version input now requires canonical base64, a 5 MiB maximum decoded payload, allow-listed media type, matching file signature, safe name, optional SHA-256 checksum match, and canonical UUID object name. Executable/HTML/SVG classes are not accepted. Bytes remain in S3; governed metadata only is retained in MySQL. |
+| Database integrity and privacy | Asset registration now writes asset, initial version, and audit evidence transactionally; version persistence reads/writes inside its transaction. Record metadata rejects private inventory/commercial fields such as supplier, SKU, stock, quantity, cost, price, reservation, and availability. |
+| Checkout origin control | Added exact-owner-only trusted HTTPS origin review and a private Personal command interface. No origin is trusted by default. The control explicitly does not activate a payment provider, create a checkout session, or process payment data. |
+| Webhook readiness | Added provider-neutral `webhookReceipts` with a unique provider/event identity and receipt helper for future idempotency. There is no webhook route, provider selection, signature handler, raw payload retention, credential, or external side effect in this checkpoint. |
+| Migration | Migration `0008_gray_skin` adds `trustedCheckoutOrigins` (8 columns) and `webhookReceipts` (10 columns). Generated SQL was reviewed as additive-only and applied successfully. Information-schema verification confirms both expected tables and the required unique indexes. |
+| Validation | `pnpm test` passed: 53 Vitest files / 142 tests. `pnpm check` and `pnpm build` passed. The production bundle retains only the existing client-chunk-size advisory. Authenticated desktop review of `/personal` confirms the exact-owner control and the clear default-empty state. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Created | `docs/architecture/SECURITY_PRODUCTION_READINESS_CONTRACT.md` | Checkpoint E enforcement and explicit non-activation contract. |
+| Created | `drizzle/0008_gray_skin.sql` | Reviewed additive trusted-origin and webhook-receipt migration. |
+| Created | `server/security.ts`, `server/productionSafety.ts` | Central workspace-operation guard and strict upload/origin/privacy helpers. |
+| Created | `server/production.security.contract.test.ts`, `server/security.workspace.guard.test.ts` | Production-safety and direct authorization guard regression evidence. |
+| Updated | `drizzle/schema.ts`, `server/db.ts`, `server/routers.ts` | Security records, transactional asset persistence, owner-only configuration, typed procedure guard, and database-backed idempotency helper. |
+| Updated | `client/src/pages/Personal.tsx`, `server/asset.version.router.test.ts` | Exact-owner checkout-origin panel and valid secure-upload fixture. |
+| Updated | `docs/architecture/DATA_DICTIONARY.md`, `docs/roadmap/MIGRATION_LEDGER.md`, `docs/quality/TEST_MATRIX.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Canonical entity, migration, validation, scope-change, and work-item evidence. |
+
+### GitHub synchronization
+
+The validated Checkpoint E correction increment is ready to commit and push to `pipersmyfurbae-hash/Evercrafted6-18` on `main`; the resulting commit identifier will be recorded immediately after synchronization.

@@ -42,6 +42,7 @@ import {
   listReviewRequests,
   listRecentSupportAudits,
   listRecentPlatformActivity,
+  listTrustedCheckoutOrigins,
   listWorkspaceEntitlements,
   listWorkspaceSubscriptions,
   listWorkspaceInvitations,
@@ -54,6 +55,7 @@ import {
   searchProjectsForUser,
   setWorkspaceEntitlement,
   setWorkspaceFeatureFlag,
+  setTrustedCheckoutOrigin,
   transitionProjectStatus,
   updateUserProfile,
   updateNotificationPreferences,
@@ -69,6 +71,8 @@ import { canOpenGuidedWreath, decideGuidedArtifact, getGuidedProjectForWorkspace
 import { generateGuidedFlorals, getGuidedFlorals, selectGuidedFloralCandidate } from "./guidedFloralsDb";
 import { generateGuidedWreathBlueprint, getGuidedRecipeBlueprint, lockGuidedWreathRecipe } from "./guidedRecipesDb";
 import { approveGuidedRenderPackage, getGuidedRenderPackage, prepareGuidedRenderPackage, requestManualRenderHandoff } from "./guidedRendersDb";
+import { buildSecureAssetStorageName, validateAssetUpload } from "./productionSafety";
+import { authorizeWorkspaceOperation } from "./security";
 import { storageGetSignedUrl, storagePut } from "./storage";
 import { adminProcedure, ownerProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
 
@@ -79,11 +83,7 @@ async function requireWorkspaceRole(input: {
   workspaceId: number;
   predicate: (role: WorkspaceRole) => boolean;
 }) {
-  const membership = await getWorkspaceMembership(input.userId, input.workspaceId);
-  if (!membership || membership.status !== "active" || membership.workspaceArchived || !input.predicate(membership.role)) {
-    throw new TRPCError({ code: "FORBIDDEN", message: "You do not have permission to access this workspace action" });
-  }
-  return membership;
+  return (await authorizeWorkspaceOperation(input)).membership;
 }
 
 async function requireWorkspaceCapability(workspaceId: number, capability: string) {
@@ -123,6 +123,12 @@ export const appRouter = router({
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
       return { success: true } as const;
     }),
+  }),
+  security: router({
+    listTrustedCheckoutOrigins: ownerProcedure.query(async () => listTrustedCheckoutOrigins()),
+    setTrustedCheckoutOrigin: ownerProcedure
+      .input(z.object({ origin: z.string().trim().min(8).max(255), status: z.enum(["reviewed", "disabled"]), reviewNote: z.string().trim().max(2000).optional() }))
+      .mutation(async ({ ctx, input }) => setTrustedCheckoutOrigin({ ...input, reviewedByUserId: ctx.user!.id })),
   }),
   profile: router({
     me: protectedProcedure.query(async ({ ctx }) => ctx.user),
@@ -383,26 +389,18 @@ export const appRouter = router({
         checksum: z.string().trim().max(128).optional(),
       }))
       .mutation(async ({ ctx, input }) => {
-        await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: canManageWorkspace });
-        await requireWorkspaceCapability(input.workspaceId, "asset.upload");
-        if (input.projectId && !await getProjectForWorkspace(input.projectId, input.workspaceId)) {
-          throw new TRPCError({ code: "NOT_FOUND", message: "Project not found in this workspace" });
-        }
-        const bytes = Buffer.from(input.base64, "base64");
-        if (bytes.byteLength === 0 || bytes.byteLength > 5 * 1024 * 1024) {
-          throw new TRPCError({ code: "PAYLOAD_TOO_LARGE", message: "Uploads must be between 1 byte and 5 MiB" });
-        }
-        const safeFileName = input.name.replace(/[^a-zA-Z0-9._-]/g, "-");
-        const storageResult = await storagePut(`workspaces/${input.workspaceId}/assets/${safeFileName}`, bytes, input.mediaType);
+        await authorizeWorkspaceOperation({ userId: ctx.user.id, workspaceId: input.workspaceId, projectId: input.projectId, predicate: canManageWorkspace, capability: "asset.upload" });
+        const upload = validateAssetUpload(input);
+        const storageResult = await storagePut(buildSecureAssetStorageName({ workspaceId: input.workspaceId, extension: upload.extension }), upload.bytes, upload.mediaType);
         const asset = await registerAsset({
           workspaceId: input.workspaceId,
           projectId: input.projectId,
           name: input.name,
-          mediaType: input.mediaType,
+          mediaType: upload.mediaType,
           storageKey: storageResult.key,
-          sizeBytes: bytes.byteLength,
-          checksum: input.checksum,
-          metadata: { url: storageResult.url },
+          sizeBytes: upload.bytes.byteLength,
+          checksum: upload.checksum,
+          metadata: { url: storageResult.url, uploadPolicy: "validated_signature_v1" },
           createdByUserId: ctx.user.id,
         });
         await incrementWorkspaceUsage({ workspaceId: input.workspaceId, metric: "asset.upload" });
@@ -419,15 +417,12 @@ export const appRouter = router({
     uploadVersionBase64: protectedProcedure
       .input(z.object({ workspaceId: z.number().int().positive(), assetId: z.number().int().positive(), name: z.string().trim().min(1).max(255), mediaType: z.string().trim().min(3).max(128), base64: z.string().min(1).max(7_000_000), checksum: z.string().trim().max(128).optional() }))
       .mutation(async ({ ctx, input }) => {
-        await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: canManageWorkspace });
-        await requireWorkspaceCapability(input.workspaceId, "asset.versioning");
+        await authorizeWorkspaceOperation({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: canManageWorkspace, capability: "asset.versioning" });
         const asset = await getAssetForWorkspace(input.assetId, input.workspaceId);
         if (!asset) throw new TRPCError({ code: "NOT_FOUND", message: "Asset not found in this workspace" });
-        const bytes = Buffer.from(input.base64, "base64");
-        if (bytes.byteLength === 0 || bytes.byteLength > 5 * 1024 * 1024) throw new TRPCError({ code: "PAYLOAD_TOO_LARGE", message: "Uploads must be between 1 byte and 5 MiB" });
-        const safeFileName = input.name.replace(/[^a-zA-Z0-9._-]/g, "-");
-        const storageResult = await storagePut(`workspaces/${input.workspaceId}/assets/${input.assetId}/revisions/${Date.now()}-${safeFileName}`, bytes, input.mediaType);
-        const result = await createAssetVersion({ workspaceId: input.workspaceId, assetId: input.assetId, storageKey: storageResult.key, sizeBytes: bytes.byteLength, checksum: input.checksum, metadata: { url: storageResult.url }, createdByUserId: ctx.user.id });
+        const upload = validateAssetUpload(input);
+        const storageResult = await storagePut(buildSecureAssetStorageName({ workspaceId: input.workspaceId, assetId: input.assetId, extension: upload.extension }), upload.bytes, upload.mediaType);
+        const result = await createAssetVersion({ workspaceId: input.workspaceId, assetId: input.assetId, storageKey: storageResult.key, sizeBytes: upload.bytes.byteLength, checksum: upload.checksum, metadata: { url: storageResult.url, uploadPolicy: "validated_signature_v1" }, createdByUserId: ctx.user.id });
         if (!result) throw new TRPCError({ code: "NOT_FOUND", message: "Asset not found in this workspace" });
         await incrementWorkspaceUsage({ workspaceId: input.workspaceId, metric: "asset.versioning" });
         return result;

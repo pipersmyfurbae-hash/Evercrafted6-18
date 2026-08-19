@@ -403,6 +403,48 @@ export const platformIntegrationControls = mysqlTable(
 );
 
 /**
+ * Future checkout origins must be explicitly reviewed and enabled by the exact
+ * platform owner. This record stores no payment data, provider credentials, or
+ * checkout session information.
+ */
+export const trustedCheckoutOrigins = mysqlTable(
+  "trustedCheckoutOrigins",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    origin: varchar("origin", { length: 255 }).notNull(),
+    status: mysqlEnum("status", ["reviewed", "disabled"]).default("disabled").notNull(),
+    reviewNote: text("reviewNote"),
+    reviewedByUserId: int("reviewedByUserId").notNull().references(() => users.id),
+    reviewedAt: timestamp("reviewedAt").defaultNow().notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  },
+  table => [uniqueIndex("trusted_checkout_origins_origin_unique").on(table.origin), index("trusted_checkout_origins_status_index").on(table.status)],
+);
+
+/**
+ * A provider-neutral event receipt ledger. The unique provider/event pair is
+ * the database authority for future webhook idempotency; payload bodies,
+ * payment data, and provider secrets are intentionally never stored here.
+ */
+export const webhookReceipts = mysqlTable(
+  "webhookReceipts",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    provider: varchar("provider", { length: 80 }).notNull(),
+    eventId: varchar("eventId", { length: 191 }).notNull(),
+    status: mysqlEnum("status", ["received", "processed", "rejected"]).default("received").notNull(),
+    payloadHash: varchar("payloadHash", { length: 128 }).notNull(),
+    errorSummary: text("errorSummary"),
+    receivedAt: timestamp("receivedAt").defaultNow().notNull(),
+    processedAt: timestamp("processedAt"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  },
+  table => [uniqueIndex("webhook_receipts_provider_event_unique").on(table.provider, table.eventId), index("webhook_receipts_status_received_index").on(table.status, table.receivedAt)],
+);
+
+/**
  * Guided Wreath Creation is a versioned customer journey layered over the
  * existing tenant-scoped project model. It deliberately separates the client
  * memory, interpretation, story, approval, consent, and provenance records so
