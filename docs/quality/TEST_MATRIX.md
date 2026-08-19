@@ -5,8 +5,8 @@
 | Governance-document consistency | EC-P01-GOV-001 | File presence, cross-link review, run-log update | `DONE: EC-RUN-0001` |
 | Project baseline | EC-P00-INV-001 | Build, type-check, unit test, route/component review | `PARTIAL: scaffold route/component review and visual capture complete; source audit and automated checks pending` |
 | Schema contracts and reference artifacts | EC-P02-DB-001, EC-P03-DATA-001 | Drizzle schema export test, migration table verification, seed/fixture review | `IN_PROGRESS: contract test, seed, fixture, and database runbook added; Vitest command evidence pending` |
-| Tenant isolation | EC-P03-AUTHZ-001 | Unit and integration negative tests | `NOT_STARTED` |
-| Workspace provisioning and roles | EC-P03-IAM-001 | tRPC caller tests and onboarding flow test | `NOT_STARTED` |
+| Tenant isolation | EC-P03-AUTHZ-001, EC-P10-TEST-001 | Typed router negative path blocks cross-tenant project listing before repository query | `PASS: 2026-08-19, deterministic tRPC-caller coverage; 21 Vitest tests pass` |
+| Workspace provisioning and roles | EC-P03-IAM-001, EC-P10-TEST-001 | Typed router bootstrap/provisioning and member/viewer authorization tests | `PASS: 2026-08-19, deterministic tRPC-caller coverage; 21 Vitest tests pass` |
 | Drizzle schema/migrations | EC-P02-DB-001, EC-P03-DATA-001 | Fresh-install and upgrade migration tests | `NOT_STARTED` |
 | Asset access and versioning | EC-P04-STO-001 | Policy/repository tests and storage adapter tests | `NOT_STARTED` |
 | Studio review and delivery | EC-P06-UX-001 | End-to-end role/project/asset workflow tests | `NOT_STARTED` |
@@ -19,4 +19,5 @@
 | Editorial public routes | EC-PROJECT-005, EC-PROJECT-007 | Dedicated collection detail, journal article, account/sign-in, legal, and editorial 404 route contract | `PASS: 2026-08-19, 2 route/copy assertions passed within 17 passing Vitest tests; desktop and mobile visual review completed` |
 | Three-experience navigation boundary | EC-PROJECT-004, EC-PROJECT-006 | Client sidebar and Personal layout source contract; owner data-contract and access-denied state | `PASS: 2026-08-19, 3 navigation/security assertions passed within 17 passing Vitest tests; desktop and mobile visual review completed` |
 | Client SaaS sign-in | EC-PROJECT-006, EC-PROJECT-008 | Dedicated `/client/sign-in` route, Client-only access state, OAuth handoff, and route contract | `PASS: 2026-08-19, 2 contract assertions passed within 17 passing Vitest tests; desktop visual review completed` |
+| Profile update and audit | EC-P05-PROFILE-001, EC-P10-TEST-001 | Typed profile update caller test and audit-write assertion | `PASS: 2026-08-19, deterministic tRPC-caller coverage; 21 Vitest tests pass` |
 | Accessibility and responsive UX | EC-P10-A11Y-001 | Keyboard, semantic, contrast, and screen-size review | `NOT_STARTED` |

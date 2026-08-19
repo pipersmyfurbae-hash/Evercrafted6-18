@@ -122,6 +122,30 @@
 
 The reconciled source history and validated unified-platform increment were pushed to `pipersmyfurbae-hash/Evercrafted6-18` on `main` successfully. The synchronization commit is `936da2a` (`chore: reconcile existing Evercrafted source history`); it includes platform commit `ae3c539` (`feat: establish three-experience Evercrafted platform`) and preserves the pre-existing Evercrafted design records and `moodoor-studio-src` history.
 
+## Run EC-RUN-0003 — Protected-workspace router policy coverage
+
+**Date:** 2026-08-19 EDT  
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`  
+**Work items:** `EC-P10-TEST-001`, `EC-P03-IAM-001`, `EC-P03-AUTHZ-001`, `EC-P05-PROFILE-001`  
+**Objective:** Add deterministic typed-router evidence for the protected workspace without adding test data to the production database.
+
+| Area | Evidence | Result |
+|---|---|---|
+| Personal workspace provisioning | `server/workspace.router.policy.test.ts` | `workspace.bootstrap` calls personal-workspace provisioning before returning the caller’s workspace list. |
+| Role policy | Typed `workspace.canManage` calls | A member is allowed to manage; a viewer receives `FORBIDDEN`. |
+| Tenant isolation | Typed `project.list` negative path | A caller with no workspace membership receives `FORBIDDEN` before the project-list repository helper is invoked. |
+| Profile audit | Typed `profile.update` call | Profile update passes caller identity to the repository helper and emits the expected audit event. |
+| Validation | `pnpm test`, `pnpm check`, `pnpm build` | Passed: 8 Vitest files / 21 tests, TypeScript check, and production build. The existing non-blocking client-chunk-size advisory remains. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Created | `server/workspace.router.policy.test.ts` | Deterministic tRPC-caller policy coverage using mocked repository seams; no production database fixtures. |
+| Updated | `docs/quality/TEST_MATRIX.md` | Records router-level provisioning, tenant-isolation, role-policy, and profile-audit evidence. |
+| Updated | `docs/roadmap/CHANGE_REGISTER.md` | Records the authorization-test coverage increment. |
+| Updated | `todo.md` | Marks EC-P10-TEST-001 complete based on the requested coverage categories. |
+
 ### Next actions
 
 The next actions are to refine the Wix CMS foundation with production field types, references, indexes, and Velo data-access policy; transform the hybrid template while removing all template testimonial content; build the custom member dashboard; then complete the remaining test, payment/provider, scheduler, and legacy-source audit work.
