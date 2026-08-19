@@ -929,3 +929,35 @@ The validated Checkpoint B correction increment was committed and pushed success
 ### GitHub synchronization
 
 The validated Checkpoint C correction increment was committed and pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `1422b18` (`feat: add guided wreath recipe blueprint`).
+
+## Run EC-RUN-0031 — Authoritative Evercrafted product correction, Checkpoint D
+
+**Date:** 2026-08-19 EDT
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`
+**Work item:** `EC-CORRECT-009`
+**Authorization:** The user explicitly directed continuation to Checkpoint D after reviewing the live Recipe and Blueprint increment.
+
+| Area | Evidence and result |
+|---|---|
+| Source contract | Added `RENDER_PACKAGE_CONTRACT.md` to preserve the approved Checkpoint D boundary: deterministic provenance manifest, client approval, and provider-neutral manual-handoff intent only. |
+| Package and handoff gates | Package preparation requires the latest `locked` Recipe and `ready` Blueprint. Approval only accepts a `draft` package; manual handoff only accepts an `approved` package. All procedures retain workspace membership, capability, and project-scope checks. |
+| Manifest boundary | The compiler preserves the exact Recipe/Blueprint source versions, selected role snapshot, renderer rule, and explicit exclusions. It does not carry quantity, SKU, vendor, supplier cost, stock, reservation, geometry, construction, provider credential/task, price, checkout, or publication data. |
+| Invalidation | A later source-selection change stales dependent Recipe, Blueprint, draft or approved Render Package, and Manual Handoff records together while retaining reason, timestamp, Memory Thread, and audit history. |
+| Migration | Migration `0007_acoustic_black_crow` adds `guidedRenderPackages` (12 columns) and `guidedManualRenderHandoffs` (9). The generated handoff-to-package foreign-key name was shortened to `guided_render_handoff_package_fk` before first execution; the reviewed additive migration then applied successfully. Managed database verification returned both expected table/column counts. |
+| UI and copy | The Wreath stage now shows package preparation gates, stale explanation, version/role-hierarchy review, renderer rule, explicit exclusions, approval, and manual-handoff intent. Outcome remains explicitly gated. How It Works now presents the eight-stage journey and distinguishes live render-package review from future provider/outcome work. |
+| Validation | `pnpm test` passed: 51 Vitest files / 133 tests. `pnpm check` and `pnpm build` passed. Desktop review of `/how-it-works` and `/create` passed. The production build retains only the existing client-chunk-size advisory. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Created | `docs/architecture/RENDER_PACKAGE_CONTRACT.md` | Render-package provenance, approval, stale-history, and provider-neutral boundary. |
+| Created | `drizzle/0007_acoustic_black_crow.sql` | Reviewed additive migration with database-safe handoff foreign-key identifier. |
+| Created | `server/guidedRenders.ts`, `server/guidedRendersDb.ts` | Deterministic manifest compiler plus tenant-scoped package, approval, handoff, and read-model services. |
+| Created | `server/guided.render.contract.test.ts` | Manifest, gate, no-commercial/provider/image, and stale-propagation regression coverage. |
+| Updated | `drizzle/schema.ts`, `server/guidedRecipesDb.ts`, `server/routers.ts`, `client/src/pages/WreathCreation.tsx`, `client/src/pages/WreathPublic.tsx` | Versioned data, downstream stale cascade, protected API, Wreath package review interface, and public journey scope. |
+| Updated | `docs/architecture/DATA_DICTIONARY.md`, `docs/roadmap/MIGRATION_LEDGER.md`, `docs/quality/TEST_MATRIX.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Canonical schema, migration, validation, scope-change, and work-item evidence. |
+
+### GitHub synchronization
+
+The validated Checkpoint D correction increment is ready to commit and push to `pipersmyfurbae-hash/Evercrafted6-18` on `main`; the resulting commit identifier will be recorded immediately after synchronization.

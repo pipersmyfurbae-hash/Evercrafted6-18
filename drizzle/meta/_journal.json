@@ -50,6 +50,13 @@
       "when": 1787137246868,
       "tag": "0006_secret_ironclad",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1787138388822,
+      "tag": "0007_acoustic_black_crow",
+      "breakpoints": true
     }
   ]
 }

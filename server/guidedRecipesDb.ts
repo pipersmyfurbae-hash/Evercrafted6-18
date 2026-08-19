@@ -5,6 +5,8 @@ import {
   guidedFloralCandidates,
   guidedFloralCompatibilityReports,
   guidedFloralRoleSets,
+  guidedManualRenderHandoffs,
+  guidedRenderPackages,
   guidedStageStates,
   guidedWreathBlueprints,
   guidedWreathRecipeItems,
@@ -114,8 +116,18 @@ export async function invalidateGuidedRecipeBlueprints(input: { projectId: numbe
     const activeRecipes = await tx.select({ id: guidedWreathRecipes.id, version: guidedWreathRecipes.version }).from(guidedWreathRecipes).where(and(eq(guidedWreathRecipes.projectId, input.projectId), eq(guidedWreathRecipes.roleSetId, input.roleSetId), eq(guidedWreathRecipes.status, "locked")));
     if (!activeRecipes.length) return 0;
     const recipeIds = activeRecipes.map(recipe => recipe.id);
+    const activeBlueprints = await tx.select({ id: guidedWreathBlueprints.id }).from(guidedWreathBlueprints).where(inArray(guidedWreathBlueprints.recipeId, recipeIds));
+    const blueprintIds = activeBlueprints.map(blueprint => blueprint.id);
+    const activePackages = blueprintIds.length
+      ? await tx.select({ id: guidedRenderPackages.id }).from(guidedRenderPackages).where(inArray(guidedRenderPackages.blueprintId, blueprintIds))
+      : [];
+    const packageIds = activePackages.map(renderPackage => renderPackage.id);
     await tx.update(guidedWreathRecipes).set({ status: "stale", staleReason: input.reason, staleAt: new Date() }).where(inArray(guidedWreathRecipes.id, recipeIds));
     await tx.update(guidedWreathBlueprints).set({ status: "stale", staleReason: input.reason, staleAt: new Date() }).where(inArray(guidedWreathBlueprints.recipeId, recipeIds));
+    if (packageIds.length) {
+      await tx.update(guidedRenderPackages).set({ status: "stale", staleReason: input.reason, staleAt: new Date() }).where(inArray(guidedRenderPackages.id, packageIds));
+      await tx.update(guidedManualRenderHandoffs).set({ status: "stale", staleReason: input.reason, staleAt: new Date() }).where(inArray(guidedManualRenderHandoffs.renderPackageId, packageIds));
+    }
     await tx.insert(memoryThreadEvents).values({ projectId: input.projectId, stage: "recipe", sourceType: "guided_wreath_recipe_invalidation", sourceId: recipeIds[0], sourceVersion: activeRecipes[0].version, summary: input.reason, isDirectSource: false, createdByUserId: input.actorUserId });
     await tx.insert(auditLogs).values({ workspaceId: input.workspaceId, actorUserId: input.actorUserId, action: "guided_wreath.recipe.invalidated", targetType: "guided_wreath_recipe", targetId: recipeIds.join(","), metadata: { projectId: input.projectId, reason: input.reason, invalidatedRecipeCount: recipeIds.length } });
     return recipeIds.length;

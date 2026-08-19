@@ -733,6 +733,52 @@ export const guidedWreathBlueprints = mysqlTable(
   ],
 );
 
+/** Checkpoint D preserves an approved-design handoff without executing a renderer. */
+export const guidedRenderPackageStatusValues = ["draft", "approved", "stale"] as const;
+export const guidedManualRenderHandoffStatusValues = ["requested", "awaiting_result", "stale"] as const;
+
+export const guidedRenderPackages = mysqlTable(
+  "guidedRenderPackages",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    projectId: int("projectId").notNull().references(() => projects.id),
+    recipeId: int("recipeId").notNull().references(() => guidedWreathRecipes.id),
+    blueprintId: int("blueprintId").notNull().references(() => guidedWreathBlueprints.id),
+    version: int("version").default(1).notNull(),
+    status: mysqlEnum("status", guidedRenderPackageStatusValues).default("draft").notNull(),
+    manifest: json("manifest").notNull(),
+    staleReason: text("staleReason"),
+    createdByUserId: int("createdByUserId").notNull().references(() => users.id),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    approvedAt: timestamp("approvedAt"),
+    staleAt: timestamp("staleAt"),
+  },
+  table => [
+    uniqueIndex("guided_render_packages_project_version_unique").on(table.projectId, table.version),
+    uniqueIndex("guided_render_packages_blueprint_unique").on(table.blueprintId),
+    index("guided_render_packages_project_status_index").on(table.projectId, table.status),
+  ],
+);
+
+export const guidedManualRenderHandoffs = mysqlTable(
+  "guidedManualRenderHandoffs",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    projectId: int("projectId").notNull().references(() => projects.id),
+    renderPackageId: int("renderPackageId").notNull().references(() => guidedRenderPackages.id),
+    status: mysqlEnum("status", guidedManualRenderHandoffStatusValues).default("requested").notNull(),
+    requestNote: text("requestNote"),
+    requestedByUserId: int("requestedByUserId").notNull().references(() => users.id),
+    requestedAt: timestamp("requestedAt").defaultNow().notNull(),
+    staleReason: text("staleReason"),
+    staleAt: timestamp("staleAt"),
+  },
+  table => [
+    uniqueIndex("guided_manual_handoffs_package_unique").on(table.renderPackageId),
+    index("guided_manual_handoffs_project_status_index").on(table.projectId, table.status),
+  ],
+);
+
 export const auditLogs = mysqlTable(
   "auditLogs",
   {
