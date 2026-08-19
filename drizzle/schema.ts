@@ -233,6 +233,18 @@ export const notifications = mysqlTable(
   table => [index("notifications_recipient_read_index").on(table.recipientUserId, table.readAt)],
 );
 
+export const notificationPreferences = mysqlTable(
+  "notificationPreferences",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    userId: int("userId").notNull().references(() => users.id),
+    inAppEnabled: boolean("inAppEnabled").default(true).notNull(),
+    emailEnabled: boolean("emailEnabled").default(false).notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  },
+  table => [uniqueIndex("notification_preferences_user_unique").on(table.userId)],
+);
+
 export const leads = mysqlTable(
   "leads",
   {

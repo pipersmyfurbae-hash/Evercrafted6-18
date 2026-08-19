@@ -327,6 +327,34 @@ The Studio reviewer-assignment increment was pushed successfully to `pipersmyfur
 
 The hardened scheduled-recovery increment was pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `e619fe5` (`feat: harden scheduled job recovery claims`).
 
+## Run EC-RUN-0010 — Persistent notification preferences and workflow delivery
+
+**Date:** 2026-08-19 EDT
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`
+**Work items:** `EC-P04-NOT-001`, `EC-PROJECT-013`, `EC-P02-DB-002`
+**Objective:** Move notification delivery from a hardcoded status response to a schema-backed, recipient-scoped in-app foundation.
+
+| Area | Evidence | Result |
+|---|---|---|
+| Persisted preferences | `notificationPreferences` schema and `0001_romantic_rocket_raccoon.sql` | Each user has persisted `inAppEnabled` and `emailEnabled` flags; in-app is the active delivery path and email remains an explicit future-provider setting. |
+| Migration safety | Reviewed SQL and managed database execution | The first generated full-baseline draft was not applied. The committed migration was corrected to incremental preference-table creation and then applied successfully. |
+| Workflow records | `createNotification` and `notifyWorkspaceMembers` | Assigned reviews notify the selected recipient; project stage changes notify active workspace members other than the initiating actor, respecting persisted in-app preference state. |
+| Background-job record | `queueDeliveryPublishingHandoff` | The provider-neutral publishing-handoff job notifies only the authorized initiating workspace member through the same persisted preference gate; no external provider is invoked. |
+| Runtime handoff policy | `server/notification.delivery.policy.test.ts` | The job event returns a candidate only for its authorized initiator when persisted in-app delivery is enabled, and returns no candidate when that preference is disabled. |
+| Recipient policy | `server/notification.policy.test.ts` | Deterministically excludes the actor, deduplicates recipients, and gates in-app delivery on persisted preferences. |
+| Protected UX | `Notifications.tsx` | Shows persisted delivery state, loading/retry/error/empty handling, read action, and internal action navigation. |
+| Validation | `pnpm test`, `pnpm check`, `pnpm build` | Passed: 22 Vitest files / 49 tests, TypeScript check, and production build. The existing non-blocking client-chunk-size advisory remains. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Created | `drizzle/0001_romantic_rocket_raccoon.sql` | Reviewed incremental schema migration for persisted notification preferences. |
+| Created | `server/notification.policy.test.ts` | Deterministic recipient-scoping and persisted-preference tests. |
+| Updated | `drizzle/schema.ts`, `server/db.ts`, `server/routers.ts` | Preference persistence, typed preference API, recipient-scoped delivery gates, and project-stage fanout. |
+| Updated | `client/src/pages/Notifications.tsx` | Persisted delivery-state display and recoverable notification UI. |
+| Created | `docs/roadmap/MIGRATION_LEDGER.md` | Versioned migration application and review evidence. |
+
 ### Next actions
 
 The next actions are to refine the Wix CMS foundation with production field types, references, indexes, and Velo data-access policy; transform the hybrid template while removing all template testimonial content; build the custom member dashboard; then complete the remaining test, payment/provider, scheduler, and legacy-source audit work.

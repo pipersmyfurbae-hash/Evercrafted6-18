@@ -18,7 +18,9 @@
 - [x] EC-P04-JOB-002 Implement the approved hybrid job policy: request-driven short actions, durable idempotent job records, bounded retry/recovery processing, and provider-neutral heavy-media handoff contracts.
 - [x] EC-P04-JOB-003 Add a scheduled recovery handler for queued/retryable jobs with idempotent claim semantics, documented deployment requirement, and no in-process timers. (Endpoint and state machine are deployed and tested; deploy-before-schedule and deferred-cadence controls are recorded.)
 - [ ] EC-P04-JOB-004 Add job health, queue latency, retry, dead-letter, and heavy-media escalation telemetry so an always-on worker can be introduced from measured demand without redesign.
-- [ ] EC-P04-NOT-001 Implement notification records, preference-ready delivery, and in-app workspace notification UI.
+- [x] EC-P04-NOT-001 Implement notification records, preference-ready delivery, and in-app workspace notification UI.
+- [x] EC-PROJECT-013 Persist notification delivery preferences, expand notifications to key workflow/job events, and add deterministic recipient-scoped policy coverage.
+- [x] EC-PROJECT-014 Add persisted-preference-gated notification creation for provider-neutral background-job handoff events with authorized-recipient regression evidence.
 - [ ] EC-P07-ENT-001 Implement plan, subscription, entitlement, and usage model scaffolding with server-enforced feature checks.
 - [ ] EC-P08-ME-001 Build the owner-only Personal Command Center with private projects, cross-workspace activity overview, integration controls, and operational dashboards.
 - [ ] EC-P08-ADM-002 Build a restricted administration and support console for tenant overview, feature flags, entitlement assistance, job/integration health, and audited access.
@@ -26,7 +28,7 @@
 - [ ] EC-P10-A11Y-001 Verify keyboard, semantic, contrast, loading, empty, error, and authorization states for all implemented user journeys.
 - [ ] EC-P11-GOV-001 Update all documentation, test evidence, affected-file inventory, and this TODO checklist after each execution run; commit and push the synchronized increment to GitHub. (EC-RUN-0002 was synchronized; this remains an ongoing delivery control.)
 - [x] EC-P11-GOV-002 Commit and push the initial governance-document set and first validated implementation increment to the designated GitHub branch, recording the commit ID and push result in RUN_LOG.md.
-- [ ] EC-P02-DB-002 Generate, review, and test Drizzle migration artifacts using the documented database workflow; record executable migration evidence.
+- [x] EC-P02-DB-002 Generate, review, and test Drizzle migration artifacts using the documented database workflow; record executable migration evidence.
 - [x] EC-P05-PROFILE-001 Build authenticated profile view and editing with loading, error, and success states.
 - [x] EC-P06-PUB-001 Build a provider-neutral Studio publishing handoff flow and audit event without enabling an external provider until separately approved.
 - [x] EC-P04-STO-002 Add tenant-scoped asset re-upload/new-version creation, version history query, and Studio version history UI.

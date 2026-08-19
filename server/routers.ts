@@ -9,6 +9,7 @@ import {
   captureLead,
   createPlan,
   createDelivery,
+  getNotificationPreferences,
   createOrganizationWorkspace,
   createProject,
   createReviewRequest,
@@ -26,6 +27,7 @@ import {
   listBackgroundJobsForWorkspace,
   listDeliveries,
   listNotificationsForUser,
+  notifyWorkspaceMembers,
   listPlatformFeatureFlags,
   listPlatformWorkspaces,
   listPlans,
@@ -46,6 +48,7 @@ import {
   setWorkspaceFeatureFlag,
   transitionProjectStatus,
   updateUserProfile,
+  updateNotificationPreferences,
   updateWorkspaceMemberRole,
   type WorkspaceRole,
   writeAuditLog,
@@ -263,6 +266,7 @@ export const appRouter = router({
         await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: canManageWorkspace });
         const project = await transitionProjectStatus({ ...input, actorUserId: ctx.user.id });
         if (!project) throw new TRPCError({ code: "NOT_FOUND", message: "Project not found in this workspace" });
+        if (project) await notifyWorkspaceMembers({ workspaceId: input.workspaceId, actorUserId: ctx.user.id, type: "project.status_changed", title: "Project stage updated", body: `Project is now ${input.toStatus.replace("_", " ")}.`, actionUrl: "/studio" });
         return project;
       }),
     listReviews: protectedProcedure
@@ -322,6 +326,10 @@ export const appRouter = router({
   }),
   notification: router({
     listMine: protectedProcedure.query(async ({ ctx }) => listNotificationsForUser(ctx.user.id)),
+    preferenceStatus: protectedProcedure.query(async ({ ctx }) => getNotificationPreferences(ctx.user.id)),
+    updatePreferences: protectedProcedure
+      .input(z.object({ inAppEnabled: z.boolean(), emailEnabled: z.boolean() }))
+      .mutation(async ({ ctx, input }) => updateNotificationPreferences({ userId: ctx.user.id, ...input })),
     markRead: protectedProcedure
       .input(z.object({ notificationId: z.number().int().positive() }))
       .mutation(async ({ ctx, input }) => {

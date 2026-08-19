@@ -10,6 +10,7 @@ import {
   InsertUser,
   leads,
   notifications,
+  notificationPreferences,
   organizations,
   plans,
   projects,
@@ -609,6 +610,7 @@ export async function createReviewRequest(input: {
   if (!reviewId) throw new Error("Review request could not be created");
   await db.insert(workflowEvents).values({ workspaceId: input.workspaceId, projectId: input.projectId, eventType: "studio.review_requested", note: input.requestNote ?? null, actorUserId: input.requestedByUserId });
   await db.insert(auditLogs).values({ workspaceId: input.workspaceId, actorUserId: input.requestedByUserId, action: "studio.review_requested", targetType: "review_request", targetId: String(reviewId) });
+  if (input.reviewerUserId) await createNotification({ workspaceId: input.workspaceId, recipientUserId: input.reviewerUserId, type: "studio.review_requested", title: "Review assigned", body: input.requestNote ?? "A workspace review has been assigned to you.", actionUrl: "/studio" });
   const result = await db.select().from(reviewRequests).where(eq(reviewRequests.id, reviewId)).limit(1);
   return result[0];
 }
@@ -680,12 +682,63 @@ export async function queueDeliveryPublishingHandoff(input: { workspaceId: numbe
     payload: { deliveryId: input.deliveryId, projectId: delivery.projectId, destinationType: delivery.destinationType, destinationRef: delivery.destinationRef ?? null },
   });
   await writeAuditLog({ workspaceId: input.workspaceId, actorUserId: input.actorUserId, action: "studio.delivery.publish_handoff.queued", targetType: "delivery", targetId: String(input.deliveryId), metadata: { jobId: job?.id ?? null, provider: "unconfigured" } });
+  const preferences = await getNotificationPreferences(input.actorUserId);
+  const notification = buildProviderHandoffNotification(input, preferences);
+  if (notification) await createNotification(notification, preferences);
   return { outcome: "queued" as const, delivery, job };
 }
 
 export async function listNotificationsForUser(userId: number) {
   const db = requireDb(await getDb());
   return db.select().from(notifications).where(eq(notifications.recipientUserId, userId)).orderBy(desc(notifications.createdAt));
+}
+
+export async function getNotificationPreferences(userId: number) {
+  const db = requireDb(await getDb());
+  await db.insert(notificationPreferences).values({ userId }).onDuplicateKeyUpdate({ set: { updatedAt: new Date() } });
+  const preferences = await db.select().from(notificationPreferences).where(eq(notificationPreferences.userId, userId)).limit(1);
+  return preferences[0];
+}
+
+export async function updateNotificationPreferences(input: { userId: number; inAppEnabled: boolean; emailEnabled: boolean }) {
+  const db = requireDb(await getDb());
+  await db.insert(notificationPreferences).values(input).onDuplicateKeyUpdate({ set: { inAppEnabled: input.inAppEnabled, emailEnabled: input.emailEnabled, updatedAt: new Date() } });
+  return getNotificationPreferences(input.userId);
+}
+
+export function isInAppDeliveryEnabled(preferences: { inAppEnabled: boolean } | undefined) {
+  return preferences?.inAppEnabled === true;
+}
+
+export function selectWorkspaceNotificationRecipientIds(members: Array<{ userId: number }>, actorUserId?: number) {
+  return Array.from(new Set(members.map(member => member.userId).filter(userId => userId !== actorUserId)));
+}
+
+type NotificationInput = { workspaceId?: number | null; recipientUserId: number; type: string; title: string; body?: string | null; actionUrl?: string | null };
+
+export function createInAppNotificationCandidate(input: NotificationInput, preferences: { inAppEnabled: boolean } | undefined) {
+  return isInAppDeliveryEnabled(preferences) ? input : undefined;
+}
+
+export function buildProviderHandoffNotification(input: { workspaceId: number; actorUserId: number }, preferences: { inAppEnabled: boolean } | undefined) {
+  return createInAppNotificationCandidate({ workspaceId: input.workspaceId, recipientUserId: input.actorUserId, type: "job.studio_provider_handoff.queued", title: "Publishing handoff queued", body: "A provider-neutral publishing handoff is queued. No external provider has been called.", actionUrl: "/studio" }, preferences);
+}
+
+export async function createNotification(input: NotificationInput, knownPreferences?: { inAppEnabled: boolean }) {
+  const preferences = knownPreferences ?? await getNotificationPreferences(input.recipientUserId);
+  const candidate = createInAppNotificationCandidate(input, preferences);
+  if (!candidate) return { delivered: false as const, reason: "in_app_disabled" as const };
+  const db = requireDb(await getDb());
+  await db.insert(notifications).values({ workspaceId: candidate.workspaceId ?? null, recipientUserId: candidate.recipientUserId, type: candidate.type, title: candidate.title, body: candidate.body ?? null, actionUrl: candidate.actionUrl ?? null });
+  return { delivered: true as const };
+}
+
+export async function notifyWorkspaceMembers(input: { workspaceId: number; actorUserId?: number; type: string; title: string; body?: string | null; actionUrl?: string | null }) {
+  const db = requireDb(await getDb());
+  const members = await db.select({ userId: workspaceMemberships.userId }).from(workspaceMemberships).where(and(eq(workspaceMemberships.workspaceId, input.workspaceId), eq(workspaceMemberships.status, "active")));
+  const recipientIds = selectWorkspaceNotificationRecipientIds(members, input.actorUserId);
+  const outcomes = await Promise.all(recipientIds.map(recipientUserId => createNotification({ ...input, recipientUserId })));
+  return { recipients: recipientIds.length, delivered: outcomes.filter(outcome => outcome.delivered).length };
 }
 
 export async function markNotificationRead(input: { notificationId: number; userId: number }) {
