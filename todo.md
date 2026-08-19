@@ -1,6 +1,6 @@
 # Project TODO
 
-- [ ] EC-P01-GOV-001 Create and maintain repository-resident roadmap, run log, change register, capability matrix, data dictionary, migration ledger, risk register, test matrix, and release checklist. (Initial artifacts exist; first end-of-run verification and GitHub synchronization remain pending.)
+- [ ] EC-P01-GOV-001 Create and maintain repository-resident roadmap, run log, change register, capability matrix, data dictionary, migration ledger, risk register, test matrix, and release checklist. (Initial artifacts verified; continue updating these records for each implementation run.)
 - [ ] EC-P00-INV-001 Audit the initialized project and the two source programs, recording runtime, routes, APIs, schema, storage, dependencies, tests, and feature disposition in governance documents. (Scaffold audit complete; legacy source working copy blocked.)
 - [ ] EC-P02-DB-001 Establish database-as-code conventions with Drizzle schema modules, migrations, seeds, fixtures, migration tests, repository helpers, data dictionary, and migration ledger. (Schema, migrations, seed convention, fixtures, helpers, and documentation exist; generated-migration workflow and automated migration-test evidence remain.)
 - [ ] EC-P03-DATA-001 Define canonical multi-tenant entities for workspaces, organizations, memberships, roles, projects, assets, workflows, audit records, notifications, jobs, feature flags, plans, entitlements, and integrations. (Foundation schema and applied migrations complete; fixture/migration-test coverage remains.)
@@ -24,8 +24,8 @@
 - [ ] EC-P08-ADM-002 Build a restricted administration and support console for tenant overview, feature flags, entitlement assistance, job/integration health, and audited access.
 - [ ] EC-P10-TEST-001 Add Vitest coverage for tenant isolation, role policy, personal-workspace provisioning, activity/audit records, and critical typed API behavior.
 - [ ] EC-P10-A11Y-001 Verify keyboard, semantic, contrast, loading, empty, error, and authorization states for all implemented user journeys.
-- [ ] EC-P11-GOV-001 Update all documentation, test evidence, affected-file inventory, and this TODO checklist after each execution run; commit and push the synchronized increment to GitHub.
-- [ ] EC-P11-GOV-002 Commit and push the initial governance-document set and first validated implementation increment to the designated GitHub branch, recording the commit ID and push result in RUN_LOG.md.
+- [ ] EC-P11-GOV-001 Update all documentation, test evidence, affected-file inventory, and this TODO checklist after each execution run; commit and push the synchronized increment to GitHub. (EC-RUN-0002 was synchronized; this remains an ongoing delivery control.)
+- [x] EC-P11-GOV-002 Commit and push the initial governance-document set and first validated implementation increment to the designated GitHub branch, recording the commit ID and push result in RUN_LOG.md.
 - [ ] EC-P02-DB-002 Generate, review, and test Drizzle migration artifacts using the documented database workflow; record executable migration evidence.
 - [ ] EC-P05-PROFILE-001 Build authenticated profile view and editing with loading, error, and success states.
 - [ ] EC-P06-PUB-001 Build a provider-neutral Studio publishing handoff flow and audit event without enabling an external provider until separately approved.
