@@ -917,6 +917,10 @@ export async function listWorkspaceEntitlements(workspaceId: number) {
   return db.select().from(workspaceEntitlements).where(eq(workspaceEntitlements.workspaceId, workspaceId)).orderBy(asc(workspaceEntitlements.capability));
 }
 
+export function isWorkspaceCapabilityEnabled(entitlements: Array<{ capability: string; isEnabled: boolean }>, capability: string) {
+  return entitlements.find(entitlement => entitlement.capability === capability)?.isEnabled ?? true;
+}
+
 export async function setWorkspaceEntitlement(input: { workspaceId: number; planId?: number | null; capability: string; isEnabled: boolean; usageLimit?: number | null }) {
   const db = requireDb(await getDb());
   const existing = await db.select().from(workspaceEntitlements).where(and(eq(workspaceEntitlements.workspaceId, input.workspaceId), eq(workspaceEntitlements.capability, input.capability))).limit(1);

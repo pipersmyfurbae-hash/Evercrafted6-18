@@ -22,6 +22,7 @@ import {
   getAssetForWorkspace,
   getBackgroundJobHealth,
   getWorkspaceMembership,
+  isWorkspaceCapabilityEnabled,
   listAssetsForProject,
   listAssetVersionsForWorkspace,
   listBackgroundJobsForWorkspace,
@@ -70,6 +71,14 @@ async function requireWorkspaceRole(input: {
     throw new TRPCError({ code: "FORBIDDEN", message: "You do not have permission to access this workspace action" });
   }
   return membership;
+}
+
+async function requireWorkspaceCapability(workspaceId: number, capability: string) {
+  const entitlements = await listWorkspaceEntitlements(workspaceId);
+  if (!isWorkspaceCapabilityEnabled(entitlements, capability)) {
+    throw new TRPCError({ code: "FORBIDDEN", message: `The ${capability} capability is not enabled for this workspace` });
+  }
+  return { capability, source: entitlements.some(entitlement => entitlement.capability === capability) ? "explicit" as const : "default" as const };
 }
 
 export const appRouter = router({
@@ -157,6 +166,12 @@ export const appRouter = router({
         const membership = await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: canAdministerWorkspace });
         return { allowed: true, role: membership.role };
       }),
+    entitlements: protectedProcedure
+      .input(z.object({ workspaceId: z.number().int().positive() }))
+      .query(async ({ ctx, input }) => {
+        await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: () => true });
+        return listWorkspaceEntitlements(input.workspaceId);
+      }),
   }),
   project: router({
     list: protectedProcedure
@@ -177,6 +192,7 @@ export const appRouter = router({
       .input(z.object({ workspaceId: z.number().int().positive(), name: z.string().trim().min(2).max(180), description: z.string().trim().max(4000).optional() }))
       .mutation(async ({ ctx, input }) => {
         await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: canManageWorkspace });
+        await requireWorkspaceCapability(input.workspaceId, "project.create");
         return createProject({ ...input, createdByUserId: ctx.user.id });
       }),
   }),
@@ -210,6 +226,7 @@ export const appRouter = router({
       }))
       .mutation(async ({ ctx, input }) => {
         await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: canManageWorkspace });
+        await requireWorkspaceCapability(input.workspaceId, "asset.upload");
         if (input.projectId && !await getProjectForWorkspace(input.projectId, input.workspaceId)) {
           throw new TRPCError({ code: "NOT_FOUND", message: "Project not found in this workspace" });
         }
@@ -243,6 +260,7 @@ export const appRouter = router({
       .input(z.object({ workspaceId: z.number().int().positive(), assetId: z.number().int().positive(), name: z.string().trim().min(1).max(255), mediaType: z.string().trim().min(3).max(128), base64: z.string().min(1).max(7_000_000), checksum: z.string().trim().max(128).optional() }))
       .mutation(async ({ ctx, input }) => {
         await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: canManageWorkspace });
+        await requireWorkspaceCapability(input.workspaceId, "asset.versioning");
         const asset = await getAssetForWorkspace(input.assetId, input.workspaceId);
         if (!asset) throw new TRPCError({ code: "NOT_FOUND", message: "Asset not found in this workspace" });
         const bytes = Buffer.from(input.base64, "base64");
@@ -280,6 +298,7 @@ export const appRouter = router({
       .input(z.object({ workspaceId: z.number().int().positive(), projectId: z.number().int().positive(), assetId: z.number().int().positive().optional(), requestNote: z.string().trim().max(2000).optional(), reviewerUserId: z.number().int().positive().optional() }))
       .mutation(async ({ ctx, input }) => {
         await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: canManageWorkspace });
+        await requireWorkspaceCapability(input.workspaceId, "studio.review");
         if (!await getProjectForWorkspace(input.projectId, input.workspaceId)) throw new TRPCError({ code: "NOT_FOUND", message: "Project not found in this workspace" });
         if (input.assetId && !await getAssetForWorkspace(input.assetId, input.workspaceId)) throw new TRPCError({ code: "NOT_FOUND", message: "Asset not found in this workspace" });
         return createReviewRequest({ ...input, requestedByUserId: ctx.user.id });
@@ -303,6 +322,7 @@ export const appRouter = router({
       .input(z.object({ workspaceId: z.number().int().positive(), projectId: z.number().int().positive(), destinationType: z.string().trim().min(2).max(80), destinationRef: z.string().trim().max(512).optional() }))
       .mutation(async ({ ctx, input }) => {
         await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: canManageWorkspace });
+        await requireWorkspaceCapability(input.workspaceId, "studio.delivery");
         if (!await getProjectForWorkspace(input.projectId, input.workspaceId)) throw new TRPCError({ code: "NOT_FOUND", message: "Project not found in this workspace" });
         return createDelivery({ ...input, createdByUserId: ctx.user.id });
       }),
@@ -318,6 +338,7 @@ export const appRouter = router({
       .input(z.object({ workspaceId: z.number().int().positive(), deliveryId: z.number().int().positive() }))
       .mutation(async ({ ctx, input }) => {
         await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: canManageWorkspace });
+        await requireWorkspaceCapability(input.workspaceId, "studio.publishing_handoff");
         const handoff = await queueDeliveryPublishingHandoff({ ...input, actorUserId: ctx.user.id });
         if (handoff.outcome === "not_found") throw new TRPCError({ code: "NOT_FOUND", message: "Delivery not found in this workspace" });
         if (handoff.outcome === "not_ready") throw new TRPCError({ code: "BAD_REQUEST", message: "Delivery must be ready before it can be handed off" });

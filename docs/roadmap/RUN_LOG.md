@@ -388,6 +388,30 @@ The persisted notification-delivery increment was pushed successfully to `pipers
 
 The durable-job telemetry increment was pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `b5894aa` (`feat: add durable job telemetry`).
 
+## Run EC-RUN-0012 — Persisted workspace capability enforcement
+
+**Date:** 2026-08-19 EDT
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`
+**Work items:** `EC-P07-ENT-001`, `EC-PROJECT-016`
+**Objective:** Convert persisted workspace entitlement records from administrative metadata into enforced protected-operation controls while retaining the current default policy for unlisted capabilities.
+
+| Area | Evidence | Result |
+|---|---|---|
+| Capability resolution | `isWorkspaceCapabilityEnabled` and `requireWorkspaceCapability` | An explicit record controls the named capability; unlisted capability names follow the documented current default policy. |
+| Protected enforcement | Typed project, asset, and Studio router mutations | Management role is necessary but not sufficient when a capability is explicitly disabled. Project creation, asset upload/versioning, review, delivery, and provider-neutral handoff are gated before side effects. |
+| Client visibility | Protected `workspace.entitlements` query and Settings card | Workspace members can inspect enabled/disabled records, but entitlement administration remains restricted to the existing administrator controls. |
+| Regression evidence | `server/entitlement.policy.test.ts` | Proves explicit `project.create` disablement returns `FORBIDDEN` before project creation and confirms an unlisted capability follows the default policy. |
+| Validation | `pnpm test`, `pnpm check`, `pnpm build` | Passed: 24 Vitest files / 52 tests, TypeScript check, and production build. The existing non-blocking client-chunk-size advisory remains. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Updated | `server/db.ts`, `server/routers.ts` | Persisted capability resolution, protected capability gate, and client-safe entitlement query. |
+| Updated | `client/src/pages/Settings.tsx` | Client workspace capability visibility. |
+| Created | `server/entitlement.policy.test.ts` | Typed-router enforcement regression coverage. |
+| Updated | `todo.md` | Tracks the completed enforcement milestone separately from remaining plan/subscription/usage work. |
+
 ### Next actions
 
 The next actions are to refine the Wix CMS foundation with production field types, references, indexes, and Velo data-access policy; transform the hybrid template while removing all template testimonial content; build the custom member dashboard; then complete the remaining test, payment/provider, scheduler, and legacy-source audit work.
