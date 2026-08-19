@@ -1,5 +1,6 @@
 import { startLogin } from "@/const";
 import { Button } from "@/components/ui/button";
+import SkipLink from "@/components/SkipLink";
 import { ArrowLeft, ArrowRight, ArrowUpRight, LogIn } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -134,7 +135,7 @@ export default function EvercraftedPages() {
   const isReading = page.kind === "article" || page.kind === "legal";
 
   return (
-    <main className="evercrafted-surface min-h-screen">
+    <><SkipLink /><main id="main-content" className="evercrafted-surface min-h-screen">
       <EditorialNavigation />
       <section className="mx-auto grid max-w-7xl gap-10 px-5 pb-16 pt-14 sm:px-8 lg:grid-cols-[.86fr_1.14fr] lg:px-12 lg:pb-24 lg:pt-24">
         <div className="flex flex-col justify-center">
@@ -149,6 +150,6 @@ export default function EvercraftedPages() {
       {page.kind === "detail" ? <section className="border-y border-stone-300 bg-[#ece8df] px-5 py-16 sm:px-8 lg:px-12"><div className="mx-auto grid max-w-7xl gap-8 md:grid-cols-3"><p className="font-editorial text-3xl text-stone-900">A collection begins with relationship.</p><p className="text-sm leading-7 text-stone-600">Surface, scale, and the passing of light are considered together before any object is asked to occupy a room.</p><p className="text-sm leading-7 text-stone-600">Verified catalog records will determine product availability, specifications, and commerce actions when they are ready to be published.</p></div></section> : null}
       {page.kind === "contact" ? <section className="border-t border-stone-300 bg-[#e4ded2] px-5 py-16 sm:px-8 lg:px-12"><div className="mx-auto max-w-7xl"><p className="font-editorial max-w-2xl text-3xl tracking-[-.035em] text-stone-900">For a considered start, use the inquiry form on the Evercrafted home page.</p><Link href="/#contact" className="mt-7 inline-flex items-center gap-2 text-sm font-medium text-stone-800">Open inquiry form <ArrowUpRight className="h-4 w-4" /></Link></div></section> : null}
       <footer className="border-t border-stone-300 px-5 py-8 text-sm text-stone-500 sm:px-8 lg:px-12"><div className="mx-auto flex max-w-7xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><span>Evercrafted</span><div className="flex gap-5"><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/client">Client workspace</Link></div></div></footer>
-    </main>
+    </main></>
   );
 }

@@ -26,6 +26,7 @@ import { Bell, BriefcaseBusiness, ChevronDown, FolderKanban, LayoutDashboard, Lo
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
+import SkipLink from "./SkipLink";
 import { Button } from "./ui/button";
 
 const menuItems = [
@@ -86,7 +87,7 @@ export default function DashboardLayout({
   }
 
   return (
-    <SidebarProvider
+    <><SkipLink /><SidebarProvider
       style={
         {
           "--sidebar-width": `${sidebarWidth}px`,
@@ -96,7 +97,7 @@ export default function DashboardLayout({
       <DashboardLayoutContent setSidebarWidth={setSidebarWidth}>
         {children}
       </DashboardLayoutContent>
-    </SidebarProvider>
+    </SidebarProvider></>
   );
 }
 
@@ -281,7 +282,7 @@ function DashboardLayoutContent({
             </div>
           </div>
         )}
-        <main className="flex-1 p-4 md:p-6">{children}</main>
+        <main id="main-content" className="flex-1 p-4 md:p-6">{children}</main>
       </SidebarInset>
     </>
   );

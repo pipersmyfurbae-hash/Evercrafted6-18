@@ -1,5 +1,6 @@
 import { startLogin } from "@/const";
 import { Button } from "@/components/ui/button";
+import SkipLink from "@/components/SkipLink";
 import { ArrowRight, CheckCircle2, FileCheck2, FolderKanban, LockKeyhole, MessageSquareText, ShieldCheck } from "lucide-react";
 import { Link, useLocation } from "wouter";
 
@@ -31,7 +32,7 @@ export default function ClientLanding() {
   const content = pageContent[location as keyof typeof pageContent] ?? pageContent["/client"];
 
   return (
-    <main className="client-surface min-h-screen overflow-hidden">
+    <><SkipLink /><main id="main-content" className="client-surface min-h-screen overflow-hidden">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-5 sm:px-8 lg:px-12" aria-label="Client SaaS navigation">
         <Link href="/client" className="flex items-center gap-3 text-sm font-medium tracking-tight"><span className="grid h-8 w-8 place-items-center rounded-lg bg-slate-900 text-xs text-white">EC</span><span>Evercrafted Client</span></Link>
         <div className="hidden items-center gap-6 text-sm text-slate-600 md:flex"><Link href="/client/how-it-works">How it works</Link><Link href="/client/capabilities">Capabilities</Link><Link href="/client/outcomes">Outcomes</Link><Link href="/client/access">Access</Link><Link href="/">Evercrafted</Link></div>
@@ -53,6 +54,6 @@ export default function ClientLanding() {
       <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-12"><div className="grid gap-10 lg:grid-cols-[.72fr_1.28fr]"><div><p className="text-xs font-medium uppercase tracking-[0.18em] text-slate-500">Capabilities</p><h2 className="mt-4 text-4xl font-medium tracking-[-0.05em] text-slate-950">Built around the actual work.</h2></div><div className="grid gap-4 sm:grid-cols-2">{capabilities.map(capability => <article key={capability.title} className="rounded-2xl border border-slate-200 bg-white p-6"><capability.icon className="h-5 w-5 text-slate-600" /><h3 className="mt-8 text-lg font-medium text-slate-900">{capability.title}</h3><p className="mt-3 text-sm leading-6 text-slate-600">{capability.copy}</p></article>)}</div></div></section>
 
       <section className="border-t border-slate-200 px-5 py-16 sm:px-8 lg:px-12"><div className="mx-auto flex max-w-7xl flex-col gap-6 rounded-3xl bg-slate-900 px-7 py-10 text-white md:flex-row md:items-end md:justify-between"><div><p className="text-xs font-medium uppercase tracking-[0.18em] text-slate-300">Access</p><h2 className="mt-4 max-w-xl text-3xl font-medium tracking-[-0.04em]">Your workspace, when you are ready.</h2><p className="mt-3 max-w-xl text-sm leading-6 text-slate-300">Client access follows an authorized invitation or approved membership path.</p></div><Button onClick={startLogin} className="rounded-lg bg-white text-slate-900 hover:bg-slate-100">Sign in <CheckCircle2 className="ml-2 h-4 w-4" /></Button></div></section>
-    </main>
+    </main></>
   );
 }

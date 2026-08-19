@@ -179,6 +179,31 @@ The protected-workspace test increment was pushed successfully to `pipersmyfurba
 
 The profile-management increment was pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `63d07f4` (`feat: complete profile management states`).
 
+## Run EC-RUN-0005 — Shared accessibility foundation
+
+**Date:** 2026-08-19 EDT  
+**Status:** `VALIDATED FOUNDATION — FULL JOURNEY AUDIT IN PROGRESS`  
+**Work item:** `EC-P10-A11Y-001`  
+**Objective:** Add a consistent keyboard-navigation foundation without overstating completion of the full accessibility program.
+
+| Area | Evidence | Result |
+|---|---|---|
+| Keyboard navigation | Reusable `SkipLink` component and `main-content` targets | Editorial home, editorial detail pages, Client conversion, Client workspace, and Personal command expose a skip-to-content route. |
+| Visible focus | Global `:focus-visible` token | Keyboard focus receives a consistent ring and offset across semantic links and controls. |
+| Regression test | `server/accessibility.contract.test.ts` | 2 assertions verify the shared skip mechanism, visible focus treatment, and target wiring. |
+| Visual review | Desktop captures of `/`, `/client`, and `/personal` | Accessibility additions do not disrupt the distinct visual systems. |
+| Validation | `pnpm check`, `pnpm test`, `pnpm build` | Passed: 10 Vitest files / 25 tests, TypeScript check, and production build. The existing non-blocking client-chunk-size advisory remains. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Created | `client/src/components/SkipLink.tsx` | Shared keyboard skip-navigation control. |
+| Created | `server/accessibility.contract.test.ts` | Regression coverage for implemented accessibility wiring. |
+| Updated | `client/src/index.css` | Defines a visible global keyboard focus treatment. |
+| Updated | `client/src/pages/Home.tsx`, `client/src/pages/ClientLanding.tsx`, `client/src/pages/EvercraftedPages.tsx` | Adds skip-link and semantic main target to public surfaces. |
+| Updated | `client/src/components/DashboardLayout.tsx`, `client/src/components/PersonalLayout.tsx` | Adds skip-link and semantic main target to protected surfaces. |
+
 ### Next actions
 
 The next actions are to refine the Wix CMS foundation with production field types, references, indexes, and Velo data-access policy; transform the hybrid template while removing all template testimonial content; build the custom member dashboard; then complete the remaining test, payment/provider, scheduler, and legacy-source audit work.
