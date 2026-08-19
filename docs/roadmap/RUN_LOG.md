@@ -699,4 +699,8 @@ The completed managed three-experience verification increment was pushed success
 | Updated | `server/jobs.ts` | Adds provider-neutral durable processing, notification, webhook, and Studio adapter types, classification, and safe dispatcher. |
 | Added | `server/job.service.contract.test.ts` | Verifies service-family routing, defer/reject behavior, and approved-adapter-only dispatch. |
 | Updated | `docs/quality/TEST_MATRIX.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Records job-service and reconciled migration/schema evidence. |
+
+### GitHub synchronization
+
+The completed provider-neutral async job service increment was pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `a8af997` (`feat: complete durable job service contracts`).
 | Updated | `docs/quality/TEST_MATRIX.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Records the completed data-governance evidence. |
