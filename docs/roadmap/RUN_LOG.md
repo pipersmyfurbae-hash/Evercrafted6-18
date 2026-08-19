@@ -815,7 +815,7 @@ The validated Wix CMS refinement-boundary increment was committed and pushed suc
 ## Run EC-RUN-0027 — First Client workspace project and Moodoor Studio walkthrough
 
 **Date:** 2026-08-19 EDT
-**Status:** `COMPLETED — GITHUB SYNCHRONIZATION PENDING`
+**Status:** `COMPLETED — GITHUB SYNCHRONIZED`
 **Work item:** `EC-LIVE-001`
 **Authorization:** The authenticated platform user explicitly requested creation of the first project in Bret Baden’s personal workspace and a Moodoor Studio walkthrough.
 
@@ -829,4 +829,4 @@ The validated Wix CMS refinement-boundary increment was committed and pushed suc
 
 ### GitHub synchronization
 
-The repository evidence for this approved live data operation is pending commit and push to `pipersmyfurbae-hash/Evercrafted6-18` on `main`.
+The repository evidence for this approved live data operation was committed and pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `03af73b` (`docs: record first studio project walkthrough`).
