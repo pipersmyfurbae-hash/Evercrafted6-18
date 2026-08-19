@@ -2,8 +2,8 @@
 
 - [ ] EC-P01-GOV-001 Create and maintain repository-resident roadmap, run log, change register, capability matrix, data dictionary, migration ledger, risk register, test matrix, and release checklist. (Initial artifacts verified; continue updating these records for each implementation run.)
 - [ ] EC-P00-INV-001 Audit the initialized project and the two source programs, recording runtime, routes, APIs, schema, storage, dependencies, tests, and feature disposition in governance documents. (Scaffold audit complete; legacy source working copy blocked.)
-- [ ] EC-P02-DB-001 Establish database-as-code conventions with Drizzle schema modules, migrations, seeds, fixtures, migration tests, repository helpers, data dictionary, and migration ledger. (Schema, migrations, seed convention, fixtures, helpers, and documentation exist; generated-migration workflow and automated migration-test evidence remain.)
-- [ ] EC-P03-DATA-001 Define canonical multi-tenant entities for workspaces, organizations, memberships, roles, projects, assets, workflows, audit records, notifications, jobs, feature flags, plans, entitlements, and integrations. (Foundation schema and applied migrations complete; fixture/migration-test coverage remains.)
+- [x] EC-P02-DB-001 Establish database-as-code conventions with Drizzle schema modules, migrations, seeds, fixtures, migration tests, repository helpers, data dictionary, and migration ledger.
+- [x] EC-P03-DATA-001 Define canonical multi-tenant entities for workspaces, organizations, memberships, roles, projects, assets, workflows, audit records, notifications, jobs, feature flags, plans, entitlements, and integrations.
 - [x] EC-P03-IAM-001 Implement personal-workspace auto-provisioning, organizations, invitations, memberships, and owner/admin/member/viewer/client role policies.
 - [x] EC-P03-AUTHZ-001 Implement server-side tenant-scoped authorization, role checks, owner-only Personal Command Center policy, and audited support-access boundaries.
 - [x] EC-P03-API-001 Publish typed tRPC routers for workspace, project, studio, asset, notification, administration, and platform-health functions.

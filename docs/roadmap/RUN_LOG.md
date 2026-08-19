@@ -622,3 +622,28 @@ The persisted Personal integration-control increment was pushed successfully to 
 ### GitHub synchronization
 
 The completed accessibility assurance increment was pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `7d900da` (`test: complete accessibility assurance`).
+
+## Run EC-RUN-0020 — Database-as-code and canonical fixture completion
+
+**Date:** 2026-08-19 EDT
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`
+**Work items:** `EC-P02-DB-001`, `EC-P03-DATA-001`
+**Objective:** Complete automated migration-artifact and canonical multi-tenant data evidence without producing persisted customer-like test data.
+
+| Area | Evidence | Result |
+|---|---|---|
+| Canonical fixture graph | `server/test/canonicalFixtures.ts` | Defines deterministic, non-persisted users, organization, workspace, active memberships, invitation, project, asset, workflow event, internal approval request, delivery, notification/preference, queued job, plan, entitlement, feature flag, audit, and integration-control state. Every tenant-bound record carries the same canonical workspace relationship. |
+| Fixture safety | `canonical.fixture.contract.test.ts` and `DATA_FIXTURE_CONVENTION.md` | Fixtures contain operational structure only. Internal approval-request state is explicitly distinct from customer-generated ratings or testimonials. Fixtures prohibit customer-generated testimonials, ratings, customer content, payment data, provider credentials, and production-like identity data. |
+| Dictionary evidence | `DATA_DICTIONARY.md` and `data.dictionary.contract.test.ts` | The current dictionary is verified against `drizzle/schema.ts`, lists all persisted entity families and migrations through `0003_messy_gambit`, and is protected by a deterministic contract test. |
+| Migration integrity | `migration.artifact.contract.test.ts` | Reconciles the 4 root generated SQL migrations against Drizzle journal entries, numbered snapshots, and migration-ledger records; requires reviewable create/alter statements and rejects `DROP TABLE` and `TRUNCATE TABLE`. |
+| Existing database practice | `schema.ts`, `seedPlans.ts`, `MIGRATION_LEDGER.md` | The canonical schema, reviewed managed-database migrations, repository helpers, and controlled development/staging reference plan seed now have both a documented convention and automated artifact evidence. |
+| Validation | `pnpm test`, `pnpm check`, `pnpm build` | Passed: 39 Vitest files / 96 tests, TypeScript check, and production build. The existing non-blocking client chunk-size advisory remains. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Added | `server/test/canonicalFixtures.ts`, `server/canonical.fixture.contract.test.ts`, `server/data.dictionary.contract.test.ts` | Provides and verifies non-persisted canonical multi-tenant test data and schema-aligned dictionary coverage. |
+| Added | `server/migration.artifact.contract.test.ts` | Locks migration, journal, snapshot, ledger, and additive-SQL integrity evidence. |
+| Updated | `docs/architecture/DATA_DICTIONARY.md`; added `docs/quality/DATA_FIXTURE_CONVENTION.md` | Verifies every canonical entity family, documents safe fixture/seed boundaries, and records the Drizzle migration workflow. |
+| Updated | `docs/quality/TEST_MATRIX.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Records the completed data-governance evidence. |
