@@ -278,6 +278,30 @@ The tenant-scoped asset list now derives `currentVersionNumber` from ordered app
 
 The governed asset-versioning increment was pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `4cf89f8` (`feat: add governed asset version history`).
 
+## Run EC-RUN-0008 — Studio reviewer assignment visibility
+
+**Date:** 2026-08-19 EDT  
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`  
+**Work items:** `EC-P04-WF-001`, `EC-P04-WF-002`  
+**Objective:** Complete reviewer/member assignment visibility within the shared Studio workflow.
+
+| Area | Evidence | Result |
+|---|---|---|
+| Reviewer selection | Existing typed `studio.requestReview` procedure and workspace-member selector | A review request can be assigned to a selected active member or left open to eligible workspace members. |
+| Assignment state | `StudioReviewerAssignments.tsx` | The Studio workflow explicitly displays each request’s assigned member or open assignment state and current resolution status. |
+| Policy continuity | Existing review-response handler | Assigned-reviewer restriction remains enforced in the typed workflow procedure. |
+| Regression coverage | `server/studio.assignment.ui.contract.test.ts` | Verifies the Studio entry point, persisted reviewer field, and visible assigned/open-state copy. |
+| Validation | `pnpm test`, `pnpm check`, `pnpm build` | Passed: 16 Vitest files / 36 tests, TypeScript check, and production build. The existing non-blocking client-chunk-size advisory remains. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Created | `client/src/components/StudioReviewerAssignments.tsx` | Clear assignee/open-state summary for Studio review records. |
+| Created | `server/studio.assignment.ui.contract.test.ts` | Assignment-state regression evidence. |
+| Updated | `client/src/pages/Studio.tsx` | Renders the reviewer-assignment summary alongside the selected project workflow. |
+| Updated | `todo.md` | Marks shared workflow assignment and Studio assignment UI complete. |
+
 ### Next actions
 
 The next actions are to refine the Wix CMS foundation with production field types, references, indexes, and Velo data-access policy; transform the hybrid template while removing all template testimonial content; build the custom member dashboard; then complete the remaining test, payment/provider, scheduler, and legacy-source audit work.

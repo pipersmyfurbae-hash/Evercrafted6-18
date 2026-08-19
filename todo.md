@@ -13,7 +13,7 @@
 - [x] EC-P05-APP-001 Build the authenticated SaaS workspace shell with context-safe navigation, workspace switcher, project list/detail, global search, notifications, profile, and settings states.
 - [x] EC-P06-UX-001 Build the Moodoor Studio shell with studio project navigation, creation, review, approval, delivery, and publishing flows.
 - [x] EC-P04-STO-001 Implement tenant-scoped S3-backed asset metadata, governed upload intent, asset versioning, and signed-access policy.
-- [ ] EC-P04-WF-001 Implement shared project/studio workflow statuses, review, approval, assignment, delivery, and audit events. (Statuses, reviews, approvals, delivery, and audits are complete; reviewer/member assignment interface remains.)
+- [x] EC-P04-WF-001 Implement shared project/studio workflow statuses, review, approval, assignment, delivery, and audit events.
 - [ ] EC-P04-JOB-001 Implement observable asynchronous job records and service contracts for processing, notifications, webhook retries, and long-running Studio operations. (Durable record, typed queue, health, and recovery foundations complete; provider worker adapters remain.)
 - [x] EC-P04-JOB-002 Implement the approved hybrid job policy: request-driven short actions, durable idempotent job records, bounded retry/recovery processing, and provider-neutral heavy-media handoff contracts.
 - [ ] EC-P04-JOB-003 Add a scheduled recovery handler for queued/retryable jobs with idempotent claim semantics, documented deployment requirement, and no in-process timers.
@@ -30,7 +30,7 @@
 - [x] EC-P05-PROFILE-001 Build authenticated profile view and editing with loading, error, and success states.
 - [x] EC-P06-PUB-001 Build a provider-neutral Studio publishing handoff flow and audit event without enabling an external provider until separately approved.
 - [x] EC-P04-STO-002 Add tenant-scoped asset re-upload/new-version creation, version history query, and Studio version history UI.
-- [ ] EC-P04-WF-002 Add assigned reviewer/member selection and assignment state UI for Studio review workflow.
+- [x] EC-P04-WF-002 Add assigned reviewer/member selection and assignment state UI for Studio review workflow.
 - [ ] EC-WIX-001 Audit the connected Wix account, target site, enabled products, permissions, Velo availability, CMS collections, member areas, stores, automations, and current integrations; record the source-of-truth mapping.
 - [ ] EC-WIX-002 Write and maintain a Wix migration decision record that maps each Evercrafted engine capability to Wix-native data, members, Velo, CMS, automations, Stores, external services, or an explicit deferred state.
 - [ ] EC-WIX-003 Define a Restoration Hardware–inspired editorial design system for Wix: warm stone/ivory/charcoal palette, high-contrast serif/sans typography, restrained grid, architectural photography treatment, and accessible interaction standards.
