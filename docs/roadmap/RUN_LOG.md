@@ -650,4 +650,26 @@ The completed accessibility assurance increment was pushed successfully to `pipe
 ### GitHub synchronization
 
 The completed data-governance assurance increment was pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `b69822b` (`test: complete data governance evidence`).
+
+## Run EC-RUN-0021 — Managed three-experience completion
+
+**Date:** 2026-08-19 EDT
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`
+**Work items:** `EC-PROJECT-001`, `EC-PROJECT-002`, `EC-PROJECT-003`
+**Objective:** Verify the managed project is the implementation source of truth for three deliberately separate experiences and lock their route/layout/visual distinctions against regression.
+
+| Area | Evidence | Result |
+|---|---|---|
+| Managed source of truth | `App.tsx`, server contracts, and managed database/migration evidence | The managed full-stack project contains the operational backend engine and all live implementations. Wix manifests and Velo contracts remain documented port-target artifacts rather than a competing runtime. |
+| Route and layout separation | `App.tsx`, `DashboardLayout.tsx`, `PersonalLayout.tsx`, and navigation contract | Editorial public routes are isolated from Client conversion and protected workspace routes. Personal uses an exact-owner data policy and a separate navigation frame without Client workspace navigation. |
+| Visual system | `index.css`, `Home.tsx`, `EvercraftedPages.tsx`, `ClientLanding.tsx`, `PersonalLayout.tsx` | Evercrafted uses calm warm-stone surfaces and Newsreader editorial treatment; Client uses a restrained slate/cloud operational surface; Personal uses a dense charcoal private frame. |
+| Regression and visual evidence | `three.experience.visual.contract.test.ts`; full-page `/`, `/client`, `/personal` captures | The contract registers all required route groups, named surfaces, editorial typography, and nav separation while rejecting testimonial copy. Desktop review confirmed three visually distinct, readable presentations. |
+| Validation | `pnpm test`, `pnpm check`, `pnpm build` | Passed: 40 Vitest files / 99 tests, TypeScript check, and production build. The existing non-blocking client chunk-size advisory remains. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Added | `server/three.experience.visual.contract.test.ts` | Protects route-group separation, named visual surfaces, typography, nav boundaries, and testimonial-content prohibition. |
+| Updated | `docs/quality/TEST_MATRIX.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Records completion and validation evidence for the managed implementation source of truth. |
 | Updated | `docs/quality/TEST_MATRIX.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Records the completed data-governance evidence. |
