@@ -84,6 +84,43 @@
 | Harmony editor access | User-reported session error plus sandbox loading-canvas evidence | Live visual editing is blocked; source template is frozen and no visual page mutation is claimed |
 | Personal owner policy | Repository Velo source plus syntax-only check | Separate server-side Personal resolver created; requires a Wix backend secret and deployment before it becomes live |
 | Three-experience page-ready content | Repository copy and dashboard specifications | Prepared separated Evercrafted editorial/commerce copy, Client SaaS public conversion copy, and Personal command specification; no template content or testimonials were altered in Wix |
+| Project-first visual verification | Desktop render review of `/`, `/client`, `/app`, and `/personal` | Evercrafted editorial public, Client SaaS conversion, Client workspace, and Personal command render as separate layouts; Personal no longer inherits the Client workspace navigation |
+| Project-first test run | `pnpm test` | All 4 Vitest files and 10 tests passed, including restored Wix shared-engine contract assertions for CMS, Client policy, and Personal policy artifacts |
+
+## Run EC-RUN-0002 — Project-first editorial routes and experience-boundary validation
+
+**Date:** 2026-08-19 EDT  
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`  
+**Work items:** `EC-3X-015`, `EC-PROJECT-004`, `EC-PROJECT-005`, `EC-PROJECT-006`, `EC-PROJECT-007`  
+**Objective:** Restore missing Wix policy-reference coverage, finish the project-first editorial route set, and prove that Client workspace and Personal command navigation remain distinct.
+
+| Area | Evidence | Result |
+|---|---|---|
+| Wix engine contract | `server/test/wix.engine.contract.test.ts` and `pnpm test` | CMS strategy/security, 17 unique collection IDs, public-lead isolation, and distinct Client/Personal Velo artifacts are covered by 4 passing assertions. |
+| Editorial public routes | `EvercraftedPages.tsx`, `NotFound.tsx`, `App.tsx`, route contract test | Added dedicated collection detail, journal article, account/sign-in, privacy, terms, and editorial 404 states without user-generated claims or unverified catalogue availability. |
+| Experience boundary | `DashboardLayout.tsx`, `PersonalLayout.tsx`, navigation contract test | Client sidebar no longer exposes Personal; Personal layout no longer exposes a Client workspace return; Personal continues using owner-only tRPC access and explicit denied-state copy. |
+| Automated validation | `pnpm test`, `pnpm check`, `pnpm build` | Passed: 6 Vitest files / 15 tests, TypeScript check, and production build. Build produced a non-blocking client-chunk-size advisory. |
+| Visual validation | Desktop at 1280×720 and mobile at 375×812 | Editorial detail/account/legal/404, Client conversion, Client shell loading, and Personal command capture as intended with distinct visual systems. |
+| Client sign-in gap closure | Dedicated `/client/sign-in`, route contract, desktop capture, and full validation rerun | Client sign-in state now provides separate access-copy and OAuth handoff; final validation passes at 7 Vitest files / 17 tests, TypeScript check, and production build. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Created | `server/test/wix.engine.contract.test.ts` | Regression coverage for Wix shared-engine manifest and policy reference artifacts. |
+| Created | `server/editorial.routes.contract.test.ts` | Route and no-fabricated-claims contract for editorial public pages. |
+| Created | `server/experience.navigation.contract.test.ts` | Client/Personal navigation and Personal data-contract boundary coverage. |
+| Updated | `client/src/App.tsx` | Registers account, sign-in, legal, collection-detail, and journal-article routes. |
+| Updated | `client/src/pages/EvercraftedPages.tsx` | Implements dedicated editorial public-page states and approved content safeguards. |
+| Updated | `client/src/pages/NotFound.tsx` | Replaces generic dashboard 404 with Evercrafted editorial 404. |
+| Updated | `client/src/components/DashboardLayout.tsx` | Removes Personal from Client workspace navigation. |
+| Updated | `client/src/components/PersonalLayout.tsx` | Removes Client workspace navigation from Personal command. |
+| Updated | `client/src/pages/ClientLanding.tsx` | Adds a Client-only `/client/sign-in` access state with protected-access guidance and OAuth handoff. |
+| Created | `server/client.signin.routes.contract.test.ts` | Confirms dedicated Client sign-in registration and separation from the editorial account path. |
+
+### GitHub synchronization
+
+Pending in this record until the validated commit hash and push result are captured immediately after repository synchronization.
 
 ### Next actions
 

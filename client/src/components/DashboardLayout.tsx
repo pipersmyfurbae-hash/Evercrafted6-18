@@ -157,7 +157,7 @@ function DashboardLayoutContent({
 
   return (
     <>
-      <div className="relative" ref={sidebarRef}>
+      <div className="relative client-surface" ref={sidebarRef}>
         <Sidebar
           collapsible="icon"
           className="border-r-0"
@@ -175,7 +175,7 @@ function DashboardLayoutContent({
               {!isCollapsed ? (
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="font-semibold tracking-tight truncate">
-                    Navigation
+                    Client workspace
                   </span>
                 </div>
               ) : null}
@@ -197,7 +197,7 @@ function DashboardLayoutContent({
               </DropdownMenu>
             </div> : null}
             <SidebarMenu className="px-2 py-1">
-              {[...menuItems, { icon: UserRound, label: "Personal", path: "/me" }, ...(user?.role === "admin" ? [{ icon: Shield, label: "Administration", path: "/admin" }] : [])].map(item => {
+              {[...menuItems, ...(user?.role === "admin" ? [{ icon: Shield, label: "Administration", path: "/admin" }] : [])].map(item => {
                 const isActive = location === item.path;
                 return (
                   <SidebarMenuItem key={item.path}>
@@ -266,7 +266,7 @@ function DashboardLayoutContent({
         />
       </div>
 
-      <SidebarInset>
+      <SidebarInset className="client-surface">
         {isMobile && (
           <div className="flex border-b h-14 items-center justify-between bg-background/95 px-2 backdrop-blur supports-[backdrop-filter]:backdrop-blur sticky top-0 z-40">
             <div className="flex items-center gap-2">
@@ -274,14 +274,14 @@ function DashboardLayoutContent({
               <div className="flex items-center gap-3">
                 <div className="flex flex-col gap-1">
                   <span className="tracking-tight text-foreground">
-                    {activeMenuItem?.label ?? "Evercrafted"}
+                    {activeMenuItem?.label ?? "Client workspace"}
                   </span>
                 </div>
               </div>
             </div>
           </div>
         )}
-        <main className="flex-1 p-4">{children}</main>
+        <main className="flex-1 p-4 md:p-6">{children}</main>
       </SidebarInset>
     </>
   );

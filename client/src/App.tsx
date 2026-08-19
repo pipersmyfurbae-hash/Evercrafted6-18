@@ -1,10 +1,12 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Route, Switch } from "wouter";
+import { Redirect, Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Admin from "./pages/Admin";
 import AppHome from "./pages/AppHome";
+import ClientLanding from "./pages/ClientLanding";
+import EvercraftedPages from "./pages/EvercraftedPages";
 import Home from "./pages/Home";
 import Invite from "./pages/Invite";
 import NotFound from "./pages/NotFound";
@@ -23,8 +25,24 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
-      <Route path="/product" component={Product} />
-      <Route path="/pricing" component={Pricing} />
+      <Route path="/product"><Redirect to="/client/capabilities" /></Route>
+      <Route path="/pricing"><Redirect to="/client/access" /></Route>
+      <Route path="/collections" component={EvercraftedPages} />
+      <Route path="/collections/material-studies" component={EvercraftedPages} />
+      <Route path="/journal" component={EvercraftedPages} />
+      <Route path="/journal/the-patience-of-material" component={EvercraftedPages} />
+      <Route path="/about" component={EvercraftedPages} />
+      <Route path="/contact" component={EvercraftedPages} />
+      <Route path="/account" component={EvercraftedPages} />
+      <Route path="/sign-in" component={EvercraftedPages} />
+      <Route path="/privacy" component={EvercraftedPages} />
+      <Route path="/terms" component={EvercraftedPages} />
+      <Route path="/client" component={ClientLanding} />
+      <Route path="/client/how-it-works" component={ClientLanding} />
+      <Route path="/client/outcomes" component={ClientLanding} />
+      <Route path="/client/capabilities" component={ClientLanding} />
+      <Route path="/client/access" component={ClientLanding} />
+      <Route path="/client/sign-in" component={ClientLanding} />
       <Route path="/app" component={AppHome} />
       <Route path="/projects" component={Projects} />
       <Route path="/projects/:projectId" component={ProjectDetail} />
@@ -33,6 +51,7 @@ function Router() {
       <Route path="/notifications" component={Notifications} />
       <Route path="/settings" component={Settings} />
       <Route path="/me" component={Personal} />
+      <Route path="/personal" component={Personal} />
       <Route path="/profile" component={Profile} />
       <Route path="/admin" component={Admin} />
       <Route path="/invite/:token" component={Invite} />

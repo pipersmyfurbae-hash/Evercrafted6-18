@@ -63,7 +63,16 @@
 - [ ] EC-3X-009 Apply the three-experience visual-system document to Wix global styles, page sections, component variants, and responsive states once Harmony editor controls or a supported page-management path are available.
 - [ ] EC-3X-010 Apply the prepared Evercrafted editorial content deck only to the public brand/commerce route group after verified catalog, collection, and legal information is supplied; do not add invented merchandise facts or customer claims.
 - [ ] EC-HARMONY-001 Diagnose the Wix Harmony editor/session error and identify a supported visual page-management or code-deployment path; preserve the source template with no live page/content mutations until verified access is restored.
+- [ ] EC-PROJECT-001 Build the managed Evercrafted project as the primary implementation source of truth for the separated Evercrafted, Client SaaS, and Personal experiences; retain Wix configuration and content records as a future port target only.
+- [ ] EC-PROJECT-002 Implement separate route groups and layout systems in the project for Evercrafted editorial/commerce, Client SaaS public conversion plus protected workspace, and owner-only Personal command.
+- [ ] EC-PROJECT-003 Apply the approved three-experience visual system in the project without reusing the source template’s bold colors, fonts, merged navigation, or testimonial content.
+- [x] EC-PROJECT-004 Verify the Personal command frame has no Client SaaS navigation, uses its explicit owner-only data contract, and maintains separate private route affordances.
+- [x] EC-PROJECT-005 Extend the Evercrafted editorial public experience with dedicated collection, journal, about, contact, account, legal, and 404 pages, keeping public commerce separate from Client and Personal paths.
+- [x] EC-PROJECT-006 Extend the Client SaaS public experience with dedicated How It Works, capabilities, outcomes, access, and sign-in routes plus explicit handoff into the protected workspace.
+- [x] EC-PROJECT-007 Maintain separate public Evercrafted collection, journal, about, and contact routes with no Client dashboard or Personal command navigation.
 - [ ] EC-3X-011 Verify the Wix CMS manifest against the live collections after reference and slug metadata are available; preserve administrator-only access until Velo policy tests pass.
 - [ ] EC-3X-012 Create the Wix secret `EVERCRAFTED_PLATFORM_OWNER_MEMBER_ID` with the verified platform-owner Wix Member ID, deploy the Personal resolver, and verify that workspace owner membership alone cannot access Personal routes.
 - [ ] EC-3X-013 Apply the prepared Client SaaS conversion content only to its dedicated public route group after plan/access language is verified; retain evidence-only outcomes content and no invented client claims.
 - [ ] EC-3X-014 Apply the prepared Personal command specification only after owner-secret policy deployment; preserve generic access-denied states and audit sensitive data access.
+- [x] EC-3X-015 Execute and record the restored Wix shared-engine contract test suite, covering CMS manifest boundaries plus Client membership and Personal owner-policy artifacts.
+- [x] EC-PROJECT-008 Add a dedicated `/client/sign-in` route and Client SaaS sign-in state, then cover it with route-level test evidence.
