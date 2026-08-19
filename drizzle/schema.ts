@@ -552,6 +552,116 @@ export const memoryConsents = mysqlTable(
   table => [uniqueIndex("memory_consents_project_type_unique").on(table.projectId, table.consentType)],
 );
 
+/**
+ * Checkpoint B keeps floral selection deliberately separate from commercial
+ * inventory. Catalog records describe vetted/reference capabilities only; no
+ * SKU, vendor, price, stock, or reservation data is permitted in this model.
+ */
+export const guidedFloralRoleValues = ["PRIMARY_FOCAL", "SUPPORTING_FLORAL", "DIRECTIONAL_ACCENT", "GREENERY_MOVEMENT"] as const;
+export const botanicalCatalogCategoryValues = ["floral", "greenery"] as const;
+export const botanicalCatalogProvenanceValues = ["reference_fixture", "vetted"] as const;
+export const botanicalCatalogAvailabilityValues = ["reference_only", "verified"] as const;
+export const floralRoleSetStatusValues = ["draft", "complete", "stale"] as const;
+export const floralCompatibilityOutcomeValues = ["pass", "warning", "blocked"] as const;
+
+export const botanicalReferenceCatalog = mysqlTable(
+  "botanicalReferenceCatalog",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    familyKey: varchar("familyKey", { length: 96 }).notNull(),
+    commonName: varchar("commonName", { length: 160 }).notNull(),
+    category: mysqlEnum("category", botanicalCatalogCategoryValues).notNull(),
+    roleHints: json("roleHints").notNull(),
+    formCapabilities: json("formCapabilities").notNull(),
+    movementCapabilities: json("movementCapabilities").notNull(),
+    surfaceQualities: json("surfaceQualities").notNull(),
+    paletteFamilies: json("paletteFamilies").notNull(),
+    provenance: mysqlEnum("provenance", botanicalCatalogProvenanceValues).default("reference_fixture").notNull(),
+    availabilityStatus: mysqlEnum("availabilityStatus", botanicalCatalogAvailabilityValues).default("reference_only").notNull(),
+    catalogVersion: varchar("catalogVersion", { length: 80 }).notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  },
+  table => [
+    uniqueIndex("botanical_reference_catalog_family_unique").on(table.familyKey),
+    index("botanical_reference_catalog_category_index").on(table.category),
+  ],
+);
+
+export const guidedFloralRoleSets = mysqlTable(
+  "guidedFloralRoleSets",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    projectId: int("projectId").notNull().references(() => projects.id),
+    essenceProfileId: int("essenceProfileId").notNull().references(() => essenceProfiles.id),
+    memoryStoryId: int("memoryStoryId").notNull().references(() => memoryStories.id),
+    version: int("version").default(1).notNull(),
+    status: mysqlEnum("status", floralRoleSetStatusValues).default("draft").notNull(),
+    catalogVersion: varchar("catalogVersion", { length: 80 }).notNull(),
+    sourceSignals: json("sourceSignals").notNull(),
+    createdByUserId: int("createdByUserId").notNull().references(() => users.id),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  },
+  table => [
+    uniqueIndex("guided_floral_role_sets_project_version_unique").on(table.projectId, table.version),
+    index("guided_floral_role_sets_project_status_index").on(table.projectId, table.status),
+  ],
+);
+
+export const guidedFloralCandidates = mysqlTable(
+  "guidedFloralCandidates",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    roleSetId: int("roleSetId").notNull().references(() => guidedFloralRoleSets.id),
+    role: mysqlEnum("role", guidedFloralRoleValues).notNull(),
+    catalogItemId: int("catalogItemId").notNull().references(() => botanicalReferenceCatalog.id),
+    rank: int("rank").notNull(),
+    explanation: text("explanation").notNull(),
+    matchEvidence: json("matchEvidence").notNull(),
+    tensionNotes: json("tensionNotes").notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  table => [
+    uniqueIndex("guided_floral_candidates_role_rank_unique").on(table.roleSetId, table.role, table.rank),
+    index("guided_floral_candidates_role_set_role_index").on(table.roleSetId, table.role),
+  ],
+);
+
+export const guidedWreathTraySelections = mysqlTable(
+  "guidedWreathTraySelections",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    projectId: int("projectId").notNull().references(() => projects.id),
+    roleSetId: int("roleSetId").notNull().references(() => guidedFloralRoleSets.id),
+    role: mysqlEnum("role", guidedFloralRoleValues).notNull(),
+    candidateId: int("candidateId").notNull().references(() => guidedFloralCandidates.id),
+    catalogItemId: int("catalogItemId").notNull().references(() => botanicalReferenceCatalog.id),
+    selectionRationale: text("selectionRationale"),
+    selectedByUserId: int("selectedByUserId").notNull().references(() => users.id),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  },
+  table => [
+    uniqueIndex("guided_wreath_tray_project_role_unique").on(table.projectId, table.role),
+    index("guided_wreath_tray_role_set_index").on(table.roleSetId),
+  ],
+);
+
+export const guidedFloralCompatibilityReports = mysqlTable(
+  "guidedFloralCompatibilityReports",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    projectId: int("projectId").notNull().references(() => projects.id),
+    roleSetId: int("roleSetId").notNull().references(() => guidedFloralRoleSets.id),
+    outcome: mysqlEnum("outcome", floralCompatibilityOutcomeValues).default("blocked").notNull(),
+    checks: json("checks").notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  },
+  table => [uniqueIndex("guided_floral_compatibility_role_set_unique").on(table.roleSetId)],
+);
+
 export const auditLogs = mysqlTable(
   "auditLogs",
   {

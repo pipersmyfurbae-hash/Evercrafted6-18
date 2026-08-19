@@ -865,3 +865,35 @@ The repository evidence for this approved live data operation was committed and 
 ### GitHub synchronization
 
 The validated Checkpoint A correction increment was committed and pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `1e587df` (`feat: add guided wreath creation shell`).
+
+## Run EC-RUN-0029 — Authoritative Evercrafted product correction, Checkpoint B
+
+**Date:** 2026-08-19 EDT
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`
+**Work item:** `EC-CORRECT-007`
+**Authorization:** The user explicitly approved Checkpoint B after reviewing the live Guided Journey Shell.
+
+| Area | Evidence and result |
+|---|---|
+| Source contract | Extracted and used the supplied Moodoor floral inventory, selection, and role-orchestration modules as reference. The managed catalog is deliberately family-level capability data, not a copy of vendor/commercial inventory. |
+| Data model | Migration `0005_amusing_tarot` adds `botanicalReferenceCatalog` (14 columns), `guidedFloralRoleSets` (11), `guidedFloralCandidates` (9), `guidedWreathTraySelections` (10), and `guidedFloralCompatibilityReports` (7). The information-schema check confirmed all five tables and expected counts. |
+| Migration recovery | The first additive apply created only the catalog and role-set tables before the database rejected one generated foreign-key identifier for exceeding its maximum name length. The migration SQL was corrected only to shorten constraint names. After checking the partial state, the remaining constraints/tables/indexes were applied successfully. No existing or customer table was altered, deleted, or recreated. |
+| Candidate model | Deterministic candidates are generated only after latest Essence and Story approval. Each is a persisted, explainable family-level option by `PRIMARY_FOCAL`, `SUPPORTING_FLORAL`, `DIRECTIONAL_ACCENT`, or `GREENERY_MOVEMENT`; match evidence and tension notes remain visible. |
+| My Wreath Tray | The selected role candidate is tenant-scoped, source-versioned, audited, and retained separately from a future Recipe. Compatibility blocks missing roles/primary focal, warns on family repetition, and promotes a complete tray only to a **Recipe dependency gate**. |
+| Preserved boundaries | No SKU, vendor, supplier, stock, quantity, price, reservation, checkout, inventory promise, material substitution, Recipe, Blueprint, greenery geometry, render, provider task, Moodoor upload, or publication behavior was added. |
+| Visual and validation evidence | Desktop capture of `/create` and `/how-it-works` passed; How It Works now accurately describes the live role/tray step. `pnpm test` passed: 49 Vitest files / 124 tests. `pnpm check` and `pnpm build` passed. The only build advisory is the pre-existing client-chunk-size recommendation. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Created | `docs/architecture/GUIDED_FLORALS_CONTRACT.md` | Product, data, compatibility, authorization, and non-goal contract. |
+| Created | `drizzle/0005_amusing_tarot.sql` | Reviewed additive Checkpoint B migration with database-safe constraint identifiers. |
+| Created | `server/guidedFlorals.ts`, `server/guidedFloralsDb.ts` | Source-derived reference catalog, deterministic candidate/compatibility engine, and tenant-scoped persistence. |
+| Created | `server/guided.florals.contract.test.ts` | Role coverage, no-commercial-data, blocked incomplete tray, and passing complete tray evidence. |
+| Updated | `drizzle/schema.ts`, `server/routers.ts`, `client/src/pages/WreathCreation.tsx`, `client/src/pages/WreathPublic.tsx` | Schema, protected API, Guided Florals/My Wreath Tray interface, and accurate public product explanation. |
+| Updated | `docs/architecture/DATA_DICTIONARY.md`, `docs/roadmap/MIGRATION_LEDGER.md`, `docs/quality/TEST_MATRIX.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Canonical schema, migration recovery, quality, scope-change, and work-item evidence. |
+
+### GitHub synchronization
+
+The validated Checkpoint B correction increment is pending commit and push to `pipersmyfurbae-hash/Evercrafted6-18` on `main`.
