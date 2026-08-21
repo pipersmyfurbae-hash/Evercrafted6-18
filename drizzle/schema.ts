@@ -778,6 +778,7 @@ export const guidedWreathBlueprints = mysqlTable(
 /** Checkpoint D preserves an approved-design handoff without executing a renderer. */
 export const guidedRenderPackageStatusValues = ["draft", "approved", "stale"] as const;
 export const guidedManualRenderHandoffStatusValues = ["requested", "awaiting_result", "stale"] as const;
+export const guidedRenderRevisionRequestStatusValues = ["requested", "stale"] as const;
 
 export const guidedRenderPackages = mysqlTable(
   "guidedRenderPackages",
@@ -818,6 +819,28 @@ export const guidedManualRenderHandoffs = mysqlTable(
   table => [
     uniqueIndex("guided_manual_handoffs_package_unique").on(table.renderPackageId),
     index("guided_manual_handoffs_project_status_index").on(table.projectId, table.status),
+  ],
+);
+
+/** Checkpoint F records a controlled request to revisit an approved package without mutating it. */
+export const guidedRenderRevisionRequests = mysqlTable(
+  "guidedRenderRevisionRequests",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    projectId: int("projectId").notNull().references(() => projects.id),
+    renderPackageId: int("renderPackageId").notNull().references(() => guidedRenderPackages.id),
+    version: int("version").default(1).notNull(),
+    status: mysqlEnum("status", guidedRenderRevisionRequestStatusValues).default("requested").notNull(),
+    reason: text("reason").notNull(),
+    requestedByUserId: int("requestedByUserId").notNull().references(() => users.id),
+    requestedAt: timestamp("requestedAt").defaultNow().notNull(),
+    staleReason: text("staleReason"),
+    staleAt: timestamp("staleAt"),
+  },
+  table => [
+    uniqueIndex("guided_render_revision_project_version_unique").on(table.projectId, table.version),
+    uniqueIndex("guided_render_revision_package_unique").on(table.renderPackageId),
+    index("guided_render_revision_project_status_index").on(table.projectId, table.status),
   ],
 );
 

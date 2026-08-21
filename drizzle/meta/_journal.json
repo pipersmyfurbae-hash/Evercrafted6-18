@@ -64,6 +64,13 @@
       "when": 1787139449679,
       "tag": "0008_gray_skin",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1787327412515,
+      "tag": "0009_famous_power_pack",
+      "breakpoints": true
     }
   ]
 }

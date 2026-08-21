@@ -994,3 +994,36 @@ The validated Checkpoint D correction increment was committed and pushed success
 ### GitHub synchronization
 
 The validated Checkpoint E correction increment was committed and pushed successfully to `pipersmyfurbae-hash/Evercrafted6-18` on `main` at commit `e4aa7df` (`feat: harden production security controls`).
+
+## Run EC-RUN-0033 — Authoritative Evercrafted product correction, Checkpoint F
+
+**Date:** 2026-08-21 EDT
+**Status:** `VALIDATED — GITHUB SYNCHRONIZATION PENDING`
+**Work item:** `EC-CORRECT-011`
+**Authorization:** The user explicitly approved continuation after reviewing the deployed Checkpoint E security increment.
+
+| Area | Evidence and result |
+|---|---|
+| Source contract | Added `CONTROLLED_REVISION_CONTRACT.md` from the authoritative follow-on guidance: comparison and controlled revision belong to Guided Mode, while provider/render/cost/fulfilment complexity remains deferred to later controlled work. |
+| Comparison boundary | The typed private-project comparison query accepts two distinct saved package identities and returns only retained package/version/status, Recipe/Blueprint version deltas, role-family name deltas, and inherited exclusions. It does not expose memory beyond the existing authorized journey, inventory, score, geometry, provider, image, commercial, or publication data. |
+| Revision gate | A request requires a current `approved` package, rejects a stale/draft/foreign package, permits one immutable request per package, and rejects a package with an existing manual handoff. It records a concise reason without mutating the approved package or any source artifact. |
+| History and invalidation | A revision request writes an append-only stage approval, Memory Thread event, and audit event. Changing an upstream Tray selection stales dependent Recipe, Blueprint, Render Package, manual handoff, and revision-request records together while retaining their reason and timestamp. |
+| Migration | Migration `0009_famous_power_pack` adds `guidedRenderRevisionRequests` (10 columns) with project/version and package uniqueness constraints. The generated render-package foreign-key identifier was shortened to `guided_render_revision_package_fk` before first execution; reviewed additive SQL applied successfully. |
+| UI and copy | The Wreath stage now presents retained package-history count, a version selector, source/role comparison, controlled revision reason capture, handoff-aware gating, and an explicit Outcome lock. How It Works now accurately describes comparison and revision without promising any provider or commercial Outcome. |
+| Validation | Focused contract coverage passes: 5 tests. Final full-suite, type, build, and database verification will be recorded before synchronization. Desktop review of `/how-it-works` and the authenticated private Wreath entry passed. |
+
+### Affected-file inventory
+
+| Status | Path | Purpose |
+|---|---|---|
+| Created | `docs/architecture/CONTROLLED_REVISION_CONTRACT.md` | Checkpoint F comparison, revision, stale-history, and non-activation boundary. |
+| Created | `drizzle/0009_famous_power_pack.sql` | Reviewed additive controlled-revision migration with database-safe foreign-key identifier. |
+| Created | `server/guidedRevisions.ts`, `server/guidedRevisionsDb.ts` | Deterministic comparator plus tenant-scoped comparison/history/revision services. |
+| Created | `server/guided.revision.contract.test.ts` | Comparison, scope/gate, stale-history, and no-provider/no-commerce regression evidence. |
+| Updated | `drizzle/schema.ts`, `server/guidedRecipesDb.ts`, `server/routers.ts` | Revision data model, downstream stale cascade, journey data, and protected typed procedures. |
+| Updated | `client/src/pages/WreathCreation.tsx`, `client/src/pages/WreathPublic.tsx` | Private comparison/revision controls and accurate public journey explanation. |
+| Updated | `docs/architecture/DATA_DICTIONARY.md`, `docs/roadmap/MIGRATION_LEDGER.md`, `docs/quality/TEST_MATRIX.md`, `docs/roadmap/CHANGE_REGISTER.md`, `todo.md` | Canonical schema, migration, validation, scope-change, and work-item evidence. |
+
+### GitHub synchronization
+
+The validated Checkpoint F correction increment is ready to commit and push to `pipersmyfurbae-hash/Evercrafted6-18` on `main`; the resulting commit identifier will be recorded immediately after synchronization.

@@ -9,7 +9,7 @@ const pathway = [
   ["04", "Florals", "You choose a small, source-versioned reference set by role and save it in My Wreath Tray—without an inventory or purchase claim."],
   ["05", "Recipe", "Your four role choices become an immutable, passing reference snapshot. It has no quantity, inventory, price, or construction claim."],
   ["06", "Blueprint", "A deterministic simplified hierarchy reads the locked Recipe without adding flowers, geometry, or production instructions."],
-  ["07", "Render package", "You review and approve a source-bound package with a renderer rule and explicit exclusions. A manual handoff records intent only; it does not call a provider or create an image."],
+  ["07", "Render package", "You review and approve a source-bound package with a renderer rule and explicit exclusions. You can compare retained package versions and request a controlled revision; a manual handoff still records intent only and never calls a provider or creates an image."],
   ["08", "Outcome", "Commission, purchase, Lookbook, and publication remain gated until their own verified data, policy, and approval conditions exist."],
 ] as const;
 
@@ -17,7 +17,7 @@ export default function WreathPublic() {
   const [location] = useLocation();
   const mode = location.startsWith("/signature-wreaths") ? "signature" : location.startsWith("/moodoor") ? "moodoor" : location.startsWith("/pricing") ? "pricing" : "how";
   const content = {
-    how: { eyebrow: "How Evercrafted works", title: "A wreath does not begin with a product. It begins with what you remember.", body: "Evercrafted preserves the distinction between your original memory, the meaning you recognize in it, and the material decisions that follow. You remain part of every approval, including the current render-package review before any future provider workflow." },
+    how: { eyebrow: "How Evercrafted works", title: "A wreath does not begin with a product. It begins with what you remember.", body: "Evercrafted preserves the distinction between your original memory, the meaning you recognize in it, and the material decisions that follow. You remain part of every approval, including render-package comparison and a controlled revision request before any future provider workflow." },
     signature: { eyebrow: "Signature Wreath Collection", title: "Objects of meaning, ready to meet another memory.", body: "The Signature Wreath Collection will present published designs with their approved Essence, Story, and material context. Personalization begins a new private Memory Thread; it never rewrites a published story." },
     moodoor: { eyebrow: "Moodoor Studio", title: "The workbench behind a design that can be traced.", body: "Moodoor is the creator and operator pathway for approved render upload, analysis, package creation, provenance, and publication review. The dedicated upload workflow follows the Guided Journey Shell review so the shared source and approval rules are in place first." },
     pricing: { eyebrow: "Pricing and access", title: "Clear options only when the underlying work is ready to stand behind them.", body: "Evercrafted will publish product and commission pricing only from verified catalog, availability, and provider data. Until then, this page does not imply prices, inventory, reservations, subscriptions, or checkout availability that have not been configured." },

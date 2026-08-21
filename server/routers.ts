@@ -71,6 +71,7 @@ import { canOpenGuidedWreath, decideGuidedArtifact, getGuidedProjectForWorkspace
 import { generateGuidedFlorals, getGuidedFlorals, selectGuidedFloralCandidate } from "./guidedFloralsDb";
 import { generateGuidedWreathBlueprint, getGuidedRecipeBlueprint, lockGuidedWreathRecipe } from "./guidedRecipesDb";
 import { approveGuidedRenderPackage, getGuidedRenderPackage, prepareGuidedRenderPackage, requestManualRenderHandoff } from "./guidedRendersDb";
+import { getGuidedRenderPackageComparison, getGuidedRenderRevisionData, requestGuidedRenderRevision } from "./guidedRevisionsDb";
 import { buildSecureAssetStorageName, validateAssetUpload } from "./productionSafety";
 import { authorizeWorkspaceOperation } from "./security";
 import { storageGetSignedUrl, storagePut } from "./storage";
@@ -248,7 +249,7 @@ export const appRouter = router({
         await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: () => true });
         const project = await getGuidedProjectForWorkspace(input.projectId, input.workspaceId);
         if (!project) throw new TRPCError({ code: "NOT_FOUND", message: "Guided Wreath project not found in this workspace" });
-        return { project, ...(await getGuidedWreathJourney(project.id)), florals: await getGuidedFlorals(project.id), recipe: await getGuidedRecipeBlueprint(project.id), render: await getGuidedRenderPackage(project.id) };
+        return { project, ...(await getGuidedWreathJourney(project.id)), florals: await getGuidedFlorals(project.id), recipe: await getGuidedRecipeBlueprint(project.id), render: await getGuidedRenderPackage(project.id), revisions: await getGuidedRenderRevisionData(project.id) };
       }),
     saveMemory: protectedProcedure
       .input(z.object({ workspaceId: z.number().int().positive(), projectId: z.number().int().positive(), body: z.string().trim().min(20).max(8000), visibility: z.enum(["private", "private_story_shareable_wreath", "private_link_lookbook", "anonymous_gallery", "public_first_name", "fully_public"]).default("private") }))
@@ -349,6 +350,26 @@ export const appRouter = router({
         if (!project) throw new TRPCError({ code: "NOT_FOUND", message: "Guided Wreath project not found in this workspace" });
         try { return await approveGuidedRenderPackage({ ...input, approvedByUserId: ctx.user.id }); }
         catch (error) { throw new TRPCError({ code: "BAD_REQUEST", message: error instanceof Error ? error.message : "Render package could not be approved" }); }
+      }),
+    compareRenderPackages: protectedProcedure
+      .input(z.object({ workspaceId: z.number().int().positive(), projectId: z.number().int().positive(), primaryPackageId: z.number().int().positive(), baselinePackageId: z.number().int().positive() }))
+      .query(async ({ ctx, input }) => {
+        await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: canOpenGuidedWreath });
+        await requireWorkspaceCapability(input.workspaceId, "guided_wreath.render");
+        const project = await getGuidedProjectForWorkspace(input.projectId, input.workspaceId);
+        if (!project) throw new TRPCError({ code: "NOT_FOUND", message: "Guided Wreath project not found in this workspace" });
+        try { return await getGuidedRenderPackageComparison(input); }
+        catch (error) { throw new TRPCError({ code: "BAD_REQUEST", message: error instanceof Error ? error.message : "Render packages could not be compared" }); }
+      }),
+    requestRenderRevision: protectedProcedure
+      .input(z.object({ workspaceId: z.number().int().positive(), projectId: z.number().int().positive(), renderPackageId: z.number().int().positive(), reason: z.string().trim().min(10).max(1500) }))
+      .mutation(async ({ ctx, input }) => {
+        await requireWorkspaceRole({ userId: ctx.user.id, workspaceId: input.workspaceId, predicate: canOpenGuidedWreath });
+        await requireWorkspaceCapability(input.workspaceId, "guided_wreath.render");
+        const project = await getGuidedProjectForWorkspace(input.projectId, input.workspaceId);
+        if (!project) throw new TRPCError({ code: "NOT_FOUND", message: "Guided Wreath project not found in this workspace" });
+        try { return await requestGuidedRenderRevision({ ...input, requestedByUserId: ctx.user.id }); }
+        catch (error) { throw new TRPCError({ code: "BAD_REQUEST", message: error instanceof Error ? error.message : "Controlled revision request could not be recorded" }); }
       }),
     requestManualRenderHandoff: protectedProcedure
       .input(z.object({ workspaceId: z.number().int().positive(), projectId: z.number().int().positive(), renderPackageId: z.number().int().positive(), requestNote: z.string().trim().max(1000).optional() }))
